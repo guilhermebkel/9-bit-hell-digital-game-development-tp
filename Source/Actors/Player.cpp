@@ -2,7 +2,7 @@
 // Created by Lucas N. Ferreira on 03/08/23.
 //
 
-#include "Mario.h"
+#include "Player.h"
 #include "Goomba.h"
 #include "../Game.h"
 #include "../Components/Drawing/AnimatorComponent.h"
@@ -10,7 +10,7 @@
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Components/ParticleSystemComponent.h"
 
-Mario::Mario(Game* game, const float forwardSpeed, const float jumpSpeed)
+Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
         : Actor(game)
         , mIsRunning(false)
         , mIsDead(false)
@@ -34,12 +34,12 @@ Mario::Mario(Game* game, const float forwardSpeed, const float jumpSpeed)
     anim->SetAnimation("idle");
     anim->SetAnimFPS(8.0f);
 
-    mRigidBodyComponent = new RigidBodyComponent(this, Mario::MASS, Mario::FRICTION);
+    mRigidBodyComponent = new RigidBodyComponent(this, Player::MASS, Player::FRICTION);
 
     new AABBColliderComponent(this, 0, 0, 32, 32, ColliderLayer::Player);
 }
 
-void Mario::OnProcessInput(const uint8_t* state)
+void Player::OnProcessInput(const uint8_t* state)
 {
     mIsRunning = false;
     Vector2 force = Vector2::Zero;
@@ -73,14 +73,14 @@ void Mario::OnProcessInput(const uint8_t* state)
     mRigidBodyComponent->ApplyForce(force);
 }
 
-void Mario::OnUpdate(float deltaTime)
+void Player::OnUpdate(float deltaTime)
 {
     Actor::OnUpdate(deltaTime);
 
     ManageAnimations();
 }
 
-void Mario::ManageAnimations()
+void Player::ManageAnimations()
 {
     AnimatorComponent* anim = GetComponent<AnimatorComponent>();
     if (!anim || mIsDead) return;
@@ -95,7 +95,7 @@ void Mario::ManageAnimations()
     }
 }
 
-void Mario::Kill()
+void Player::Kill()
 {
     if (mIsDead) return;
 
@@ -107,7 +107,7 @@ void Mario::Kill()
     GetComponent<AABBColliderComponent>()->SetEnabled(false);
 }
 
-void Mario::OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other)
+void Player::OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other)
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
@@ -115,7 +115,7 @@ void Mario::OnHorizontalCollision(const float minOverlap, AABBColliderComponent*
     }
 }
 
-void Mario::OnVerticalCollision(const float minOverlap, AABBColliderComponent* other)
+void Player::OnVerticalCollision(const float minOverlap, AABBColliderComponent* other)
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {

@@ -4,7 +4,7 @@
 
 #include "Spawner.h"
 #include "../Game.h"
-#include "Mario.h"
+#include "Player.h"
 #include "Goomba.h"
 #include <cmath>
 
@@ -17,11 +17,11 @@ void Spawner::OnUpdate(float deltaTime)
 {
         Actor::OnUpdate(deltaTime);
 
-        const class Mario* mario = GetGame()->GetPlayer();
+        const class Player* player = GetGame()->GetPlayer();
 
-        if (mario)
+        if (player)
         {
-                float dist = std::abs(GetPosition().x - mario->GetPosition().x);
+                float dist = std::abs(GetPosition().x - player->GetPosition().x);
 
                 if (dist < mSpawnDistance)
                 {

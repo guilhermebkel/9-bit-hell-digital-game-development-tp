@@ -9,7 +9,7 @@ Background::Background(Game* game)
 
     new StaticSpriteComponent(
         this,
-        "../Assets/Sprites/Background.png",
+        "../Assets/Levels/Level1/Background.png",
         Game::WINDOW_WIDTH,
         Game::WINDOW_HEIGHT,
         10

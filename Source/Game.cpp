@@ -7,7 +7,7 @@
 #include "Components/Drawing/DrawComponent.h"
 #include "Random.h"
 #include "Actors/Actor.h"
-#include "Actors/Mario.h"
+#include "Actors/Player.h"
 #include "Actors/Background.h"
 
 Game::Game()
@@ -18,7 +18,7 @@ Game::Game()
         ,mIsDebugging(false)
         ,mUpdatingActors(false)
         ,mCameraPos(Vector2::Zero)
-        ,mMario(nullptr)
+        ,mPlayer(nullptr)
 {
 
 }
@@ -55,8 +55,8 @@ void Game::InitializeActors()
 {
     new Background(this);
 
-    mMario = new Mario(this);
-    mMario->SetPosition(Vector2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
+    mPlayer = new Player(this);
+    mPlayer->SetPosition(Vector2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
 }
 
 void Game::RunLoop()
