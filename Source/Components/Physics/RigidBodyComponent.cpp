@@ -36,40 +36,33 @@ void RigidBodyComponent::Update(float deltaTime)
         ApplyForce(Vector2::UnitY * GRAVITY);
     }
 
-    // Apply friction
-    if(Math::Abs(mVelocity.x) > 0.05f && mFrictionCoefficient != 0.0f)
+    if(!Math::NearlyZero(mVelocity.Length()) && mFrictionCoefficient != 0.0f)
     {
-        ApplyForce(Vector2::UnitX * -mFrictionCoefficient * mVelocity.x);
+        ApplyForce(mVelocity * -mFrictionCoefficient);
     }
 
-    // Euler Integration
     mVelocity += mAcceleration * deltaTime;
 
     mVelocity.x = Math::Clamp<float>(mVelocity.x, -MAX_SPEED_X, MAX_SPEED_X);
     mVelocity.y = Math::Clamp<float>(mVelocity.y, -MAX_SPEED_Y, MAX_SPEED_Y);
 
-    if(Math::NearlyZero(mVelocity.x, 1.0f))
+    if(mVelocity.Length() < 1.0f)
     {
-        mVelocity.x = 0.f;
+        mVelocity = Vector2::Zero;
     }
 
-    auto collider = mOwner->GetComponent<AABBColliderComponent>();
-
-    mOwner->SetPosition(Vector2(mOwner->GetPosition().x + mVelocity.x * deltaTime,
-                                     mOwner->GetPosition().y));
-
-    if (collider)
+    if (!Math::NearlyZero(mVelocity.Length()))
     {
-        collider->DetectHorizontalCollision(this);
+        Vector2 newPos = mOwner->GetPosition() + mVelocity * deltaTime;
+        mOwner->SetPosition(newPos);
     }
 
-    mOwner->SetPosition(Vector2(mOwner->GetPosition().x,
-                                    mOwner->GetPosition().y + mVelocity.y * deltaTime));
-
-    if (collider)
-    {
-        collider->DetectVertialCollision(this);
-    }
+    // auto collider = mOwner->GetComponent<AABBColliderComponent>();
+    // if (collider)
+    // {
+    //     collider->DetectHorizontalCollision(this);
+    //     collider->DetectVertialCollision(this);
+    // }
 
     mAcceleration.Set(0.f, 0.f);
 }

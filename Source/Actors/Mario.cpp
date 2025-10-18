@@ -22,8 +22,8 @@ Mario::Mario(Game* game, const float forwardSpeed, const float jumpSpeed)
         this,
         "../Assets/Sprites/Mario/Mario.png",
         "../Assets/Sprites/Mario/Mario.json",
-        32,
-        32
+        64,
+        64
     );
 
     anim->AddAnimation("idle", {1});

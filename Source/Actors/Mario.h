@@ -8,12 +8,10 @@
 class Mario : public Actor
 {
 public:
-    static constexpr float FORWARD_SPEED = 2500.0f;
-    static constexpr float JUMP_SPEED = 850.0f;
     static constexpr float MASS = 1.0f;
     static constexpr float FRICTION = 10.0f;
 
-    explicit Mario(Game* game, float forwardSpeed = 1500.0f, float jumpSpeed = -750.0f);
+    explicit Mario(Game* game, float forwardSpeed = 2500.0f, float jumpSpeed = -750.0f);
 
     void OnProcessInput(const Uint8* keyState) override;
     void OnUpdate(float deltaTime) override;
