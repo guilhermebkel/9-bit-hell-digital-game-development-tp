@@ -20,19 +20,19 @@ Mario::Mario(Game* game, const float forwardSpeed, const float jumpSpeed)
 {
     AnimatorComponent* anim = new AnimatorComponent(
         this,
-        "../Assets/Sprites/Mario/Mario.png",
-        "../Assets/Sprites/Mario/Mario.json",
+        "../Assets/Sprites/Player/Player.png",
+        "../Assets/Sprites/Player/Player.json",
         64,
         64
     );
 
-    anim->AddAnimation("idle", {1});
-    anim->AddAnimation("run", {3, 4, 5});
-    anim->AddAnimation("jump", {2});
-    anim->AddAnimation("dead", {0});
+    anim->AddAnimation("idle", {2, 1});
+    anim->AddAnimation("run", {4, 12, 15, 11, 6, 13, 16, 14, 7});
+    anim->AddAnimation("damage", {8, 9, 10, 5});
+    anim->AddAnimation("being-hit", {3, 0});
 
     anim->SetAnimation("idle");
-    anim->SetAnimFPS(10.0f);
+    anim->SetAnimFPS(8.0f);
 
     mRigidBodyComponent = new RigidBodyComponent(this, Mario::MASS, Mario::FRICTION);
 
