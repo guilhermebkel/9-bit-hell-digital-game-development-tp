@@ -57,12 +57,11 @@ void RigidBodyComponent::Update(float deltaTime)
         mOwner->SetPosition(newPos);
     }
 
-    // auto collider = mOwner->GetComponent<AABBColliderComponent>();
-    // if (collider)
-    // {
-    //     collider->DetectHorizontalCollision(this);
-    //     collider->DetectVertialCollision(this);
-    // }
+    auto collider = mOwner->GetComponent<AABBColliderComponent>();
+    if (collider)
+    {
+        collider->DetectCollision(this);
+    }
 
     mAcceleration.Set(0.f, 0.f);
 }

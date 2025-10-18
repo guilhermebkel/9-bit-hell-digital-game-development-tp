@@ -24,8 +24,8 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
         this,
         "../Assets/Sprites/Player/Player.png",
         "../Assets/Sprites/Player/Player.json",
-        Player::WIDTH,
-        Player::HEIGHT
+        Player::SPRITE_WIDTH,
+        Player::SPRITE_HEIGHT
     );
 
     anim->AddAnimation("idle", {1, 2});
@@ -38,7 +38,9 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
 
     mRigidBodyComponent = new RigidBodyComponent(this, Player::MASS, Player::FRICTION);
 
-    new AABBColliderComponent(this, 0, 0, Player::WIDTH, Player::HEIGHT, ColliderLayer::Player);
+    // Align collider base with sprite base
+    const int dy = (int)((SPRITE_HEIGHT / 2.0f) - (PHYSICS_HEIGHT / 2.0f));
+    new AABBColliderComponent(this, 0, dy, Player::PHYSICS_WIDTH, Player::PHYSICS_HEIGHT, ColliderLayer::Player);
 }
 
 void Player::OnProcessInput(const uint8_t* state)
@@ -86,8 +88,8 @@ void Player::OnUpdate(float deltaTime)
     Actor::OnUpdate(deltaTime);
 
     Vector2 limitedPosition = GetPosition();
-    const float halfWidth = Player::WIDTH / 2.0f;
-    const float halfHeight = Player::HEIGHT / 2.0f;
+    const float halfWidth = Player::SPRITE_WIDTH / 2.0f;
+    const float halfHeight = Player::SPRITE_HEIGHT / 2.0f;
 
     limitedPosition.x = Math::Clamp(limitedPosition.x, halfWidth, Game::WINDOW_WIDTH - halfWidth);
     limitedPosition.y = Math::Clamp(limitedPosition.y, GetGame()->GetUpperBoundary() + halfHeight, Game::WINDOW_HEIGHT - halfHeight);
@@ -141,7 +143,14 @@ void Player::OnHorizontalCollision(const float minOverlap, AABBColliderComponent
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        // Kill();
+        if (mIsAttacking)
+        {
+            Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
+            if (enemy)
+            {
+                enemy->Kill();
+            }
+        }
     }
 }
 
@@ -149,14 +158,13 @@ void Player::OnVerticalCollision(const float minOverlap, AABBColliderComponent* 
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        // Goomba* goomba = dynamic_cast<Goomba*>(other->GetOwner());
-        // if (goomba)
-        // {
-        //     goomba->Kill();
-        //
-        //     Vector2 vel = mRigidBodyComponent->GetVelocity();
-        //     vel.y = -mJumpSpeed * 0.5f;
-        //     mRigidBodyComponent->SetVelocity(vel);
-        // }
+        if (mIsAttacking)
+        {
+            Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
+            if (enemy)
+            {
+                enemy->Kill();
+            }
+        }
     }
 }

@@ -20,8 +20,8 @@ Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
         this,
         "../Assets/Sprites/Goomba/Goomba.png",
         "../Assets/Sprites/Goomba/Goomba.json",
-        Enemy::WIDTH,
-        Enemy::HEIGHT
+        Enemy::SPRITE_WIDTH,
+        Enemy::SPRITE_HEIGHT
     );
 
     mDrawComponent->AddAnimation("walk", {1, 2});
@@ -31,7 +31,9 @@ Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
 
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);
 
-    mColliderComponent = new AABBColliderComponent(this, 0, 0, Enemy::WIDTH, Enemy::HEIGHT, ColliderLayer::Enemy);
+    // Align collider base with sprite base
+    const int dy = (int)((SPRITE_HEIGHT / 2.0f) - (PHYSICS_HEIGHT / 2.0f));
+    mColliderComponent = new AABBColliderComponent(this, 0, dy, Enemy::PHYSICS_WIDTH, Enemy::PHYSICS_HEIGHT, ColliderLayer::Enemy);
 
     Vector2 initialVelocity = Vector2::Zero;
     while (initialVelocity.Length() < 1.0f)
@@ -67,8 +69,8 @@ void Enemy::OnUpdate(float deltaTime)
     Vector2 pos = GetPosition();
     Vector2 vel = mRigidBodyComponent->GetVelocity();
 
-    const float halfWidth = Enemy::WIDTH / 2.0f;
-    const float halfHeight = Enemy::HEIGHT / 2.0f;
+    const float halfWidth = Enemy::SPRITE_WIDTH / 2.0f;
+    const float halfHeight = Enemy::SPRITE_HEIGHT / 2.0f;
 
     if ((pos.x <= halfWidth && vel.x < 0.0f) || (pos.x >= Game::WINDOW_WIDTH - halfWidth && vel.x > 0.0f))
     {

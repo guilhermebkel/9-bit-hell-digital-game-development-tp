@@ -9,8 +9,10 @@
 class Enemy : public Actor
 {
 public:
-    static constexpr float WIDTH = 48.0f;
-    static constexpr float HEIGHT = 48.0f;
+    static constexpr float SPRITE_WIDTH = 48.0f;
+    static constexpr float SPRITE_HEIGHT = 48.0f;
+    static constexpr float PHYSICS_WIDTH = 36.0f; // ~ 75% of SPRITE_WIDTH
+    static constexpr float PHYSICS_HEIGHT = 24.0f; // ~50% of SPRITE_HEIGHT
 
     explicit Enemy(Game* game, float forwardSpeed = 100.0f, float deathTime = 0.5f);
 

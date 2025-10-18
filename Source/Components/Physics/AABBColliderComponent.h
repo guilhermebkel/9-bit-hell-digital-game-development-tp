@@ -26,8 +26,7 @@ public:
 
     bool Intersect(const AABBColliderComponent& b) const;
 
-    float DetectHorizontalCollision(RigidBodyComponent *rigidBody);
-    float DetectVertialCollision(RigidBodyComponent *rigidBody);
+    void DetectCollision(RigidBodyComponent *rigidBody);
 
     Vector2 GetMin() const;
     Vector2 GetMax() const;

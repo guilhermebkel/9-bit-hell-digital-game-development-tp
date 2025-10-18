@@ -88,9 +88,9 @@ float AABBColliderComponent::GetMinHorizontalOverlap(AABBColliderComponent* b) c
     return leftOverlap;
 }
 
-float AABBColliderComponent::DetectHorizontalCollision(RigidBodyComponent *rigidBody)
+void AABBColliderComponent::DetectCollision(RigidBodyComponent* rigidBody)
 {
-    if (mIsStatic) return 0.0f;
+    if (mIsStatic) return;
 
     auto colliders = GetGame()->GetColliders();
 
@@ -103,54 +103,20 @@ float AABBColliderComponent::DetectHorizontalCollision(RigidBodyComponent *rigid
             float minXOverlap = GetMinHorizontalOverlap(other);
             float minYOverlap = GetMinVerticalOverlap(other);
 
-            bool needToResolveHorizontalCollisionFirst = std::abs(minXOverlap) < std::abs(minYOverlap);
-
-            if (needToResolveHorizontalCollisionFirst)
+            if (std::abs(minXOverlap) < std::abs(minYOverlap))
             {
-                if (std::abs(minXOverlap) > 0.001f)
-                {
-                    ResolveHorizontalCollisions(rigidBody, minXOverlap);
-                    mOwner->OnHorizontalCollision(minXOverlap, other);
-                    return minXOverlap;
-                }
+                ResolveHorizontalCollisions(rigidBody, minXOverlap);
+                mOwner->OnHorizontalCollision(minXOverlap, other);
+                other->GetOwner()->OnHorizontalCollision(-minXOverlap, this);
+            }
+            else
+            {
+                ResolveVerticalCollisions(rigidBody, minYOverlap);
+                mOwner->OnVerticalCollision(minYOverlap, other);
+                other->GetOwner()->OnVerticalCollision(-minYOverlap, this);
             }
         }
     }
-
-    return 0.0f;
-}
-
-float AABBColliderComponent::DetectVertialCollision(RigidBodyComponent *rigidBody)
-{
-    if (mIsStatic) return 0.0f;
-
-    auto colliders = GetGame()->GetColliders();
-    mOwner->SetOffGround();
-
-    for (auto other : colliders)
-    {
-        if (other == this || !other->IsEnabled()) continue;
-
-        if (this->Intersect(*other))
-        {
-            float minXOverlap = GetMinHorizontalOverlap(other);
-            float minYOverlap = GetMinVerticalOverlap(other);
-
-            bool needToResolveVerticalCollisionFirst = std::abs(minYOverlap) <= std::abs(minXOverlap);
-
-            if (needToResolveVerticalCollisionFirst)
-            {
-                if (std::abs(minYOverlap) > 0.001f)
-                {
-                    ResolveVerticalCollisions(rigidBody, minYOverlap);
-                    mOwner->OnVerticalCollision(minYOverlap, other);
-                    return minYOverlap;
-                }
-            }
-        }
-    }
-
-    return 0.0f;
 }
 
 void AABBColliderComponent::ResolveHorizontalCollisions(RigidBodyComponent *rigidBody, const float minXOverlap)
