@@ -7,6 +7,7 @@
 #include "Random.h"
 #include "Actors/Actor.h"
 #include "Actors/Mario.h"
+#include "Actors/Background.h"
 
 Game::Game()
         :mWindow(nullptr)
@@ -31,7 +32,7 @@ bool Game::Initialize()
         return false;
     }
 
-    mWindow = SDL_CreateWindow("9-bit Hell (Base)", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
+    mWindow = SDL_CreateWindow("9-bit Hell", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
     if (!mWindow)
     {
         SDL_Log("Failed to create window: %s", SDL_GetError());
@@ -51,6 +52,8 @@ bool Game::Initialize()
 
 void Game::InitializeActors()
 {
+    new Background(this);
+
     mMario = new Mario(this);
     mMario->SetPosition(Vector2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
 }
