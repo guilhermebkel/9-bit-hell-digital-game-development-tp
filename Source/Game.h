@@ -43,6 +43,10 @@ public:
     // Game specific
     const class Player* GetPlayer() { return mPlayer; }
 
+    // Limitation in Y-axis for movement inside Scenario
+    float GetUpperBoundary() const { return mUpperBoundaryY; }
+    void SetUpperBoundary(float y) { mUpperBoundaryY = y; }
+
 private:
     void ProcessInput();
     void UpdateGame(float deltaTime);
@@ -76,4 +80,7 @@ private:
 
     // Game-specific
     class Player *mPlayer;
+
+    // Limitation in Y-axis for movement inside Scenario
+    float mUpperBoundaryY;
 };

@@ -10,6 +10,8 @@ class Player : public Actor
 public:
     static constexpr float MASS = 1.0f;
     static constexpr float FRICTION = 10.0f;
+    static constexpr float WIDTH = 80.0f;
+    static constexpr float HEIGHT = 80.0f;
 
     explicit Player(Game* game, float forwardSpeed = 2500.0f, float jumpSpeed = -750.0f);
 

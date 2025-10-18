@@ -14,4 +14,6 @@ Background::Background(Game* game)
         Game::WINDOW_HEIGHT,
         10
     );
+
+    GetGame()->SetUpperBoundary(423.f);
 }

@@ -18,6 +18,7 @@ Game::Game()
         ,mIsDebugging(false)
         ,mUpdatingActors(false)
         ,mCameraPos(Vector2::Zero)
+        ,mUpperBoundaryY(0.0f)
         ,mPlayer(nullptr)
 {
 

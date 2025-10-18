@@ -22,8 +22,8 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
         this,
         "../Assets/Sprites/Player/Player.png",
         "../Assets/Sprites/Player/Player.json",
-        80,
-        80
+        Player::WIDTH,
+        Player::HEIGHT
     );
 
     anim->AddAnimation("idle", {1, 2});
@@ -76,6 +76,15 @@ void Player::OnProcessInput(const uint8_t* state)
 void Player::OnUpdate(float deltaTime)
 {
     Actor::OnUpdate(deltaTime);
+
+    Vector2 limitedPosition = GetPosition();
+    const float halfWidth = Player::WIDTH / 2.0f;
+    const float halfHeight = Player::HEIGHT / 2.0f;
+
+    limitedPosition.x = Math::Clamp(limitedPosition.x, halfWidth, Game::WINDOW_WIDTH - halfWidth);
+    limitedPosition.y = Math::Clamp(limitedPosition.y, GetGame()->GetUpperBoundary() + halfHeight, Game::WINDOW_HEIGHT - halfHeight);
+
+    SetPosition(limitedPosition);
 
     ManageAnimations();
 }
