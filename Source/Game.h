@@ -1,30 +1,7 @@
-// ----------------------------------------------------------------
-// From Game Programming in C++ by Sanjay Madhav
-// Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
-// Released under the BSD License
-// See LICENSE in root directory for full details.
-// ----------------------------------------------------------------
-
 #pragma once
 #include <SDL.h>
 #include <vector>
 #include "Renderer/Renderer.h"
-
-enum class TileID : int
-{
-    Empty           = -1,
-    Ground          = 0,
-    QuestionBlock   = 1,
-    PipeTopRight    = 12,
-    PipeTopLeft     = 2,
-    Brick           = 4,
-    PipeBodyRight   = 6,
-    PipeBodyLeft    = 9,
-    StairBlock      = 8,
-    MarioStart      = 16,
-    GoombaSpawn     = 10
-};
 
 class Game
 {
@@ -45,12 +22,8 @@ public:
     // Renderer
     class Renderer* GetRenderer() { return mRenderer; }
 
-    static const int WINDOW_WIDTH   = 640;
-    static const int WINDOW_HEIGHT  = 448;
-    static const int LEVEL_WIDTH    = 215;
-    static const int LEVEL_HEIGHT   = 15;
-    static const int TILE_SIZE      = 32;
-    static const int SPAWN_DISTANCE = 700;
+    static const int WINDOW_WIDTH   = 1024;
+    static const int WINDOW_HEIGHT  = 768;
     static const int FPS = 60;
 
     // Draw functions
@@ -75,10 +48,6 @@ private:
     void UpdateGame(float deltaTime);
     void UpdateCamera();
     void GenerateOutput();
-
-    // Level loading
-    int **LoadLevel(const std::string& fileName, int width, int height);
-    void BuildLevel(int** levelData, int width, int height);
 
     // All the actors in the game
     std::vector<class Actor*> mActors;
@@ -107,5 +76,4 @@ private:
 
     // Game-specific
     class Mario *mMario;
-    int **mLevelData;
 };

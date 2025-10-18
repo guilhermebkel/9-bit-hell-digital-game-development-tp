@@ -22,8 +22,8 @@ Mario::Mario(Game* game, const float forwardSpeed, const float jumpSpeed)
         this,
         "../Assets/Sprites/Mario/Mario.png",
         "../Assets/Sprites/Mario/Mario.json",
-        Game::TILE_SIZE,
-        Game::TILE_SIZE
+        32,
+        32
     );
 
     anim->AddAnimation("idle", {1});
@@ -36,57 +36,46 @@ Mario::Mario(Game* game, const float forwardSpeed, const float jumpSpeed)
 
     mRigidBodyComponent = new RigidBodyComponent(this, Mario::MASS, Mario::FRICTION);
 
-    new AABBColliderComponent(this, 0, 0, Game::TILE_SIZE, Game::TILE_SIZE, ColliderLayer::Player);
+    new AABBColliderComponent(this, 0, 0, 32, 32, ColliderLayer::Player);
 }
 
 void Mario::OnProcessInput(const uint8_t* state)
 {
     mIsRunning = false;
+    Vector2 force = Vector2::Zero;
 
     if (state[SDL_SCANCODE_D])
     {
-        mRigidBodyComponent->ApplyForce(Vector2(mForwardSpeed, 0.0f));
+        force.x += mForwardSpeed;
         SetScale(Vector2(1.0f, 1.0f));
         mIsRunning = true;
     }
 
     if (state[SDL_SCANCODE_A])
     {
-        mRigidBodyComponent->ApplyForce(Vector2(-mForwardSpeed, 0.0f));
+        force.x -= mForwardSpeed;
         SetScale(Vector2(-1.0f, 1.0f));
         mIsRunning = true;
     }
 
-    if (state[SDL_SCANCODE_SPACE] && mIsOnGround)
+    if (state[SDL_SCANCODE_W])
     {
-        Vector2 vel = mRigidBodyComponent->GetVelocity();
-        vel.y = -mJumpSpeed;
-        mRigidBodyComponent->SetVelocity(vel);
-        mIsOnGround = false;
+        force.y -= mForwardSpeed;
+        mIsRunning = true;
     }
+
+    if (state[SDL_SCANCODE_S])
+    {
+        force.y += mForwardSpeed;
+        mIsRunning = true;
+    }
+
+    mRigidBodyComponent->ApplyForce(force);
 }
 
 void Mario::OnUpdate(float deltaTime)
 {
     Actor::OnUpdate(deltaTime);
-
-    if (!Math::NearlyZero(mRigidBodyComponent->GetVelocity().y))
-    {
-        mIsOnGround = false;
-    }
-
-    if (GetPosition().y > Game::WINDOW_HEIGHT + 100)
-    {
-        Kill();
-    }
-
-    Vector2 pos = GetPosition();
-    const Vector2& cameraPos = GetGame()->GetCameraPos();
-    if (pos.x < cameraPos.x)
-    {
-        pos.x = cameraPos.x;
-        SetPosition(pos);
-    }
 
     ManageAnimations();
 }
@@ -96,20 +85,13 @@ void Mario::ManageAnimations()
     AnimatorComponent* anim = GetComponent<AnimatorComponent>();
     if (!anim || mIsDead) return;
 
-    if (!IsOnGround())
+    if (mIsRunning)
     {
-        anim->SetAnimation("jump");
+        anim->SetAnimation("run");
     }
     else
     {
-        if (mIsRunning)
-        {
-            anim->SetAnimation("run");
-        }
-        else
-        {
-            anim->SetAnimation("idle");
-        }
+        anim->SetAnimation("idle");
     }
 }
 
@@ -129,7 +111,7 @@ void Mario::OnHorizontalCollision(const float minOverlap, AABBColliderComponent*
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        Kill();
+        // Kill();
     }
 }
 
@@ -137,14 +119,14 @@ void Mario::OnVerticalCollision(const float minOverlap, AABBColliderComponent* o
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        Goomba* goomba = dynamic_cast<Goomba*>(other->GetOwner());
-        if (goomba)
-        {
-            goomba->Kill();
-
-            Vector2 vel = mRigidBodyComponent->GetVelocity();
-            vel.y = -mJumpSpeed * 0.5f;
-            mRigidBodyComponent->SetVelocity(vel);
-        }
+        // Goomba* goomba = dynamic_cast<Goomba*>(other->GetOwner());
+        // if (goomba)
+        // {
+        //     goomba->Kill();
+        //
+        //     Vector2 vel = mRigidBodyComponent->GetVelocity();
+        //     vel.y = -mJumpSpeed * 0.5f;
+        //     mRigidBodyComponent->SetVelocity(vel);
+        // }
     }
 }

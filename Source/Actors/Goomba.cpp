@@ -18,8 +18,8 @@ Goomba::Goomba(Game* game, float forwardSpeed, float deathTime)
         this,
         "../Assets/Sprites/Goomba/Goomba.png",
         "../Assets/Sprites/Goomba/Goomba.json",
-        Game::TILE_SIZE,
-        Game::TILE_SIZE
+        32,
+        32
     );
 
     mDrawComponent->AddAnimation("walk", {1, 2});
@@ -29,7 +29,7 @@ Goomba::Goomba(Game* game, float forwardSpeed, float deathTime)
 
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);
     
-    mColliderComponent = new AABBColliderComponent(this, 0, 0, Game::TILE_SIZE, Game::TILE_SIZE, ColliderLayer::Enemy);
+    mColliderComponent = new AABBColliderComponent(this, 0, 0, 32, 32, ColliderLayer::Enemy);
     
     SetScale(Vector2(-1.0f, 1.0f));
     Vector2 initialVelocity(-mForwardSpeed, 0.0f);

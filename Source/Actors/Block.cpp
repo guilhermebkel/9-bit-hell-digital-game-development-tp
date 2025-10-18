@@ -10,7 +10,7 @@
 Block::Block(Game* game, const std::string &texturePath)
         :Actor(game)
 {
-        new AnimatorComponent(this, texturePath, "", Game::TILE_SIZE, Game::TILE_SIZE);
+        new AnimatorComponent(this, texturePath, "", 32, 32);
 
-        new AABBColliderComponent(this, 0, 0, Game::TILE_SIZE, Game::TILE_SIZE, ColliderLayer::Blocks, true);
+        new AABBColliderComponent(this, 0, 0, 32, 32, ColliderLayer::Blocks, true);
 }
