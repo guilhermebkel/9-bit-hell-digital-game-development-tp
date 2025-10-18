@@ -22,14 +22,14 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
         this,
         "../Assets/Sprites/Player/Player.png",
         "../Assets/Sprites/Player/Player.json",
-        64,
-        64
+        80,
+        80
     );
 
-    anim->AddAnimation("idle", {2, 1});
-    anim->AddAnimation("run", {4, 12, 15, 11, 6, 13, 16, 14, 7});
-    anim->AddAnimation("damage", {8, 9, 10, 5});
-    anim->AddAnimation("being-hit", {3, 0});
+    anim->AddAnimation("idle", {1, 2});
+    anim->AddAnimation("run", {8, 9, 10, 11, 12, 13, 14, 15, 16});
+    anim->AddAnimation("damage", {4, 5, 6, 7});
+    anim->AddAnimation("being-hit", {0, 3});
 
     anim->SetAnimation("idle");
     anim->SetAnimFPS(8.0f);

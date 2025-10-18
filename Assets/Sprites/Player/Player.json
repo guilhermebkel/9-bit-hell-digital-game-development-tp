@@ -1,19 +1,19 @@
 {
   "frames": [
     {
-      "filename": "Player/BeingHit2.png",
+      "filename": "BeingHit2.png",
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 84,
+        "w": 96,
         "h": 96
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 6,
+        "x": 0,
         "y": 0,
-        "w": 84,
+        "w": 96,
         "h": 96
       },
       "sourceSize": {
@@ -26,19 +26,19 @@
       }
     },
     {
-      "filename": "Player/Idle2.png",
+      "filename": "Idle1.png",
       "frame": {
         "x": 0,
         "y": 96,
-        "w": 60,
+        "w": 96,
         "h": 96
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 12,
+        "x": 0,
         "y": 0,
-        "w": 60,
+        "w": 96,
         "h": 96
       },
       "sourceSize": {
@@ -51,19 +51,19 @@
       }
     },
     {
-      "filename": "Player/Idle1.png",
+      "filename": "Idle2.png",
       "frame": {
         "x": 0,
         "y": 192,
-        "w": 54,
+        "w": 96,
         "h": 96
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 18,
+        "x": 0,
         "y": 0,
-        "w": 54,
+        "w": 96,
         "h": 96
       },
       "sourceSize": {
@@ -76,19 +76,19 @@
       }
     },
     {
-      "filename": "Player/BeingHit1.png",
+      "filename": "BeingHit1.png",
       "frame": {
         "x": 0,
         "y": 288,
-        "w": 14,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 1,
+        "x": 0,
         "y": 0,
-        "w": 14,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -101,19 +101,19 @@
       }
     },
     {
-      "filename": "Player/Run1.png",
+      "filename": "Damage1.png",
       "frame": {
         "x": 0,
         "y": 304,
-        "w": 13,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 2,
+        "x": 0,
         "y": 0,
-        "w": 13,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -126,19 +126,19 @@
       }
     },
     {
-      "filename": "Player/Damage4.png",
+      "filename": "Damage2.png",
       "frame": {
         "x": 0,
         "y": 320,
-        "w": 12,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
+        "x": 0,
         "y": 0,
-        "w": 12,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -151,19 +151,19 @@
       }
     },
     {
-      "filename": "Player/Run5.png",
+      "filename": "Damage3.png",
       "frame": {
         "x": 0,
         "y": 336,
-        "w": 12,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 2,
+        "x": 0,
         "y": 0,
-        "w": 12,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -176,19 +176,19 @@
       }
     },
     {
-      "filename": "Player/Run9.png",
+      "filename": "Damage4.png",
       "frame": {
         "x": 0,
         "y": 352,
-        "w": 12,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 2,
+        "x": 0,
         "y": 0,
-        "w": 12,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -201,19 +201,19 @@
       }
     },
     {
-      "filename": "Player/Damage1.png",
+      "filename": "Run1.png",
       "frame": {
         "x": 0,
         "y": 368,
-        "w": 10,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 2,
+        "x": 0,
         "y": 0,
-        "w": 10,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -226,19 +226,19 @@
       }
     },
     {
-      "filename": "Player/Damage2.png",
+      "filename": "Run2.png",
       "frame": {
         "x": 0,
         "y": 384,
-        "w": 10,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 3,
+        "x": 0,
         "y": 0,
-        "w": 10,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -251,19 +251,19 @@
       }
     },
     {
-      "filename": "Player/Damage3.png",
+      "filename": "Run3.png",
       "frame": {
         "x": 0,
         "y": 400,
-        "w": 10,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 3,
+        "x": 0,
         "y": 0,
-        "w": 10,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -276,19 +276,19 @@
       }
     },
     {
-      "filename": "Player/Run4.png",
+      "filename": "Run4.png",
       "frame": {
         "x": 0,
         "y": 416,
-        "w": 10,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 3,
+        "x": 0,
         "y": 0,
-        "w": 10,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -301,19 +301,19 @@
       }
     },
     {
-      "filename": "Player/Run2.png",
+      "filename": "Run5.png",
       "frame": {
         "x": 0,
         "y": 432,
-        "w": 9,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
+        "x": 0,
         "y": 0,
-        "w": 9,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -326,19 +326,19 @@
       }
     },
     {
-      "filename": "Player/Run6.png",
+      "filename": "Run6.png",
       "frame": {
         "x": 0,
         "y": 448,
-        "w": 9,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 3,
+        "x": 0,
         "y": 0,
-        "w": 9,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -351,19 +351,19 @@
       }
     },
     {
-      "filename": "Player/Run8.png",
+      "filename": "Run7.png",
       "frame": {
         "x": 0,
         "y": 464,
-        "w": 9,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
+        "x": 0,
         "y": 0,
-        "w": 9,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -376,19 +376,19 @@
       }
     },
     {
-      "filename": "Player/Run3.png",
+      "filename": "Run8.png",
       "frame": {
         "x": 0,
         "y": 480,
-        "w": 8,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
+        "x": 0,
         "y": 0,
-        "w": 8,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -401,19 +401,19 @@
       }
     },
     {
-      "filename": "Player/Run7.png",
+      "filename": "Run9.png",
       "frame": {
         "x": 0,
         "y": 496,
-        "w": 8,
+        "w": 16,
         "h": 16
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
+        "x": 0,
         "y": 0,
-        "w": 8,
+        "w": 16,
         "h": 16
       },
       "sourceSize": {
@@ -432,7 +432,7 @@
     "image": "Player.png",
     "format": "RGBA8888",
     "size": {
-      "w": 84,
+      "w": 96,
       "h": 512
     },
     "scale": 1
