@@ -21,7 +21,6 @@ void Spawner::OnUpdate(float deltaTime)
 
         if (player)
         {
-                printf("\nENTROU\n");
                 Enemy* enemy = new Enemy(GetGame());
 
                 enemy->SetPosition(player->GetPosition());
