@@ -1,0 +1,187 @@
+//
+// Created by Lucas N. Ferreira on 28/09/23.
+//
+
+#include "AABBColliderComponent.h"
+#include "../../Actors/Actor.h"
+#include "../../Game.h"
+#include "RigidBodyComponent.h"
+#include <algorithm>
+
+AABBColliderComponent::AABBColliderComponent(class Actor* owner, int dx, int dy, int w, int h,
+        ColliderLayer layer, bool isStatic, int updateOrder)
+        :Component(owner, updateOrder)
+        ,mOffset(Vector2((float)dx, (float)dy))
+        ,mIsStatic(isStatic)
+        ,mWidth(w)
+        ,mHeight(h)
+        ,mLayer(layer)
+{
+    GetGame()->AddCollider(this);
+}
+
+AABBColliderComponent::~AABBColliderComponent()
+{
+    GetGame()->RemoveCollider(this);
+}
+
+Vector2 AABBColliderComponent::GetMin() const
+{
+    Vector2 center = mOwner->GetPosition() + mOffset;
+    float halfW = mWidth / 2.0f;
+    float halfH = mHeight / 2.0f;
+    return Vector2(center.x - halfW, center.y - halfH);
+}
+
+Vector2 AABBColliderComponent::GetMax() const
+{
+    Vector2 center = mOwner->GetPosition() + mOffset;
+    float halfW = mWidth / 2.0f;
+    float halfH = mHeight / 2.0f;
+    return Vector2(center.x + halfW, center.y + halfH);
+}
+
+bool AABBColliderComponent::Intersect(const AABBColliderComponent& b) const
+{
+    Vector2 aMin = this->GetMin();
+    Vector2 aMax = this->GetMax();
+    Vector2 bMin = b.GetMin();
+    Vector2 bMax = b.GetMax();
+
+    bool noOverlap = aMax.x < bMin.x || bMax.x < aMin.x ||
+                     aMax.y < bMin.y || bMax.y < aMin.y;
+
+    return !noOverlap;
+}
+
+float AABBColliderComponent::GetMinVerticalOverlap(AABBColliderComponent* b) const
+{
+    Vector2 aMin = this->GetMin();
+    Vector2 aMax = this->GetMax();
+    Vector2 bMin = b->GetMin();
+    Vector2 bMax = b->GetMax();
+
+    float topOverlap = bMax.y - aMin.y;
+    float bottomOverlap = bMin.y - aMax.y;
+
+    if (std::abs(topOverlap) < std::abs(bottomOverlap))
+    {
+        return topOverlap;
+    }
+    return bottomOverlap;
+}
+
+float AABBColliderComponent::GetMinHorizontalOverlap(AABBColliderComponent* b) const
+{
+    Vector2 aMin = this->GetMin();
+    Vector2 aMax = this->GetMax();
+    Vector2 bMin = b->GetMin();
+    Vector2 bMax = b->GetMax();
+
+    float rightOverlap = bMax.x - aMin.x;
+    float leftOverlap = bMin.x - aMax.x;
+
+    if (std::abs(rightOverlap) < std::abs(leftOverlap))
+    {
+        return rightOverlap;
+    }
+    return leftOverlap;
+}
+
+float AABBColliderComponent::DetectHorizontalCollision(RigidBodyComponent *rigidBody)
+{
+    if (mIsStatic) return 0.0f;
+
+    auto colliders = GetGame()->GetColliders();
+
+    for (auto other : colliders)
+    {
+        if (other == this || !other->IsEnabled()) continue;
+
+        if (this->Intersect(*other))
+        {
+            float minXOverlap = GetMinHorizontalOverlap(other);
+            float minYOverlap = GetMinVerticalOverlap(other);
+
+            bool needToResolveHorizontalCollisionFirst = std::abs(minXOverlap) < std::abs(minYOverlap);
+
+            if (needToResolveHorizontalCollisionFirst)
+            {
+                if (std::abs(minXOverlap) > 0.001f)
+                {
+                    ResolveHorizontalCollisions(rigidBody, minXOverlap);
+                    mOwner->OnHorizontalCollision(minXOverlap, other);
+                    return minXOverlap;
+                }
+            }
+        }
+    }
+
+    return 0.0f;
+}
+
+float AABBColliderComponent::DetectVertialCollision(RigidBodyComponent *rigidBody)
+{
+    if (mIsStatic) return 0.0f;
+
+    auto colliders = GetGame()->GetColliders();
+    mOwner->SetOffGround();
+
+    for (auto other : colliders)
+    {
+        if (other == this || !other->IsEnabled()) continue;
+
+        if (this->Intersect(*other))
+        {
+            float minXOverlap = GetMinHorizontalOverlap(other);
+            float minYOverlap = GetMinVerticalOverlap(other);
+
+            bool needToResolveVerticalCollisionFirst = std::abs(minYOverlap) <= std::abs(minXOverlap);
+
+            if (needToResolveVerticalCollisionFirst)
+            {
+                if (std::abs(minYOverlap) > 0.001f)
+                {
+                    ResolveVerticalCollisions(rigidBody, minYOverlap);
+                    mOwner->OnVerticalCollision(minYOverlap, other);
+                    return minYOverlap;
+                }
+            }
+        }
+    }
+
+    return 0.0f;
+}
+
+void AABBColliderComponent::ResolveHorizontalCollisions(RigidBodyComponent *rigidBody, const float minXOverlap)
+{
+    Vector2 pos = mOwner->GetPosition();
+    pos.x += minXOverlap;
+    mOwner->SetPosition(pos);
+
+    Vector2 vel = rigidBody->GetVelocity();
+    vel.x = 0.0f;
+    rigidBody->SetVelocity(vel);
+}
+
+void AABBColliderComponent::ResolveVerticalCollisions(RigidBodyComponent *rigidBody, const float minYOverlap)
+{
+    Vector2 pos = mOwner->GetPosition();
+    pos.y += minYOverlap;
+    mOwner->SetPosition(pos);
+
+    Vector2 vel = rigidBody->GetVelocity();
+    vel.y = 0.0f;
+    rigidBody->SetVelocity(vel);
+
+    if (minYOverlap < 0)
+    {
+        mOwner->SetOnGround();
+    }
+}
+
+void AABBColliderComponent::DebugDraw(class Renderer *renderer)
+{
+    renderer->DrawRect(mOwner->GetPosition() + mOffset,Vector2((float)mWidth, (float)mHeight), mOwner->GetRotation(),
+                       Color::Green, mOwner->GetGame()->GetCameraPos(), RendererMode::LINES);
+}
