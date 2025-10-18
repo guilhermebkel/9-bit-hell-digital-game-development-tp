@@ -12,6 +12,7 @@ public:
     static constexpr float FRICTION = 10.0f;
     static constexpr float WIDTH = 80.0f;
     static constexpr float HEIGHT = 80.0f;
+    static constexpr float ATTACK_ANIMATION_DURATION = 0.3f;
 
     explicit Player(Game* game, float forwardSpeed = 2500.0f, float jumpSpeed = -750.0f);
 
@@ -30,6 +31,9 @@ private:
     float mJumpSpeed;
     bool mIsRunning;
     bool mIsDead;
+
+    bool mIsAttacking;
+    float mAttackTimer;
 
     class RigidBodyComponent* mRigidBodyComponent;
     class AnimatorComponent* mDrawComponent;

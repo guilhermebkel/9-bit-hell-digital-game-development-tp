@@ -76,7 +76,7 @@
       }
     },
     {
-      "filename": "BeingHit1.png",
+      "filename": "Attack1.png",
       "frame": {
         "x": 0,
         "y": 288,
@@ -101,7 +101,7 @@
       }
     },
     {
-      "filename": "Damage1.png",
+      "filename": "Attack2.png",
       "frame": {
         "x": 0,
         "y": 304,
@@ -126,7 +126,7 @@
       }
     },
     {
-      "filename": "Damage2.png",
+      "filename": "Attack3.png",
       "frame": {
         "x": 0,
         "y": 320,
@@ -151,7 +151,7 @@
       }
     },
     {
-      "filename": "Damage3.png",
+      "filename": "Attack4.png",
       "frame": {
         "x": 0,
         "y": 336,
@@ -176,7 +176,7 @@
       }
     },
     {
-      "filename": "Damage4.png",
+      "filename": "BeingHit1.png",
       "frame": {
         "x": 0,
         "y": 352,

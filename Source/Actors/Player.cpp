@@ -3,7 +3,7 @@
 //
 
 #include "Player.h"
-#include "Goomba.h"
+#include "Enemy.h"
 #include "../Game.h"
 #include "../Components/Drawing/AnimatorComponent.h"
 #include "../Components/Physics/RigidBodyComponent.h"
@@ -14,6 +14,8 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
         : Actor(game)
         , mIsRunning(false)
         , mIsDead(false)
+        , mIsAttacking(false)
+        , mAttackTimer(0.0f)
         , mForwardSpeed(forwardSpeed)
         , mJumpSpeed(jumpSpeed)
         , mRigidBodyComponent(nullptr)
@@ -28,8 +30,8 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
 
     anim->AddAnimation("idle", {1, 2});
     anim->AddAnimation("run", {8, 9, 10, 11, 12, 13, 14, 15, 16});
-    anim->AddAnimation("damage", {4, 5, 6, 7});
-    anim->AddAnimation("being-hit", {0, 3});
+    anim->AddAnimation("attack", {3, 4, 5, 6});
+    anim->AddAnimation("being-hit", {7, 0});
 
     anim->SetAnimation("idle");
     anim->SetAnimFPS(8.0f);
@@ -70,6 +72,12 @@ void Player::OnProcessInput(const uint8_t* state)
         mIsRunning = true;
     }
 
+    if (state[SDL_SCANCODE_SPACE])
+    {
+        mIsAttacking = true;
+        mAttackTimer = ATTACK_ANIMATION_DURATION;
+    }
+
     mRigidBodyComponent->ApplyForce(force);
 }
 
@@ -86,6 +94,15 @@ void Player::OnUpdate(float deltaTime)
 
     SetPosition(limitedPosition);
 
+    if (mIsAttacking)
+    {
+        mAttackTimer -= deltaTime;
+        if (mAttackTimer <= 0.0f)
+        {
+            mIsAttacking = false;
+        }
+    }
+
     ManageAnimations();
 }
 
@@ -94,7 +111,11 @@ void Player::ManageAnimations()
     AnimatorComponent* anim = GetComponent<AnimatorComponent>();
     if (!anim || mIsDead) return;
 
-    if (mIsRunning)
+    if (mIsAttacking)
+    {
+        anim->SetAnimation("attack");
+    }
+    else if (mIsRunning)
     {
         anim->SetAnimation("run");
     }
