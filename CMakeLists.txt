@@ -44,8 +44,8 @@ add_executable(${PROJECT_NAME}
         Source/Renderer/Texture.h
         Source/Actors/Block.cpp
         Source/Actors/Block.h
-        Source/Actors/Goomba.cpp
-        Source/Actors/Goomba.h
+        Source/Actors/Enemy.cpp
+        Source/Actors/Enemy.h
         Source/Actors/Spawner.cpp
         Source/Actors/Spawner.h
         Source/Actors/Player.cpp

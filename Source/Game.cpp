@@ -9,6 +9,7 @@
 #include "Actors/Actor.h"
 #include "Actors/Player.h"
 #include "Actors/Background.h"
+#include "Actors/Spawner.h"
 
 Game::Game()
         :mWindow(nullptr)
@@ -58,6 +59,8 @@ void Game::InitializeActors()
 
     mPlayer = new Player(this);
     mPlayer->SetPosition(Vector2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
+
+    new Spawner(this, 0.0f);
 }
 
 void Game::RunLoop()

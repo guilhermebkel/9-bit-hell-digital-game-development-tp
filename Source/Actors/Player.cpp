@@ -36,7 +36,7 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
 
     mRigidBodyComponent = new RigidBodyComponent(this, Player::MASS, Player::FRICTION);
 
-    new AABBColliderComponent(this, 0, 0, 32, 32, ColliderLayer::Player);
+    new AABBColliderComponent(this, 0, 0, Player::WIDTH, Player::HEIGHT, ColliderLayer::Player);
 }
 
 void Player::OnProcessInput(const uint8_t* state)

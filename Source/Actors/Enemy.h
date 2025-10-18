@@ -6,10 +6,13 @@
 
 #include "Actor.h"
 
-class Goomba : public Actor
+class Enemy : public Actor
 {
 public:
-    explicit Goomba(Game* game, float forwardSpeed = 100.0f, float deathTime = 0.5f);
+    static constexpr float WIDTH = 48.0f;
+    static constexpr float HEIGHT = 48.0f;
+
+    explicit Enemy(Game* game, float forwardSpeed = 100.0f, float deathTime = 0.5f);
 
     void OnUpdate(float deltaTime) override;
     void OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other) override;

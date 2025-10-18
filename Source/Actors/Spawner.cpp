@@ -5,7 +5,7 @@
 #include "Spawner.h"
 #include "../Game.h"
 #include "Player.h"
-#include "Goomba.h"
+#include "Enemy.h"
 #include <cmath>
 
 Spawner::Spawner(Game* game, float spawnDistance)
@@ -21,15 +21,11 @@ void Spawner::OnUpdate(float deltaTime)
 
         if (player)
         {
-                float dist = std::abs(GetPosition().x - player->GetPosition().x);
+                printf("\nENTROU\n");
+                Enemy* enemy = new Enemy(GetGame());
 
-                if (dist < mSpawnDistance)
-                {
-                        Goomba* goomba = new Goomba(GetGame());
+                enemy->SetPosition(player->GetPosition());
 
-                        goomba->SetPosition(this->GetPosition());
-
-                        mState = ActorState::Destroy;
-                }
+                mState = ActorState::Destroy;
         }
 }
