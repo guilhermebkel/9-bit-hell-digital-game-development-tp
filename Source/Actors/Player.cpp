@@ -12,10 +12,10 @@ Player::Player(Game* game, const float forwardSpeed)
         , mIsRunning(false)
         , mIsDead(false)
         , mIsMeleeAttacking(false)
-        , mMeleeAttackTimer(0.0f)
-        , mIsShooting(false)
-        , mShootingTimer(0.0f)
-        , mRangedAttackTimer(0.0f)
+        , mMeleeAttackAnimationTimer(0.0f)
+        , mIsRangedAttacking(false)
+        , mRangedAttackAnimationTimer(0.0f)
+        , mRangedAttackCooldownTimer(0.0f)
         , mCoinCount(0)
         , mForwardSpeed(forwardSpeed)
         , mRigidBodyComponent(nullptr)
@@ -77,15 +77,15 @@ void Player::OnProcessInput(const uint8_t* state)
     if (state[SDL_SCANCODE_J])
     {
         mIsMeleeAttacking = true;
-        mMeleeAttackTimer = Player::MELEE_ATTACK_ANIMATION_DURATION;
+        mMeleeAttackAnimationTimer = Player::MELEE_ATTACK_ANIMATION_DURATION;
     }
 
-    if (state[SDL_SCANCODE_K] && mRangedAttackTimer <= 0.0f)
+    if (state[SDL_SCANCODE_K] && mRangedAttackCooldownTimer <= 0.0f)
     {
-        mRangedAttackTimer = Player::RANGED_ATTACK_COOLDOWN;
+        mRangedAttackCooldownTimer = Player::RANGED_ATTACK_COOLDOWN;
 
-        mIsShooting = true;
-        mShootingTimer = Player::RANGED_ATTACK_ANIMATION_DURATION;
+        mIsRangedAttacking = true;
+        mRangedAttackAnimationTimer = Player::RANGED_ATTACK_ANIMATION_DURATION;
 
         float direction = GetScale().x;
         Vector2 startPosition = GetPosition() + Vector2(direction * 20.0f, 0.0f);
@@ -118,25 +118,25 @@ void Player::OnUpdate(float deltaTime)
 
     if (mIsMeleeAttacking)
     {
-        mMeleeAttackTimer -= deltaTime;
-        if (mMeleeAttackTimer <= 0.0f)
+        mMeleeAttackAnimationTimer -= deltaTime;
+        if (mMeleeAttackAnimationTimer <= 0.0f)
         {
             mIsMeleeAttacking = false;
         }
     }
 
-    if (mIsShooting)
+    if (mIsRangedAttacking)
     {
-        mShootingTimer -= deltaTime;
-        if (mShootingTimer <= 0.0f)
+        mRangedAttackAnimationTimer -= deltaTime;
+        if (mRangedAttackAnimationTimer <= 0.0f)
         {
-            mIsShooting = false;
+            mIsRangedAttacking = false;
         }
     }
 
-    if (mRangedAttackTimer > 0.0f)
+    if (mRangedAttackCooldownTimer > 0.0f)
     {
-        mRangedAttackTimer -= deltaTime;
+        mRangedAttackCooldownTimer -= deltaTime;
     }
 
     ManageAnimations();
@@ -147,7 +147,7 @@ void Player::ManageAnimations()
     AnimatorComponent* anim = GetComponent<AnimatorComponent>();
     if (!anim || mIsDead) return;
 
-    if (mIsMeleeAttacking || mIsShooting)
+    if (mIsMeleeAttacking || mIsRangedAttacking)
     {
         anim->SetAnimation("attack");
     }

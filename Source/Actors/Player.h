@@ -37,11 +37,11 @@ private:
     bool mIsDead;
 
     bool mIsMeleeAttacking;
-    float mMeleeAttackTimer;
+    float mMeleeAttackAnimationTimer;
 
-    bool mIsShooting;
-    float mShootingTimer;
-    float mRangedAttackTimer;
+    bool mIsRangedAttacking;
+    float mRangedAttackAnimationTimer;
+    float mRangedAttackCooldownTimer;
 
     int mCoinCount;
 
