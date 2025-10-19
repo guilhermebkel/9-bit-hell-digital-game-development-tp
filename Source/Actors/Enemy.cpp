@@ -1,5 +1,3 @@
-// File Path: ./Source/Actors/Goomba.cpp
-
 #include "Enemy.h"
 #include "../Game.h"
 #include "../Components/Drawing/AnimatorComponent.h"

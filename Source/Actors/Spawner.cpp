@@ -1,5 +1,3 @@
-// File Path: ./Source/Actors/Spawner.cpp
-
 #include "Spawner.h"
 #include "../Game.h"
 #include "Player.h"

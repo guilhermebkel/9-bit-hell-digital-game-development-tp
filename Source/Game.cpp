@@ -2,7 +2,6 @@
 #include <vector>
 #include <map>
 #include <fstream>
-#include <SDL2/SDL_image.h>
 #include "Game.h"
 #include "Components/Drawing/DrawComponent.h"
 #include "Random.h"
@@ -132,7 +131,6 @@ void Game::ReduceCorruption(float amount)
 {
     mCorruptionLevel -= amount;
     mCorruptionLevel = Math::Clamp(mCorruptionLevel, 0.0f, 1.0f);
-    SDL_Log("Corrupcao reduzida! Nivel atual: %f", mCorruptionLevel);
 }
 
 void Game::UpdateActors(float deltaTime)

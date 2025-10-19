@@ -1,5 +1,3 @@
-// File Path: ./Source/Renderer/Texture.cpp
-
 #include "Texture.h"
 #include <GL/glew.h>
 #include <SDL2/SDL_image.h>
@@ -20,7 +18,7 @@ bool Texture::Load(const std::string &filePath)
     SDL_Surface* originalSurface = IMG_Load(filePath.c_str());
     if (!originalSurface)
     {
-        SDL_Log("Falha ao carregar o arquivo de textura %s - Erro: %s", filePath.c_str(), IMG_GetError());
+        SDL_Log("Failed to load texture file %s - Erro: %s", filePath.c_str(), IMG_GetError());
         return false;
     }
 

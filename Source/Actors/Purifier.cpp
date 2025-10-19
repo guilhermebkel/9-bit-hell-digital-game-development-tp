@@ -1,5 +1,3 @@
-// File Path: ./Source/Actors/Mushroom.cpp
-
 #include "Purifier.h"
 #include "Player.h"
 #include "../Game.h"

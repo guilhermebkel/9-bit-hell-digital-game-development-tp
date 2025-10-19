@@ -1,5 +1,3 @@
-// File Path: ./Source/Actors/CorruptionOverlay.h
-
 #pragma once
 #include "Actor.h"
 
