@@ -1,7 +1,3 @@
-//
-// Created by Lucas N. Ferreira on 09/10/25.
-//
-
 #pragma once
 
 #include "DrawComponent.h"

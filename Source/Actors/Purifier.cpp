@@ -2,6 +2,7 @@
 
 #include "Purifier.h"
 #include "Player.h"
+#include "../Game.h"
 #include <SDL2/SDL.h>
 
 Purifier::Purifier(class Game* game)
@@ -11,5 +12,5 @@ Purifier::Purifier(class Game* game)
 
 void Purifier::OnCollect(Player* player)
 {
-    SDL_Log("Item de purificacao coletado!");
+    player->GetGame()->ReduceCorruption(0.25f);
 }

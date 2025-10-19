@@ -48,6 +48,10 @@ public:
     float GetUpperBoundary() const { return mUpperBoundaryY; }
     void SetUpperBoundary(float y) { mUpperBoundaryY = y; }
 
+    // Corruption management
+    void ReduceCorruption(float amount);
+    float GetCorruptionLevel() const { return mCorruptionLevel; }
+
 private:
     void ProcessInput();
     void UpdateGame(float deltaTime);
@@ -85,4 +89,8 @@ private:
 
     // Limitation in Y-axis for movement inside Scenario
     float mUpperBoundaryY;
+
+    // Corruption management
+    float mCorruptionLevel;
+    float mCorruptionRate;
 };

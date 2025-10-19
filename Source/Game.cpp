@@ -9,6 +9,7 @@
 #include "Actors/Actor.h"
 #include "Actors/Player.h"
 #include "Actors/Background.h"
+#include "Actors/CorruptionOverlay.h"
 #include "Actors/Spawner.h"
 
 Game::Game()
@@ -21,6 +22,8 @@ Game::Game()
         ,mCameraPos(Vector2::Zero)
         ,mDrawSortRequested(false)
         ,mUpperBoundaryY(0.0f)
+        ,mCorruptionLevel(0.0f)
+        ,mCorruptionRate(0.02f)
         ,mPlayer(nullptr)
 {
 
@@ -60,6 +63,8 @@ void Game::InitializeActors()
 
     mPlayer = new Player(this);
     mPlayer->SetPosition(Vector2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
+
+    new CorruptionOverlay(this);
 
     new Spawner(this, SpawnType::Enemy, 5);
     new Spawner(this, SpawnType::Coin, 10);
@@ -115,6 +120,19 @@ void Game::UpdateGame(float deltaTime)
 {
     UpdateActors(deltaTime);
     UpdateCamera();
+
+    if (mPlayer)
+    {
+        mCorruptionLevel += mCorruptionRate * deltaTime;
+        mCorruptionLevel = Math::Clamp(mCorruptionLevel, 0.0f, 1.0f);
+    }
+}
+
+void Game::ReduceCorruption(float amount)
+{
+    mCorruptionLevel -= amount;
+    mCorruptionLevel = Math::Clamp(mCorruptionLevel, 0.0f, 1.0f);
+    SDL_Log("Corrupcao reduzida! Nivel atual: %f", mCorruptionLevel);
 }
 
 void Game::UpdateActors(float deltaTime)

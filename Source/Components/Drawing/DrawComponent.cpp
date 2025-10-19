@@ -1,7 +1,3 @@
-//
-// Created by Lucas N. Ferreira on 03/08/23.
-//
-
 #include "DrawComponent.h"
 #include "../../Game.h"
 #include "../../Actors/Actor.h"

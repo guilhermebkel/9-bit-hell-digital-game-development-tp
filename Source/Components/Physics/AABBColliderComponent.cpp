@@ -1,7 +1,3 @@
-//
-// Created by Lucas N. Ferreira on 28/09/23.
-//
-
 #include "AABBColliderComponent.h"
 #include "../../Actors/Actor.h"
 #include "../../Game.h"
@@ -102,16 +98,25 @@ void AABBColliderComponent::DetectCollision(RigidBodyComponent* rigidBody)
         {
             float minXOverlap = GetMinHorizontalOverlap(other);
             float minYOverlap = GetMinVerticalOverlap(other);
+            bool isCollisionWithCollectable = other->mLayer == ColliderLayer::Collectable;
 
             if (std::abs(minXOverlap) < std::abs(minYOverlap))
             {
-                ResolveHorizontalCollisions(rigidBody, minXOverlap);
+                if (!isCollisionWithCollectable)
+                {
+                    ResolveHorizontalCollisions(rigidBody, minXOverlap);
+                }
+
                 mOwner->OnHorizontalCollision(minXOverlap, other);
                 other->GetOwner()->OnHorizontalCollision(-minXOverlap, this);
             }
             else
             {
-                ResolveVerticalCollisions(rigidBody, minYOverlap);
+                if (!isCollisionWithCollectable)
+                {
+                    ResolveVerticalCollisions(rigidBody, minYOverlap);
+                }
+
                 mOwner->OnVerticalCollision(minYOverlap, other);
                 other->GetOwner()->OnVerticalCollision(-minYOverlap, this);
             }
@@ -139,11 +144,6 @@ void AABBColliderComponent::ResolveVerticalCollisions(RigidBodyComponent *rigidB
     Vector2 vel = rigidBody->GetVelocity();
     vel.y = 0.0f;
     rigidBody->SetVelocity(vel);
-
-    if (minYOverlap < 0)
-    {
-        mOwner->SetOnGround();
-    }
 }
 
 void AABBColliderComponent::DebugDraw(class Renderer *renderer)

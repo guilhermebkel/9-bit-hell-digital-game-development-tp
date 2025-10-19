@@ -1,6 +1,5 @@
-// File Path: ./Source/Actors/Collectable.cpp
-
 #include "Collectable.h"
+#include "Enemy.h"
 #include "../Game.h"
 #include "Player.h"
 #include "../Components/Drawing/StaticSpriteComponent.h"
@@ -11,7 +10,12 @@ Collectable::Collectable(Game* game, const std::string& texturePath, int width, 
 {
     new StaticSpriteComponent(this, texturePath, width, height, 90);
 
-    mColliderComponent = new AABBColliderComponent(this, 0, 0, width, height, ColliderLayer::Collectable, true);
+    float physicsWidth = width * 0.50f;
+    float physicsHeight = height * 0.25f;
+    // Align collider base with sprite base
+    const int dy = (int)((physicsHeight / 2.0f) - (physicsHeight / 2.0f));
+
+    mColliderComponent = new AABBColliderComponent(this, 0, dy, physicsWidth, physicsHeight, ColliderLayer::Collectable, true);
 }
 
 void Collectable::HandleCollision(AABBColliderComponent* other)

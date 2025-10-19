@@ -1,7 +1,3 @@
-//
-// Created by Lucas N. Ferreira on 18/09/25.
-//
-
 #include "../Game.h"
 #include "ParticleSystemComponent.h"
 #include "Physics/AABBColliderComponent.h"

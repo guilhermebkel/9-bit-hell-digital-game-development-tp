@@ -1,7 +1,3 @@
-//
-// Created by Lucas N. Ferreira on 03/08/23.
-//
-
 #include "Player.h"
 #include "Enemy.h"
 #include "../Game.h"
@@ -10,7 +6,7 @@
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Components/ParticleSystemComponent.h"
 
-Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
+Player::Player(Game* game, const float forwardSpeed)
         : Actor(game)
         , mIsRunning(false)
         , mIsDead(false)
@@ -18,7 +14,6 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
         , mAttackTimer(0.0f)
         , mCoinCount(0)
         , mForwardSpeed(forwardSpeed)
-        , mJumpSpeed(jumpSpeed)
         , mRigidBodyComponent(nullptr)
 {
     mDrawComponent = new AnimatorComponent(
