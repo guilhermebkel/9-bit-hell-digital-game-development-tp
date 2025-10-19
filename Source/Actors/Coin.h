@@ -4,6 +4,9 @@
 class Coin : public Collectable
 {
 public:
+    static constexpr int SPRITE_WIDTH = 32;
+    static constexpr int SPRITE_HEIGHT = 32;
+
     explicit Coin(class Game* game);
 
 protected:

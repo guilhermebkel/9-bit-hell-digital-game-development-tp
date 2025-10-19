@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 Coin::Coin(class Game* game)
-    : Collectable(game, "../Assets/Sprites/Collectables/Coin.png", 32, 32)
+    : Collectable(game, "../Assets/Sprites/Collectables/Coin.png", Coin::SPRITE_WIDTH, Coin::SPRITE_HEIGHT)
 {
 }
 
