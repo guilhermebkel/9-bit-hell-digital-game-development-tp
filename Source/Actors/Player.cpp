@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Enemy.h"
+#include "Projectile.h"
 #include "../Game.h"
 #include "../Components/Drawing/AnimatorComponent.h"
 #include "../Components/Physics/RigidBodyComponent.h"
@@ -10,8 +11,11 @@ Player::Player(Game* game, const float forwardSpeed)
         : Actor(game)
         , mIsRunning(false)
         , mIsDead(false)
-        , mIsAttacking(false)
-        , mAttackTimer(0.0f)
+        , mIsMeleeAttacking(false)
+        , mMeleeAttackTimer(0.0f)
+        , mIsShooting(false)
+        , mShootingTimer(0.0f)
+        , mRangedAttackTimer(0.0f)
         , mCoinCount(0)
         , mForwardSpeed(forwardSpeed)
         , mRigidBodyComponent(nullptr)
@@ -35,7 +39,7 @@ Player::Player(Game* game, const float forwardSpeed)
     mRigidBodyComponent = new RigidBodyComponent(this, Player::MASS, Player::FRICTION);
 
     // Align collider base with sprite base
-    const int dy = (int)((SPRITE_HEIGHT / 2.0f) - (PHYSICS_HEIGHT / 2.0f));
+    const int dy = (int)((Player::SPRITE_HEIGHT / 2.0f) - (Player::PHYSICS_HEIGHT / 2.0f));
     new AABBColliderComponent(this, 0, dy, Player::PHYSICS_WIDTH, Player::PHYSICS_HEIGHT, ColliderLayer::Player);
 }
 
@@ -70,10 +74,25 @@ void Player::OnProcessInput(const uint8_t* state)
         mIsRunning = true;
     }
 
-    if (state[SDL_SCANCODE_SPACE])
+    if (state[SDL_SCANCODE_J])
     {
-        mIsAttacking = true;
-        mAttackTimer = ATTACK_ANIMATION_DURATION;
+        mIsMeleeAttacking = true;
+        mMeleeAttackTimer = Player::MELEE_ATTACK_ANIMATION_DURATION;
+    }
+
+    if (state[SDL_SCANCODE_K] && mRangedAttackTimer <= 0.0f)
+    {
+        mRangedAttackTimer = Player::RANGED_ATTACK_COOLDOWN;
+
+        mIsShooting = true;
+        mShootingTimer = Player::RANGED_ATTACK_ANIMATION_DURATION;
+
+        float direction = GetScale().x;
+        Vector2 startPosition = GetPosition() + Vector2(direction * 20.0f, 0.0f);
+
+        Projectile* projectile = new Projectile(GetGame());
+        projectile->SetPosition(startPosition);
+        projectile->GetComponent<RigidBodyComponent>()->SetVelocity(Vector2(direction * Projectile::SPEED, 0.0f));
     }
 
     mRigidBodyComponent->ApplyForce(force);
@@ -97,13 +116,27 @@ void Player::OnUpdate(float deltaTime)
         mDrawComponent->SetDrawOrder(100 + static_cast<int>(GetPosition().y));
     }
 
-    if (mIsAttacking)
+    if (mIsMeleeAttacking)
     {
-        mAttackTimer -= deltaTime;
-        if (mAttackTimer <= 0.0f)
+        mMeleeAttackTimer -= deltaTime;
+        if (mMeleeAttackTimer <= 0.0f)
         {
-            mIsAttacking = false;
+            mIsMeleeAttacking = false;
         }
+    }
+
+    if (mIsShooting)
+    {
+        mShootingTimer -= deltaTime;
+        if (mShootingTimer <= 0.0f)
+        {
+            mIsShooting = false;
+        }
+    }
+
+    if (mRangedAttackTimer > 0.0f)
+    {
+        mRangedAttackTimer -= deltaTime;
     }
 
     ManageAnimations();
@@ -114,7 +147,7 @@ void Player::ManageAnimations()
     AnimatorComponent* anim = GetComponent<AnimatorComponent>();
     if (!anim || mIsDead) return;
 
-    if (mIsAttacking)
+    if (mIsMeleeAttacking || mIsShooting)
     {
         anim->SetAnimation("attack");
     }
@@ -154,7 +187,7 @@ void Player::OnHorizontalCollision(const float minOverlap, AABBColliderComponent
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        if (mIsAttacking)
+        if (mIsMeleeAttacking)
         {
             Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
             if (enemy)
@@ -169,7 +202,7 @@ void Player::OnVerticalCollision(const float minOverlap, AABBColliderComponent* 
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        if (mIsAttacking)
+        if (mIsMeleeAttacking)
         {
             Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
             if (enemy)

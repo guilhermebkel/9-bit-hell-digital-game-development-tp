@@ -30,7 +30,7 @@ Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);
 
     // Align collider base with sprite base
-    const int dy = (int)((SPRITE_HEIGHT / 2.0f) - (PHYSICS_HEIGHT / 2.0f));
+    const int dy = (int)((Enemy::SPRITE_HEIGHT / 2.0f) - (Enemy::PHYSICS_HEIGHT / 2.0f));
     mColliderComponent = new AABBColliderComponent(this, 0, dy, Enemy::PHYSICS_WIDTH, Enemy::PHYSICS_HEIGHT, ColliderLayer::Enemy);
 
     Vector2 initialVelocity = Vector2::Zero;

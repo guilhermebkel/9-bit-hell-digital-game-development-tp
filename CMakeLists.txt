@@ -64,6 +64,8 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Purifier.h
         Source/Actors/CorruptionOverlay.cpp
         Source/Actors/CorruptionOverlay.h
+        Source/Actors/Projectile.cpp
+        Source/Actors/Projectile.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW SDL2::SDL2 ${SDL2_IMAGE_LIBRARIES} OpenGL::GL)

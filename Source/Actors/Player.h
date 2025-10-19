@@ -12,7 +12,9 @@ public:
     static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.50f;
     static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.25f;
 
-    static constexpr float ATTACK_ANIMATION_DURATION = 0.3f;
+    static constexpr float MELEE_ATTACK_ANIMATION_DURATION = 0.3f;
+    static constexpr float RANGED_ATTACK_ANIMATION_DURATION = 0.3f;
+    static constexpr float RANGED_ATTACK_COOLDOWN = 0.3f;
 
     explicit Player(Game* game, float forwardSpeed = 2500.0f);
 
@@ -34,8 +36,12 @@ private:
     bool mIsRunning;
     bool mIsDead;
 
-    bool mIsAttacking;
-    float mAttackTimer;
+    bool mIsMeleeAttacking;
+    float mMeleeAttackTimer;
+
+    bool mIsShooting;
+    float mShootingTimer;
+    float mRangedAttackTimer;
 
     int mCoinCount;
 
