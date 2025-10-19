@@ -16,6 +16,7 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
         , mIsDead(false)
         , mIsAttacking(false)
         , mAttackTimer(0.0f)
+        , mCoinCount(0)
         , mForwardSpeed(forwardSpeed)
         , mJumpSpeed(jumpSpeed)
         , mRigidBodyComponent(nullptr)
@@ -130,6 +131,16 @@ void Player::ManageAnimations()
     {
         anim->SetAnimation("idle");
     }
+}
+
+void Player::AddCoin(int amount)
+{
+    mCoinCount += amount;
+}
+
+int Player::GetCoinCount() const
+{
+    return mCoinCount;
 }
 
 void Player::Kill()

@@ -42,8 +42,6 @@ add_executable(${PROJECT_NAME}
         Source/Renderer/VertexArray.cpp
         Source/Renderer/Texture.cpp
         Source/Renderer/Texture.h
-        Source/Actors/Block.cpp
-        Source/Actors/Block.h
         Source/Actors/Enemy.cpp
         Source/Actors/Enemy.h
         Source/Actors/Spawner.cpp
@@ -58,6 +56,12 @@ add_executable(${PROJECT_NAME}
         Source/Actors/Background.h
         Source/Components/Drawing/StaticSpriteComponent.cpp
         Source/Components/Drawing/StaticSpriteComponent.h
+        Source/Actors/Collectable.cpp
+        Source/Actors/Collectable.h
+        Source/Actors/Coin.cpp
+        Source/Actors/Coin.h
+        Source/Actors/Purifier.cpp
+        Source/Actors/Purifier.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW SDL2::SDL2 ${SDL2_IMAGE_LIBRARIES} OpenGL::GL)

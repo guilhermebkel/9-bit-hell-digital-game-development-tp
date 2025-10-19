@@ -1,19 +1,21 @@
-//
-// Created by Lucas N. Ferreira on 30/09/23.
-//
-
 #pragma once
-
 #include "Actor.h"
+
+enum class SpawnType
+{
+    Enemy,
+    Coin,
+    Purifier
+};
 
 class Spawner : public Actor
 {
 public:
-    static constexpr float SPAWN_DISTANCE = 500.0f;
-
-    explicit Spawner(Game* game, float spawnDistance);
+    explicit Spawner(Game* game, SpawnType type, int count, bool spawnOnStart = true);
 
     void OnUpdate(float deltaTime) override;
 private:
-    float mSpawnDistance;
+    SpawnType mSpawnType;
+    int mSpawnCount;
+    bool mHasSpawned;
 };

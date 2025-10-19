@@ -13,7 +13,8 @@ enum class ColliderLayer
 {
     Player,
     Enemy,
-    Blocks
+    Blocks,
+    Collectable
 };
 
 class AABBColliderComponent : public Component

@@ -23,6 +23,9 @@ public:
     void OnProcessInput(const Uint8* keyState) override;
     void OnUpdate(float deltaTime) override;
 
+    void AddCoin(int amount = 1);
+    int GetCoinCount() const;
+
     void OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other) override;
     void OnVerticalCollision(const float minOverlap, AABBColliderComponent* other) override;
 
@@ -38,6 +41,8 @@ private:
 
     bool mIsAttacking;
     float mAttackTimer;
+
+    int mCoinCount;
 
     class RigidBodyComponent* mRigidBodyComponent;
     class AnimatorComponent* mDrawComponent;

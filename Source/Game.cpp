@@ -61,7 +61,9 @@ void Game::InitializeActors()
     mPlayer = new Player(this);
     mPlayer->SetPosition(Vector2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
 
-    new Spawner(this, 0.0f);
+    new Spawner(this, SpawnType::Enemy, 5);
+    new Spawner(this, SpawnType::Coin, 10);
+    new Spawner(this, SpawnType::Purifier, 2);
 }
 
 void Game::RunLoop()
