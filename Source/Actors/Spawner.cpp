@@ -18,17 +18,15 @@ void Spawner::OnUpdate(float deltaTime)
 {
         Actor::OnUpdate(deltaTime);
 
-        const class Player* player = GetGame()->GetPlayer();
-
-        if (player)
+        for (int i = 0; i < 10; ++i)
         {
                 Enemy* enemy = new Enemy(GetGame());
 
                 enemy->SetPosition(Vector2(
-                        Random::GetIntRange(100, Game::WINDOW_WIDTH - 100),
-                        Random::GetIntRange(GetGame()->GetUpperBoundary() + 100, Game::WINDOW_HEIGHT - 100)
+                    Random::GetFloatRange(100.0f, Game::WINDOW_WIDTH - 100.0f),
+                    Random::GetFloatRange(GetGame()->GetUpperBoundary() + 100.0f, Game::WINDOW_HEIGHT - 100.0f)
                 ));
-
-                mState = ActorState::Destroy;
         }
+
+        mState = ActorState::Destroy;
 }
