@@ -29,6 +29,7 @@ public:
     // Draw functions
     void AddDrawable(class DrawComponent* drawable);
     void RemoveDrawable(class DrawComponent* drawable);
+    void RequestDrawSort() { mDrawSortRequested = true; }
     std::vector<class DrawComponent*>& GetDrawables() { return mDrawables; }
 
     // Collider functions
@@ -62,6 +63,7 @@ private:
 
     // All the draw components
     std::vector<class DrawComponent*> mDrawables;
+    bool mDrawSortRequested;
 
     // All the collision components
     std::vector<class AABBColliderComponent*> mColliders;

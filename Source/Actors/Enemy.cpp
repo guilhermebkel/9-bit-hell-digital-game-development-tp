@@ -83,6 +83,11 @@ void Enemy::OnUpdate(float deltaTime)
     }
 
     mRigidBodyComponent->SetVelocity(vel);
+
+    if (mDrawComponent)
+    {
+        mDrawComponent->SetDrawOrder(100 + static_cast<int>(GetPosition().y));
+    }
 }
 
 void Enemy::OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other)

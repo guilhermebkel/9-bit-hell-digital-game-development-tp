@@ -19,6 +19,7 @@ public:
 
     virtual void Draw(Renderer* renderer);
     int GetDrawOrder() const { return mDrawOrder; }
+    void SetDrawOrder(int drawOrder);
 
     void SetVisible(bool visible) { mIsVisible = visible; }
     void SetColor(const Vector3& color) { mColor = color; }

@@ -6,6 +6,7 @@
 #include "../Game.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "../Random.h"
 #include <cmath>
 
 Spawner::Spawner(Game* game, float spawnDistance)
@@ -23,7 +24,10 @@ void Spawner::OnUpdate(float deltaTime)
         {
                 Enemy* enemy = new Enemy(GetGame());
 
-                enemy->SetPosition(player->GetPosition());
+                enemy->SetPosition(Vector2(
+                        Random::GetIntRange(100, Game::WINDOW_WIDTH - 100),
+                        Random::GetIntRange(GetGame()->GetUpperBoundary() + 100, Game::WINDOW_HEIGHT - 100)
+                ));
 
                 mState = ActorState::Destroy;
         }

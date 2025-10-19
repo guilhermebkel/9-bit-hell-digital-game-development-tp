@@ -19,6 +19,7 @@ Game::Game()
         ,mIsDebugging(false)
         ,mUpdatingActors(false)
         ,mCameraPos(Vector2::Zero)
+        ,mDrawSortRequested(false)
         ,mUpperBoundaryY(0.0f)
         ,mPlayer(nullptr)
 {
@@ -212,6 +213,15 @@ void Game::RemoveCollider(AABBColliderComponent* collider)
 
 void Game::GenerateOutput()
 {
+    if (mDrawSortRequested)
+    {
+        std::sort(mDrawables.begin(), mDrawables.end(), [](DrawComponent* a, DrawComponent* b) {
+            return a->GetDrawOrder() < b->GetDrawOrder();
+        });
+
+        mDrawSortRequested = false;
+    }
+
     mRenderer->Clear();
 
     for (auto drawable : mDrawables)

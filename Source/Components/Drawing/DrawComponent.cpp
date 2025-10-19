@@ -24,3 +24,9 @@ void DrawComponent::Draw(Renderer *renderer)
 {
 
 }
+
+void DrawComponent::SetDrawOrder(int drawOrder)
+{
+    mDrawOrder = drawOrder;
+    mOwner->GetGame()->RequestDrawSort();
+}

@@ -20,7 +20,7 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
         , mJumpSpeed(jumpSpeed)
         , mRigidBodyComponent(nullptr)
 {
-    AnimatorComponent* anim = new AnimatorComponent(
+    mDrawComponent = new AnimatorComponent(
         this,
         "../Assets/Sprites/Player/Player.png",
         "../Assets/Sprites/Player/Player.json",
@@ -28,13 +28,13 @@ Player::Player(Game* game, const float forwardSpeed, const float jumpSpeed)
         Player::SPRITE_HEIGHT
     );
 
-    anim->AddAnimation("idle", {1, 2});
-    anim->AddAnimation("run", {8, 9, 10, 11, 12, 13, 14, 15, 16});
-    anim->AddAnimation("attack", {3, 4, 5, 6});
-    anim->AddAnimation("being-hit", {7, 0});
+    mDrawComponent->AddAnimation("idle", {1, 2});
+    mDrawComponent->AddAnimation("run", {8, 9, 10, 11, 12, 13, 14, 15, 16});
+    mDrawComponent->AddAnimation("attack", {3, 4, 5, 6});
+    mDrawComponent->AddAnimation("being-hit", {7, 0});
 
-    anim->SetAnimation("idle");
-    anim->SetAnimFPS(8.0f);
+    mDrawComponent->SetAnimation("idle");
+    mDrawComponent->SetAnimFPS(8.0f);
 
     mRigidBodyComponent = new RigidBodyComponent(this, Player::MASS, Player::FRICTION);
 
@@ -95,6 +95,11 @@ void Player::OnUpdate(float deltaTime)
     limitedPosition.y = Math::Clamp(limitedPosition.y, GetGame()->GetUpperBoundary() + halfHeight, Game::WINDOW_HEIGHT - halfHeight);
 
     SetPosition(limitedPosition);
+
+    if (mDrawComponent)
+    {
+        mDrawComponent->SetDrawOrder(100 + static_cast<int>(GetPosition().y));
+    }
 
     if (mIsAttacking)
     {
