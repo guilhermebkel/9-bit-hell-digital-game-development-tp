@@ -98,11 +98,14 @@ void AABBColliderComponent::DetectCollision(RigidBodyComponent* rigidBody)
         {
             float minXOverlap = GetMinHorizontalOverlap(other);
             float minYOverlap = GetMinVerticalOverlap(other);
-            bool isCollisionWithCollectable = other->mLayer == ColliderLayer::Collectable;
+
+            bool collidedWithCollectable = (other->mLayer == ColliderLayer::Collectable);
+            bool enemiesCollided = (mLayer == ColliderLayer::Enemy && other->mLayer == ColliderLayer::Enemy);
+            bool canDecelerateOnCollision = !collidedWithCollectable && !enemiesCollided;
 
             if (std::abs(minXOverlap) < std::abs(minYOverlap))
             {
-                if (!isCollisionWithCollectable)
+                if (canDecelerateOnCollision)
                 {
                     ResolveHorizontalCollisions(rigidBody, minXOverlap);
                 }
@@ -112,7 +115,7 @@ void AABBColliderComponent::DetectCollision(RigidBodyComponent* rigidBody)
             }
             else
             {
-                if (!isCollisionWithCollectable)
+                if (canDecelerateOnCollision)
                 {
                     ResolveVerticalCollisions(rigidBody, minYOverlap);
                 }
