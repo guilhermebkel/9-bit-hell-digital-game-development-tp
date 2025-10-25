@@ -15,6 +15,8 @@
 
 #include "Actors/MenuBackground.h"
 #include "Actors/MenuScreen.h"
+#include "Actors/PauseScreen.h"
+#include "Components/Drawing/UIButtonComponent.h"
 
 Game::Game()
         :mWindow(nullptr)
@@ -189,17 +191,57 @@ void Game::ProcessInput()
     {
         switch (event.type)
         {
-            case SDL_QUIT:
-                Quit();
-                break;
+        case SDL_QUIT:
+            Quit();
+            break;
+        case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_ESCAPE && !event.key.repeat)
+            {
+                if (mCurrentScene == GameScene::Gameplay && mSceneState == SceneState::Running)
+                {
+                    TogglePause();
+                }
+            }
+            break;
         }
     }
 
     const Uint8* state = SDL_GetKeyboardState(nullptr);
 
-    for (auto actor : mActors)
+    if (!mIsPaused)
     {
-        actor->ProcessInput(state);
+        for (auto actor : mActors)
+        {
+            if (actor != mPauseScreen)
+            {
+                actor->ProcessInput(state);
+            }
+        }
+    }
+    else if (mPauseScreen)
+    {
+        mPauseScreen->ProcessInput(state);
+    }
+}
+
+void Game::TogglePause()
+{
+    mIsPaused = !mIsPaused;
+
+    if (mIsPaused)
+    {
+        mPauseScreen = new PauseScreen(this);
+    }
+    else
+    {
+        if (mPauseScreen)
+        {
+            if (mPauseScreen)
+            {
+                mPauseScreen->SetState(ActorState::Destroy);
+                mPauseScreen = nullptr;
+            }
+        }
     }
 }
 
@@ -207,7 +249,7 @@ void Game::UpdateGame(float deltaTime)
 {
     UpdateSceneManager(deltaTime);
 
-    if (mSceneState == SceneState::Running)
+    if (mSceneState == SceneState::Running && !mIsPaused)
     {
         UpdateActors(deltaTime);
         UpdateCamera();

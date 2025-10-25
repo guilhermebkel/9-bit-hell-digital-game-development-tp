@@ -18,10 +18,8 @@ public:
     void SetDrawOrder(int drawOrder);
 
     void SetVisible(bool visible) { mIsVisible = visible; }
-    void SetColor(const Vector3& color) { mColor = color; }
 
 protected:
     int mDrawOrder;
     bool mIsVisible;
-    Vector3 mColor;
 };

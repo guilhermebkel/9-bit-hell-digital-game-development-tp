@@ -8,6 +8,7 @@ RectComponent::RectComponent(class Actor* owner, int width, int height, Renderer
     , mMode(mode)
     , mWidth(width)
     , mHeight(height)
+    , mColor(1.0f, 1.0f, 1.0f, 1.0f)
 {
 
 }
@@ -22,6 +23,6 @@ void RectComponent::Draw(class Renderer *renderer)
     if(mIsVisible)
     {
         renderer->DrawRect(mOwner->GetPosition(), Vector2(mWidth, mHeight), mOwner->GetRotation(),
-                           Vector4(mColor.x, mColor.y, mColor.z, 1.0f), GetGame()->GetCameraPos(), mMode);
+                           mColor, GetGame()->GetCameraPos(), mMode);
     }
 }

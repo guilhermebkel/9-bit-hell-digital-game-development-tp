@@ -11,8 +11,11 @@ public:
 
     void Draw(class Renderer* renderer) override;
 
+    void SetColor(const Vector4& color) { mColor = color; }
+
 private:
     int mWidth;
     int mHeight;
     RendererMode mMode;
+    Vector4 mColor;
 };

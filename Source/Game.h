@@ -67,6 +67,9 @@ public:
     void ReduceCorruption(float amount);
     float GetCorruptionLevel() const { return mCorruptionLevel; }
 
+    void TogglePause();
+    bool IsPaused() const { return mIsPaused; }
+
 private:
     void ProcessInput();
     void UpdateGame(float deltaTime);
@@ -120,4 +123,7 @@ private:
     SceneState mSceneState = SceneState::Running;
     float mTransitionTimer = 0.0f;
     float mTransitionTotalTime = 0.0f;
+
+    bool mIsPaused = false;
+    class Actor* mPauseScreen = nullptr;
 };
