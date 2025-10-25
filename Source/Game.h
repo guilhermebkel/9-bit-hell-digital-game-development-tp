@@ -1,7 +1,9 @@
 #pragma once
+#include <memory>
 #include <SDL.h>
 #include <vector>
 #include "Renderer/Renderer.h"
+#include "Scenes/Scene.h"
 
 class Game
 {
@@ -58,6 +60,14 @@ public:
 
     // Game specific
     const class Player* GetPlayer() { return mPlayer; }
+    void SetPlayer(class Player* player) { mPlayer = player; }
+
+    // Corruption specific
+    void AddCorruption(float amount) {
+        mCorruptionLevel += amount;
+        mCorruptionLevel = Math::Clamp(mCorruptionLevel, 0.0f, 1.0f);
+    }
+    float GetCorruptionRate() const { return mCorruptionRate; }
 
     // Limitation in Y-axis for movement inside Scenario
     float GetUpperBoundary() const { return mUpperBoundaryY; }
@@ -79,8 +89,6 @@ private:
     void UpdateSceneManager(float deltaTime);
     void ChangeScene();
     void UnloadAllActors();
-    void LoadMainMenuScene();
-    void LoadGameplayScene();
 
     // All the actors in the game
     std::vector<class Actor*> mActors;
@@ -118,7 +126,8 @@ private:
     float mCorruptionLevel;
     float mCorruptionRate;
 
-    GameScene mCurrentScene = GameScene::MainMenu;
+    std::unique_ptr<Scene> mCurrentScene;
+    GameScene mCurrentSceneEnum = GameScene::MainMenu;
     GameScene mNextScene = GameScene::MainMenu;
     SceneState mSceneState = SceneState::Running;
     float mTransitionTimer = 0.0f;

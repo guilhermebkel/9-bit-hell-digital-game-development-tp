@@ -22,9 +22,9 @@ PauseScreen::PauseScreen(Game* game)
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;
     const float windowCenterY = Game::WINDOW_HEIGHT / 2.0f;
 
-    auto* mtitleActor = new Actor(game);
-    mtitleActor->SetPosition(Vector2(windowCenterX - 100.0f, windowCenterY - 150.0f));
-    auto* titleText = new UITextComponent(mtitleActor, PauseScreen::DRAW_ORDER);
+    mTitleActor = new Actor(game);
+    mTitleActor->SetPosition(Vector2(windowCenterX - 100.0f, windowCenterY - 150.0f));
+    auto* titleText = new UITextComponent(mTitleActor, PauseScreen::DRAW_ORDER);
     titleText->SetText("PAUSED", Color::White, 48);
 
     Actor* resumeButtonActor = new Actor(game);

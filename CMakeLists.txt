@@ -81,6 +81,12 @@ add_executable(${PROJECT_NAME}
         Source/Actors/MenuBackground.h
         Source/Actors/PauseScreen.cpp
         Source/Actors/PauseScreen.h
+        Source/Scenes/Scene.cpp
+        Source/Scenes/Scene.h
+        Source/Scenes/MainMenuScene.cpp
+        Source/Scenes/MainMenuScene.h
+        Source/Scenes/GameplayScene.cpp
+        Source/Scenes/GameplayScene.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW SDL2::SDL2 ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} OpenGL::GL)

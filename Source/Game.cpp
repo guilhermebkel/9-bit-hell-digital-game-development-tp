@@ -12,11 +12,13 @@
 #include "Actors/Spawner.h"
 #include "Actors/HUD.h"
 #include <SDL_ttf.h>
-
 #include "Actors/MenuBackground.h"
 #include "Actors/MenuScreen.h"
 #include "Actors/PauseScreen.h"
 #include "Components/Drawing/UIButtonComponent.h"
+#include "Scenes/MainMenuScene.h"
+#include "Scenes/GameplayScene.h"
+#include "Scenes/Scene.h"
 
 Game::Game()
         :mWindow(nullptr)
@@ -61,8 +63,8 @@ bool Game::Initialize()
     mRenderer = new Renderer(mWindow);
     mRenderer->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    mCurrentScene = GameScene::MainMenu;
-    LoadMainMenuScene();
+    mNextScene = GameScene::MainMenu;
+    ChangeScene();
 
     mTicksCount = SDL_GetTicks();
 
@@ -83,43 +85,32 @@ void Game::UnloadAllActors()
     mPlayer = nullptr;
 }
 
-void Game::LoadGameplayScene()
-{
-    new Background(this);
-
-    mPlayer = new Player(this);
-    mPlayer->SetPosition(Vector2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f));
-
-    new CorruptionOverlay(this);
-
-    new Spawner(this, SpawnType::Enemy, 5);
-    new Spawner(this, SpawnType::Coin, 10);
-    new Spawner(this, SpawnType::Purifier, 2);
-
-    new HUD(this);
-}
-
-void Game::LoadMainMenuScene()
-{
-    new MenuBackground(this);
-    new MenuScreen(this);
-}
-
 void Game::ChangeScene()
 {
+    if (mCurrentScene)
+    {
+        mCurrentScene->Unload();
+    }
     UnloadAllActors();
 
-    mCurrentScene = mNextScene;
+    mCurrentScene = nullptr;
 
-    switch (mCurrentScene)
+    switch (mNextScene)
     {
     case GameScene::MainMenu:
-        LoadMainMenuScene();
+        mCurrentScene = std::make_unique<MainMenuScene>(this);
         break;
     case GameScene::Gameplay:
-        LoadGameplayScene();
+        mCurrentScene = std::make_unique<GameplayScene>(this);
         break;
     }
+
+    if (mCurrentScene)
+    {
+        mCurrentScene->Load();
+    }
+
+    mCurrentSceneEnum = mNextScene;
 }
 
 void Game::SetScene(Game::GameScene scene, float transitionTime)
@@ -197,7 +188,7 @@ void Game::ProcessInput()
         case SDL_KEYDOWN:
             if (event.key.keysym.sym == SDLK_ESCAPE && !event.key.repeat)
             {
-                if (mCurrentScene == GameScene::Gameplay && mSceneState == SceneState::Running)
+                if (mCurrentSceneEnum == GameScene::Gameplay && mSceneState == SceneState::Running)
                 {
                     TogglePause();
                 }
@@ -208,19 +199,26 @@ void Game::ProcessInput()
 
     const Uint8* state = SDL_GetKeyboardState(nullptr);
 
-    if (!mIsPaused)
+    if (mSceneState == SceneState::Running)
     {
-        for (auto actor : mActors)
+        if (!mIsPaused)
         {
-            if (actor != mPauseScreen)
+            if (mCurrentScene)
+            {
+                mCurrentScene->ProcessInput(state);
+            }
+
+            mUpdatingActors = true;
+            for (auto actor : mActors)
             {
                 actor->ProcessInput(state);
             }
+            mUpdatingActors = false;
         }
-    }
-    else if (mPauseScreen)
-    {
-        mPauseScreen->ProcessInput(state);
+        else if (mPauseScreen)
+        {
+            mPauseScreen->ProcessInput(state);
+        }
     }
 }
 
