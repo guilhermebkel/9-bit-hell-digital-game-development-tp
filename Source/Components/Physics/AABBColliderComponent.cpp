@@ -152,5 +152,5 @@ void AABBColliderComponent::ResolveVerticalCollisions(RigidBodyComponent *rigidB
 void AABBColliderComponent::DebugDraw(class Renderer *renderer)
 {
     renderer->DrawRect(mOwner->GetPosition() + mOffset,Vector2((float)mWidth, (float)mHeight), mOwner->GetRotation(),
-                       Color::Green, mOwner->GetGame()->GetCameraPos(), RendererMode::LINES);
+                       Vector4(Color::Green.x, Color::Green.y, Color::Green.z, 1.0f), mOwner->GetGame()->GetCameraPos(), RendererMode::LINES);
 }

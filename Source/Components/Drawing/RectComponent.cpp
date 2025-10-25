@@ -22,6 +22,6 @@ void RectComponent::Draw(class Renderer *renderer)
     if(mIsVisible)
     {
         renderer->DrawRect(mOwner->GetPosition(), Vector2(mWidth, mHeight), mOwner->GetRotation(),
-                           mColor, GetGame()->GetCameraPos(), mMode);
+                           Vector4(mColor.x, mColor.y, mColor.z, 1.0f), GetGame()->GetCameraPos(), mMode);
     }
 }

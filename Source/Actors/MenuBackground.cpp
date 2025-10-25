@@ -1,19 +1,17 @@
-#include "Background.h"
+#include "MenuBackground.h"
 #include "../Game.h"
 #include "../Components/Drawing/StaticSpriteComponent.h"
 
-Background::Background(Game* game)
+MenuBackground::MenuBackground(Game* game)
     : Actor(game)
 {
     SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, Game::WINDOW_HEIGHT / 2.0f));
 
     new StaticSpriteComponent(
         this,
-        "../Assets/Levels/Level1/Background.png",
+        "../Assets/MenuBackground.png",
         Game::WINDOW_WIDTH,
         Game::WINDOW_HEIGHT,
         10
     );
-
-    GetGame()->SetUpperBoundary(423.0f);
 }

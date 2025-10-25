@@ -6,12 +6,27 @@
 class Game
 {
 public:
+    enum class GameScene
+    {
+        MainMenu,
+        Gameplay
+    };
+
+    enum class SceneState
+    {
+        Running,
+        FadingOut,
+        FadingIn
+    };
+
     Game();
 
     bool Initialize();
     void RunLoop();
     void Shutdown();
     void Quit() { mIsRunning = false; }
+
+    void SetScene(GameScene scene, float transitionTime = 0.5f);
 
     // Actor functions
     void InitializeActors();
@@ -58,6 +73,12 @@ private:
     void UpdateCamera();
     void GenerateOutput();
 
+    void UpdateSceneManager(float deltaTime);
+    void ChangeScene();
+    void UnloadAllActors();
+    void LoadMainMenuScene();
+    void LoadGameplayScene();
+
     // All the actors in the game
     std::vector<class Actor*> mActors;
     std::vector<class Actor*> mPendingActors;
@@ -93,4 +114,10 @@ private:
     // Corruption management
     float mCorruptionLevel;
     float mCorruptionRate;
+
+    GameScene mCurrentScene = GameScene::MainMenu;
+    GameScene mNextScene = GameScene::MainMenu;
+    SceneState mSceneState = SceneState::Running;
+    float mTransitionTimer = 0.0f;
+    float mTransitionTotalTime = 0.0f;
 };

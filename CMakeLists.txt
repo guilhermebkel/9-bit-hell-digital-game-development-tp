@@ -73,6 +73,12 @@ add_executable(${PROJECT_NAME}
         Source/Components/Drawing/UITextComponent.h
         Source/Actors/HUD.cpp
         Source/Actors/HUD.h
+        Source/Components/Drawing/UIButtonComponent.cpp
+        Source/Components/Drawing/UIButtonComponent.h
+        Source/Actors/MenuScreen.cpp
+        Source/Actors/MenuScreen.h
+        Source/Actors/MenuBackground.cpp
+        Source/Actors/MenuBackground.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW SDL2::SDL2 ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} OpenGL::GL)

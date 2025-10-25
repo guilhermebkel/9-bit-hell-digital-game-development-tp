@@ -22,8 +22,8 @@ public:
 	bool Initialize(float width, float height);
 	void Shutdown();
 
-    void DrawRect(const Vector2 &position, const Vector2 &size,  float rotation,
-                  const Vector3 &color, const Vector2 &cameraPos, RendererMode mode);
+	void DrawRect(const Vector2 &position, const Vector2 &size, float rotation,
+			  const Vector4 &color, const Vector2 &cameraPos, RendererMode mode);
 
     void DrawTexture(const Vector2 &position, const Vector2 &size,  float rotation,
                      const Vector3 &color, Texture *texture,
@@ -43,7 +43,7 @@ public:
 
 private:
     void Draw(RendererMode mode, const Matrix4 &modelMatrix, const Vector2 &cameraPos, VertexArray *vertices,
-              const Vector3 &color,  Texture *texture = nullptr, const Vector4 &textureRect = Vector4::UnitRect, float textureFactor = 1.0f);
+              const Vector4 &color,  Texture *texture = nullptr, const Vector4 &textureRect = Vector4::UnitRect, float textureFactor = 1.0f);
 
 	bool LoadShaders();
     void CreateSpriteVerts();

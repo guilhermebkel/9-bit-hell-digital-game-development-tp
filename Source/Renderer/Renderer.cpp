@@ -97,10 +97,11 @@ void Renderer::Clear()
 }
 
 void Renderer::Draw(RendererMode mode, const Matrix4 &modelMatrix, const Vector2 &cameraPos, VertexArray *vertices,
-                    const Vector3 &color, Texture *texture, const Vector4 &textureRect, float textureFactor)
+                    const Vector4 &color, Texture *texture, const Vector4 &textureRect, float textureFactor)
 {
     mBaseShader->SetMatrixUniform("uWorldTransform", modelMatrix);
-    mBaseShader->SetVectorUniform("uColor", color);
+    mBaseShader->SetVectorUniform("uColor", Vector3(color.x, color.y, color.z));
+    mBaseShader->SetFloatUniform("uAlpha", color.w);
     mBaseShader->SetVectorUniform("uTexRect", textureRect);
     mBaseShader->SetVectorUniform("uCameraPos", cameraPos);
 
@@ -128,7 +129,7 @@ void Renderer::Draw(RendererMode mode, const Matrix4 &modelMatrix, const Vector2
     }
 }
 
-void Renderer::DrawRect(const Vector2 &position, const Vector2 &size, float rotation, const Vector3 &color,
+void Renderer::DrawRect(const Vector2 &position, const Vector2 &size, float rotation, const Vector4 &color,
                         const Vector2 &cameraPos, RendererMode mode)
 {
     Matrix4 model = Matrix4::CreateScale(Vector3(size.x, size.y, 1.0f)) *
@@ -148,7 +149,7 @@ void Renderer::DrawTexture(const Vector2 &position, const Vector2 &size, float r
                     Matrix4::CreateRotationZ(rotation) *
                     Matrix4::CreateTranslation(Vector3(position.x, position.y, 0.0f));
 
-    Draw(RendererMode::TRIANGLES, model, cameraPos, mSpriteVerts, color, texture, textureRect, textureFactor);
+    Draw(RendererMode::TRIANGLES, model, cameraPos, mSpriteVerts, Vector4(color.x, color.y, color.z, 1.0f), texture, textureRect, textureFactor);
 }
 
 void Renderer::DrawGeometry(const Vector2 &position, const Vector2 &size, float rotation, const Vector3 &color,
@@ -158,7 +159,7 @@ void Renderer::DrawGeometry(const Vector2 &position, const Vector2 &size, float 
                     Matrix4::CreateRotationZ(rotation) *
                     Matrix4::CreateTranslation(Vector3(position.x, position.y, 0.0f));
 
-    Draw(mode, model, cameraPos, vertexArray, color);
+    Draw(mode, model, cameraPos, vertexArray, Vector4(color.x, color.y, color.z, 1.0f));
 }
 
 void Renderer::Present()

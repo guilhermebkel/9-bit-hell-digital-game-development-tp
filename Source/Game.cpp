@@ -13,6 +13,9 @@
 #include "Actors/HUD.h"
 #include <SDL_ttf.h>
 
+#include "Actors/MenuBackground.h"
+#include "Actors/MenuScreen.h"
+
 Game::Game()
         :mWindow(nullptr)
         ,mRenderer(nullptr)
@@ -56,15 +59,29 @@ bool Game::Initialize()
     mRenderer = new Renderer(mWindow);
     mRenderer->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    // Init all game actors
-    InitializeActors();
+    mCurrentScene = GameScene::MainMenu;
+    LoadMainMenuScene();
 
     mTicksCount = SDL_GetTicks();
 
     return true;
 }
 
-void Game::InitializeActors()
+void Game::UnloadAllActors()
+{
+    while (!mActors.empty())
+    {
+        delete mActors.back();
+    }
+    mPendingActors.clear();
+
+    mDrawables.clear();
+    mColliders.clear();
+
+    mPlayer = nullptr;
+}
+
+void Game::LoadGameplayScene()
 {
     new Background(this);
 
@@ -78,6 +95,67 @@ void Game::InitializeActors()
     new Spawner(this, SpawnType::Purifier, 2);
 
     new HUD(this);
+}
+
+void Game::LoadMainMenuScene()
+{
+    new MenuBackground(this);
+    new MenuScreen(this);
+}
+
+void Game::ChangeScene()
+{
+    UnloadAllActors();
+
+    mCurrentScene = mNextScene;
+
+    switch (mCurrentScene)
+    {
+    case GameScene::MainMenu:
+        LoadMainMenuScene();
+        break;
+    case GameScene::Gameplay:
+        LoadGameplayScene();
+        break;
+    }
+}
+
+void Game::SetScene(Game::GameScene scene, float transitionTime)
+{
+    if (mSceneState == SceneState::Running)
+    {
+        mNextScene = scene;
+        mSceneState = SceneState::FadingOut;
+        mTransitionTimer = transitionTime;
+        mTransitionTotalTime = transitionTime;
+    }
+}
+
+void Game::UpdateSceneManager(float deltaTime)
+{
+    switch (mSceneState)
+    {
+    case SceneState::FadingOut:
+        mTransitionTimer -= deltaTime;
+        if (mTransitionTimer <= 0.0f)
+        {
+            ChangeScene();
+            mSceneState = SceneState::FadingIn;
+            mTransitionTimer = mTransitionTotalTime;
+        }
+        break;
+
+    case SceneState::FadingIn:
+        mTransitionTimer -= deltaTime;
+        if (mTransitionTimer <= 0.0f)
+        {
+            mSceneState = SceneState::Running;
+        }
+        break;
+
+    case SceneState::Running:
+        break;
+    }
 }
 
 void Game::RunLoop()
@@ -127,13 +205,18 @@ void Game::ProcessInput()
 
 void Game::UpdateGame(float deltaTime)
 {
-    UpdateActors(deltaTime);
-    UpdateCamera();
+    UpdateSceneManager(deltaTime);
 
-    if (mPlayer)
+    if (mSceneState == SceneState::Running)
     {
-        mCorruptionLevel += mCorruptionRate * deltaTime;
-        mCorruptionLevel = Math::Clamp(mCorruptionLevel, 0.0f, 1.0f);
+        UpdateActors(deltaTime);
+        UpdateCamera();
+
+        if (mPlayer)
+        {
+            mCorruptionLevel += mCorruptionRate * deltaTime;
+            mCorruptionLevel = Math::Clamp(mCorruptionLevel, 0.0f, 1.0f);
+        }
     }
 }
 
@@ -255,6 +338,24 @@ void Game::GenerateOutput()
     for (auto drawable : mDrawables)
     {
         drawable->Draw(mRenderer);
+    }
+
+    if (mSceneState != SceneState::Running)
+    {
+        float alpha = 0.0f;
+        if (mSceneState == SceneState::FadingOut)
+        {
+            alpha = 1.0f - mTransitionTimer / mTransitionTotalTime;
+        }
+        else
+        {
+            alpha = mTransitionTimer / mTransitionTotalTime;
+        }
+
+        Vector4 black(0.0f, 0.0f, 0.0f, alpha);
+        mRenderer->DrawRect(Vector2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f),
+                            Vector2(WINDOW_WIDTH, WINDOW_HEIGHT), 0.0f, black, Vector2::Zero,
+                            RendererMode::TRIANGLES);
     }
 
     mRenderer->Present();
