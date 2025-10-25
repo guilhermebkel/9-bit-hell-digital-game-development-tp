@@ -10,7 +10,7 @@ UIButtonComponent::UIButtonComponent(Actor* owner, const std::string& text, Vect
     , mSelected(false)
 {
     mTextActor = new Actor(owner->GetGame());
-    mTextComponent = new UITextComponent(mTextActor);
+    mTextComponent = new UITextComponent(mTextActor, drawOrder);
     mTextComponent->SetText(text, Color::White, 24);
 }
 
