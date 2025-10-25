@@ -28,6 +28,9 @@ public:
     void OnVerticalCollision(const float minOverlap, AABBColliderComponent* other) override;
 
     void Kill() override;
+    void TakeDamage(float amount);
+    float GetHealth() const { return mHealth; }
+    float GetMaxHealth() const { return mMaxHealth; }
 
 private:
     void ManageAnimations();
@@ -50,4 +53,7 @@ private:
     class AABBColliderComponent* mColliderComponent;
 
     float mFireBallCooldown = 1.0f;
+
+    float mHealth;
+    float mMaxHealth;
 };

@@ -19,6 +19,8 @@ Player::Player(Game* game, const float forwardSpeed)
         , mCoinCount(0)
         , mForwardSpeed(forwardSpeed)
         , mRigidBodyComponent(nullptr)
+        , mHealth(100.0f)
+        , mMaxHealth(100.0f)
 {
     mDrawComponent = new AnimatorComponent(
         this,
@@ -210,5 +212,17 @@ void Player::OnVerticalCollision(const float minOverlap, AABBColliderComponent* 
                 enemy->Kill();
             }
         }
+    }
+}
+
+void Player::TakeDamage(float amount)
+{
+    if (mIsDead) return;
+
+    mHealth -= amount;
+    if (mHealth <= 0.0f)
+    {
+        mHealth = 0.0f;
+        Kill();
     }
 }

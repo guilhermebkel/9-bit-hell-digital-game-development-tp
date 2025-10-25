@@ -1,6 +1,7 @@
 #pragma once
 #include "Actor.h"
 #include "CorruptionOverlay.h"
+#include "UIHealthBarWidget.h"
 #include "UIStatWidget.h"
 
 class HUD : public Actor
@@ -15,6 +16,7 @@ public:
 private:
     UIStatWidget* mCoinWidget;
     UIStatWidget* mCorruptionWidget;
+    UIHealthBarWidget* mHealthBarWidget;
 
     void OnUpdate();
 };

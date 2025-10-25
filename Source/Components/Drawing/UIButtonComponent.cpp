@@ -23,7 +23,7 @@ void UIButtonComponent::Draw(class Renderer* renderer)
 {
     if (mSelected)
     {
-        Vector4 highlightColor(1.0f, 1.0f, 0.0f, 0.25f);
+        Vector4 highlightColor(1.0f, 0.0f, 0.0f, 0.25f);
         renderer->DrawRect(mOwner->GetPosition(), mSize, 0.0f, highlightColor, Vector2::Zero, RendererMode::TRIANGLES);
     }
 

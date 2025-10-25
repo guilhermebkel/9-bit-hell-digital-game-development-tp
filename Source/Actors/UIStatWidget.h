@@ -2,7 +2,6 @@
 #include "../Math.h"
 #include <string>
 
-// Enum para controlar o alinhamento horizontal do widget
 enum class HAlign { Left, Center, Right };
 
 class UIStatWidget

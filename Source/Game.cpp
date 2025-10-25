@@ -25,7 +25,7 @@ Game::Game()
         ,mDrawSortRequested(false)
         ,mUpperBoundaryY(0.0f)
         ,mCorruptionLevel(0.0f)
-        ,mCorruptionRate(0.02f)
+        ,mCorruptionRate(0.008f)
         ,mPlayer(nullptr)
 {
 
