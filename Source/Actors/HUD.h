@@ -1,6 +1,7 @@
 #pragma once
 #include "Actor.h"
 #include "CorruptionOverlay.h"
+#include "UIStatWidget.h"
 
 class HUD : public Actor
 {
@@ -12,6 +13,8 @@ public:
     void OnUpdate(float deltaTime) override;
 
 private:
-    class UITextComponent* mCoinText;
-    class UITextComponent* mCorruptionText;
+    UIStatWidget* mCoinWidget;
+    UIStatWidget* mCorruptionWidget;
+
+    void OnUpdate();
 };

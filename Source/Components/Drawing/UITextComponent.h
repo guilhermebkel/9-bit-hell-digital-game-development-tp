@@ -12,6 +12,7 @@ public:
     void Draw(class Renderer* renderer) override;
 
     void SetText(const std::string& text, const Vector3& color = Color::White, int pointSize = 24);
+    std::string GetText() { return mText; };
 
     class Texture* GetTexture() const { return mTexture; }
 

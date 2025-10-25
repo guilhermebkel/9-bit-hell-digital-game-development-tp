@@ -12,7 +12,7 @@ UITextComponent::UITextComponent(Actor* owner, int drawOrder)
     , mPointSize(24)
 {
     mFont = new Font(GetGame());
-    mFont->Load("../Assets/Fonts/OpenSans-Regular.ttf");
+    mFont->Load("../Assets/Fonts/VT323-Regular.ttf");
 }
 
 UITextComponent::~UITextComponent()

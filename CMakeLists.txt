@@ -85,6 +85,8 @@ add_executable(${PROJECT_NAME}
         Source/Scenes/MainMenuScene.h
         Source/Scenes/GameplayScene.cpp
         Source/Scenes/GameplayScene.h
+        Source/Actors/UIStatWidget.cpp
+        Source/Actors/UIStatWidget.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW SDL2::SDL2 ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} OpenGL::GL)

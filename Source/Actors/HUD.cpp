@@ -5,17 +5,18 @@
 
 HUD::HUD(Game* game)
     : Actor(game)
-    , mCoinText(nullptr)
-    , mCorruptionText(nullptr)
+    , mCoinWidget(nullptr)
+    , mCorruptionWidget(nullptr)
 {
+    int pointSize = 24;
 
-    Actor* coinActor = new Actor(game);
-    mCoinText = new UITextComponent(coinActor, HUD::DRAW_ORDER);
-    mCoinText->SetText("Moedas: 0", Color::White, 24);
+    mCoinWidget = new UIStatWidget(game, "COINS", pointSize);
+    mCoinWidget->SetOutline(true);
+    mCoinWidget->SetPosition(Vector2(20.0f, 32.0f), HAlign::Left);
 
-    Actor* corruptionActor = new Actor(game);
-    mCorruptionText = new UITextComponent(corruptionActor, HUD::DRAW_ORDER);
-    mCorruptionText->SetText("Corrupcao: 0%", Color::White, 24);
+    mCorruptionWidget = new UIStatWidget(game, "CORRUPTION", pointSize);
+    mCorruptionWidget->SetOutline(true);
+    mCorruptionWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, 32.0f), HAlign::Right);
 }
 
 void HUD::OnUpdate(float deltaTime)
@@ -23,26 +24,11 @@ void HUD::OnUpdate(float deltaTime)
     Actor::OnUpdate(deltaTime);
 
     const Player* player = GetGame()->GetPlayer();
-    if (player && mCoinText)
+    if (player)
     {
-        std::string coinStr = "Moedas: " + std::to_string(player->GetCoinCount());
-        mCoinText->SetText(coinStr, Color::White, 24);
-
-        Vector2 position = mCoinText->GetOwner()->GetPosition();
-        position.x = 0.0f + (mCoinText->GetTexture()->GetWidth() / 2.0f) + 16.0f;
-        position.y = 0.0f + (mCoinText->GetTexture()->GetHeight() / 2.0f) + 16.0f;
-        mCoinText->GetOwner()->SetPosition(position);
+        mCoinWidget->SetValue(std::to_string(player->GetCoinCount()));
     }
 
-    if (mCorruptionText)
-    {
-        int corruptionPercent = static_cast<int>(GetGame()->GetCorruptionLevel() * 100);
-        std::string corruptionStr = "Corrupcao: " + std::to_string(corruptionPercent) + "%";
-        mCorruptionText->SetText(corruptionStr, Color::White, 24);
-
-        Vector2 position = mCorruptionText->GetOwner()->GetPosition();
-        position.x = Game::WINDOW_WIDTH - (mCoinText->GetTexture()->GetWidth() / 2.0f) - 48.0f;
-        position.y = 0.0f + (mCoinText->GetTexture()->GetHeight() / 2.0f) + 16.0f;
-        mCorruptionText->GetOwner()->SetPosition(position);
-    }
+    int corruptionPercent = static_cast<int>(GetGame()->GetCorruptionLevel() * 100);
+    mCorruptionWidget->SetValue(std::to_string(corruptionPercent) + "%");
 }
