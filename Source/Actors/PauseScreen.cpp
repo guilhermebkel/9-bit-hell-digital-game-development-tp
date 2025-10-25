@@ -14,7 +14,7 @@ PauseScreen::PauseScreen(Game* game)
         Game::WINDOW_WIDTH,
         Game::WINDOW_HEIGHT,
         RendererMode::TRIANGLES,
-        PauseScreen::DRAW_ORDER - 1
+        PauseScreen::DRAW_ORDER
     );
     background->SetColor(Vector4(0.0f, 0.0f, 0.0f, 0.7f));
 
