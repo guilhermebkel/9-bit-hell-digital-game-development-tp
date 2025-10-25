@@ -20,6 +20,8 @@ public:
 	int GetWidth() const { return mWidth; }
 	int GetHeight() const { return mHeight; }
 
+	void CreateFromSurface(SDL_Surface* surface);
+
 	unsigned int GetTextureID() const { return mTextureID; }
 
 private:

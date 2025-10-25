@@ -10,6 +10,7 @@ project(${PROJECT_NAME})
 
 find_package(SDL2 2.32.2 EXACT REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -66,6 +67,12 @@ add_executable(${PROJECT_NAME}
         Source/Actors/CorruptionOverlay.h
         Source/Actors/Projectile.cpp
         Source/Actors/Projectile.h
+        Source/Renderer/Font.cpp
+        Source/Renderer/Font.h
+        Source/Components/Drawing/UITextComponent.cpp
+        Source/Components/Drawing/UITextComponent.h
+        Source/Actors/HUD.cpp
+        Source/Actors/HUD.h
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW SDL2::SDL2 ${SDL2_IMAGE_LIBRARIES} OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW SDL2::SDL2 ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} OpenGL::GL)

@@ -10,6 +10,8 @@
 #include "Actors/Background.h"
 #include "Actors/CorruptionOverlay.h"
 #include "Actors/Spawner.h"
+#include "Actors/HUD.h"
+#include <SDL_ttf.h>
 
 Game::Game()
         :mWindow(nullptr)
@@ -35,6 +37,12 @@ bool Game::Initialize()
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
         SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+        return false;
+    }
+
+    if (TTF_Init() == -1)
+    {
+        SDL_Log("Failed to initialize SDL_ttf: %s", TTF_GetError());
         return false;
     }
 
@@ -68,6 +76,8 @@ void Game::InitializeActors()
     new Spawner(this, SpawnType::Enemy, 5);
     new Spawner(this, SpawnType::Coin, 10);
     new Spawner(this, SpawnType::Purifier, 2);
+
+    new HUD(this);
 }
 
 void Game::RunLoop()
@@ -261,5 +271,7 @@ void Game::Shutdown()
     mRenderer = nullptr;
 
     SDL_DestroyWindow(mWindow);
+
+    TTF_Quit();
     SDL_Quit();
 }

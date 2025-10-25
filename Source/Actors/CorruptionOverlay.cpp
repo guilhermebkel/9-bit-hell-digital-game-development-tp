@@ -6,10 +6,9 @@
 CorruptionOverlay::CorruptionOverlay(Game* game)
     : Actor(game)
 {
-    int higherThanActorsDrawOrder = Game::WINDOW_HEIGHT * 2.0f;
     int initialVignetteSize = Math::Max(Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT) * 2.5f;
 
-    new StaticSpriteComponent(this, "../Assets/Vignette.png", initialVignetteSize, initialVignetteSize, higherThanActorsDrawOrder);
+    new StaticSpriteComponent(this, "../Assets/Vignette.png", initialVignetteSize, initialVignetteSize, CorruptionOverlay::DRAW_ORDER);
 }
 
 void CorruptionOverlay::OnUpdate(float deltaTime)
