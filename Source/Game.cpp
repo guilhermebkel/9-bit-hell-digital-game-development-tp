@@ -228,11 +228,8 @@ void Game::TogglePause()
     {
         if (mPauseScreen)
         {
-            if (mPauseScreen)
-            {
-                mPauseScreen->SetState(ActorState::Destroy);
-                mPauseScreen = nullptr;
-            }
+            mPauseScreen->SetState(ActorState::Destroy);
+            mPauseScreen = nullptr;
         }
     }
 }
