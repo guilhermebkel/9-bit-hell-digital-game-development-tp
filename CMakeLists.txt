@@ -77,8 +77,6 @@ add_executable(${PROJECT_NAME}
         Source/Components/Drawing/UIButtonComponent.h
         Source/Actors/MenuScreen.cpp
         Source/Actors/MenuScreen.h
-        Source/Actors/MenuBackground.cpp
-        Source/Actors/MenuBackground.h
         Source/Actors/PauseScreen.cpp
         Source/Actors/PauseScreen.h
         Source/Scenes/Scene.cpp

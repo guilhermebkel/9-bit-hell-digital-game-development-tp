@@ -1,13 +1,13 @@
 #include "MainMenuScene.h"
 #include "../Game.h"
-#include "../Actors/MenuBackground.h"
+#include "../Actors/Background.h"
 #include "../Actors/MenuScreen.h"
 
 MainMenuScene::MainMenuScene(Game* game) : Scene(game) {}
 
 void MainMenuScene::Load()
 {
-    new MenuBackground(GetGame());
+    new Background(GetGame(), "../Assets/MenuBackground.png");
     new MenuScreen(GetGame());
 }
 

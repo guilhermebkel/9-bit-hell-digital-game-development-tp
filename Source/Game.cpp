@@ -7,13 +7,7 @@
 #include "Random.h"
 #include "Actors/Actor.h"
 #include "Actors/Player.h"
-#include "Actors/Background.h"
-#include "Actors/CorruptionOverlay.h"
-#include "Actors/Spawner.h"
-#include "Actors/HUD.h"
 #include <SDL_ttf.h>
-#include "Actors/MenuBackground.h"
-#include "Actors/MenuScreen.h"
 #include "Actors/PauseScreen.h"
 #include "Components/Drawing/UIButtonComponent.h"
 #include "Scenes/MainMenuScene.h"
@@ -101,7 +95,7 @@ void Game::ChangeScene()
         mCurrentScene = std::make_unique<MainMenuScene>(this);
         break;
     case GameScene::Gameplay:
-        mCurrentScene = std::make_unique<GameplayScene>(this);
+        mCurrentScene = std::make_unique<GameplayScene>(this, LevelID::Tutorial);
         break;
     }
 
