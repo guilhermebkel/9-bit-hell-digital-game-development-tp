@@ -3,15 +3,23 @@
 #include <SDL.h>
 #include <vector>
 #include "Renderer/Renderer.h"
+#include "Scenes/GameplayScene.h"
 #include "Scenes/Scene.h"
 
 class Game
 {
 public:
+    struct PlayerUpgrades
+    {
+        int coins = 0;
+        float fireRate = 0.3f;
+    };
+
     enum class GameScene
     {
         MainMenu,
-        Gameplay
+        Gameplay,
+        Upgrade
     };
 
     enum class SceneState
@@ -54,6 +62,14 @@ public:
     void RemoveCollider(class AABBColliderComponent* collider);
     std::vector<class AABBColliderComponent*>& GetColliders() { return mColliders; }
 
+    // Player upgrades
+    int GetCoinCount() const { return mPlayerUpgrades.coins; }
+    void AddCoin(int amount = 1) { mPlayerUpgrades.coins += amount; }
+    bool CanAfford(int cost) const { return mPlayerUpgrades.coins >= cost; }
+    void SpendCoins(int amount) { mPlayerUpgrades.coins -= amount; }
+    void UpgradeFireRate();
+    float GetPlayerFireRate() const { return mPlayerUpgrades.fireRate; }
+
     // Camera functions
     Vector2& GetCameraPos() { return mCameraPos; };
     void SetCameraPos(const Vector2& position) { mCameraPos = position; };
@@ -79,6 +95,10 @@ public:
 
     void TogglePause();
     bool IsPaused() const { return mIsPaused; }
+
+    void SetCurrentLevelID(LevelID currentLevelID) { mCurrentLevelID = currentLevelID; }
+
+    std::vector<class Actor*> GetActors() { return mActors; }
 
 private:
     void ProcessInput();
@@ -135,4 +155,8 @@ private:
 
     bool mIsPaused = false;
     class Actor* mPauseScreen = nullptr;
+
+    LevelID mCurrentLevelID = LevelID::Tutorial;
+
+    PlayerUpgrades mPlayerUpgrades;
 };

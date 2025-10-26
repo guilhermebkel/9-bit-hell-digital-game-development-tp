@@ -16,7 +16,6 @@ Player::Player(Game* game, const float forwardSpeed)
         , mIsRangedAttacking(false)
         , mRangedAttackAnimationTimer(0.0f)
         , mRangedAttackCooldownTimer(0.0f)
-        , mCoinCount(0)
         , mForwardSpeed(forwardSpeed)
         , mRigidBodyComponent(nullptr)
         , mHealth(100.0f)
@@ -84,7 +83,7 @@ void Player::OnProcessInput(const uint8_t* state)
 
     if (state[SDL_SCANCODE_K] && mRangedAttackCooldownTimer <= 0.0f)
     {
-        mRangedAttackCooldownTimer = Player::RANGED_ATTACK_COOLDOWN;
+        mRangedAttackCooldownTimer = GetGame()->GetPlayerFireRate();
 
         mIsRangedAttacking = true;
         mRangedAttackAnimationTimer = Player::RANGED_ATTACK_ANIMATION_DURATION;
@@ -161,16 +160,6 @@ void Player::ManageAnimations()
     {
         anim->SetAnimation("idle");
     }
-}
-
-void Player::AddCoin(int amount)
-{
-    mCoinCount += amount;
-}
-
-int Player::GetCoinCount() const
-{
-    return mCoinCount;
 }
 
 void Player::Kill()

@@ -4,7 +4,7 @@
 class UIHealthBarWidget
 {
 public:
-    UIHealthBarWidget(class Game* game, const Vector2& position, const Vector2& size);
+    UIHealthBarWidget(class Game* game, const Vector2& position, const Vector2& size, int drawOrder = 200);
     ~UIHealthBarWidget();
 
     void Update(float currentValue, float maxValue);

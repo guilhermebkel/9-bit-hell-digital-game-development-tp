@@ -7,7 +7,7 @@ enum class HAlign { Left, Center, Right };
 class UIStatWidget
 {
 public:
-    UIStatWidget(class Game* game, const std::string& label, int pointSize = 24);
+    UIStatWidget(class Game* game, const std::string& label, int pointSize = 24, int drawOrder = 200);
     ~UIStatWidget();
 
     void SetPosition(const Vector2& position, HAlign align = HAlign::Left);

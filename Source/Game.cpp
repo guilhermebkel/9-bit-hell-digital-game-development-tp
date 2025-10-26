@@ -13,6 +13,7 @@
 #include "Scenes/MainMenuScene.h"
 #include "Scenes/GameplayScene.h"
 #include "Scenes/Scene.h"
+#include "Scenes/UpgradeScene.h"
 
 Game::Game()
         :mWindow(nullptr)
@@ -85,18 +86,22 @@ void Game::ChangeScene()
     {
         mCurrentScene->Unload();
     }
+
     UnloadAllActors();
 
     mCurrentScene = nullptr;
 
     switch (mNextScene)
     {
-    case GameScene::MainMenu:
-        mCurrentScene = std::make_unique<MainMenuScene>(this);
-        break;
-    case GameScene::Gameplay:
-        mCurrentScene = std::make_unique<GameplayScene>(this, LevelID::Tutorial);
-        break;
+        case GameScene::MainMenu:
+            mCurrentScene = std::make_unique<MainMenuScene>(this);
+            break;
+        case GameScene::Gameplay:
+            mCurrentScene = std::make_unique<GameplayScene>(this, mCurrentLevelID);
+            break;
+        case GameScene::Upgrade:
+            mCurrentScene = std::make_unique<UpgradeScene>(this);
+            break;
     }
 
     if (mCurrentScene)
@@ -242,12 +247,7 @@ void Game::UpdateGame(float deltaTime)
     {
         UpdateActors(deltaTime);
         UpdateCamera();
-
-        if (mPlayer)
-        {
-            mCorruptionLevel += mCorruptionRate * deltaTime;
-            mCorruptionLevel = Math::Clamp(mCorruptionLevel, 0.0f, 1.0f);
-        }
+        mCurrentScene->Update(deltaTime);
     }
 }
 
@@ -406,4 +406,14 @@ void Game::Shutdown()
 
     TTF_Quit();
     SDL_Quit();
+}
+
+void Game::UpgradeFireRate()
+{
+    mPlayerUpgrades.fireRate *= 0.90f;
+
+    if (mPlayerUpgrades.fireRate < 0.1f)
+    {
+        mPlayerUpgrades.fireRate = 0.1f;
+    }
 }

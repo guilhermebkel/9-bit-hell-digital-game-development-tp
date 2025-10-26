@@ -1,12 +1,16 @@
 #pragma once
+#include "Scene.h"
 #include <vector>
 
-#include "Scene.h"
+class UIStatWidget;
+class UIButtonComponent;
+class Player;
 
-class MainMenuScene : public Scene
+class UpgradeScene : public Scene
 {
 public:
-    explicit MainMenuScene(class Game* game);
+    explicit UpgradeScene(class Game* game);
+    ~UpgradeScene() override;
 
     void Load() override;
     void Unload() override;
@@ -19,9 +23,12 @@ private:
     void ClickSelectedButton();
     void UpdateButtonSelection();
 
-    std::vector<class UIButtonComponent*> mButtons;
-    size_t mSelectedButtonIndex;
+    UIStatWidget* mCoinWidget;
+    std::vector<UIButtonComponent*> mButtons;
 
+    std::vector<class Actor*> mSceneActors;
+
+    size_t mSelectedButtonIndex;
     bool mUpPressed = false;
     bool mDownPressed = false;
     bool mEnterPressed = false;

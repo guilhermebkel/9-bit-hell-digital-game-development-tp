@@ -3,6 +3,7 @@
 #include "../Actors/Background.h"
 #include "../Actors/Player.h"
 #include "../Actors/CorruptionOverlay.h"
+#include "../Actors/Enemy.h"
 #include "../Actors/Spawner.h"
 #include "../Actors/HUD.h"
 
@@ -14,6 +15,7 @@ GameplayScene::GameplayScene(Game* game, LevelID level)
 void GameplayScene::Load()
 {
     GetGame()->SetPlayer(new Player(GetGame()));
+
     new CorruptionOverlay(GetGame());
     new HUD(GetGame());
 
@@ -38,6 +40,12 @@ void GameplayScene::Update(float deltaTime)
     {
         GetGame()->AddCorruption(GetGame()->GetCorruptionRate() * deltaTime);
     }
+
+    if (IsLevelComplete())
+    {
+        GetGame()->SetCurrentLevelID(mNextLevelID);
+        GetGame()->SetScene(Game::GameScene::Upgrade);
+    }
 }
 
 void GameplayScene::ProcessInput(const uint8_t* keyState)
@@ -46,6 +54,8 @@ void GameplayScene::ProcessInput(const uint8_t* keyState)
 
 void GameplayScene::LoadTutorial()
 {
+    SetNextLevelID(LevelID::Tutorial);
+
     new Background(GetGame(), "../Assets/Levels/Level1/Background.png");
     GetGame()->SetUpperBoundary(423.0f);
 
@@ -57,4 +67,17 @@ void GameplayScene::LoadTutorial()
 void GameplayScene::LoadLevel1()
 {
 
+}
+
+bool GameplayScene::IsLevelComplete()
+{
+    for (auto actor : GetGame()->GetActors())
+    {
+        if (dynamic_cast<Enemy*>(actor))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }

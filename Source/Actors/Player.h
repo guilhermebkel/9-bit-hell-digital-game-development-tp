@@ -14,15 +14,11 @@ public:
 
     static constexpr float MELEE_ATTACK_ANIMATION_DURATION = 0.3f;
     static constexpr float RANGED_ATTACK_ANIMATION_DURATION = 0.3f;
-    static constexpr float RANGED_ATTACK_COOLDOWN = 0.3f;
 
     explicit Player(Game* game, float forwardSpeed = 2500.0f);
 
     void OnProcessInput(const Uint8* keyState) override;
     void OnUpdate(float deltaTime) override;
-
-    void AddCoin(int amount = 1);
-    int GetCoinCount() const;
 
     void OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other) override;
     void OnVerticalCollision(const float minOverlap, AABBColliderComponent* other) override;
@@ -51,8 +47,6 @@ private:
     class RigidBodyComponent* mRigidBodyComponent;
     class AnimatorComponent* mDrawComponent;
     class AABBColliderComponent* mColliderComponent;
-
-    float mFireBallCooldown = 1.0f;
 
     float mHealth;
     float mMaxHealth;

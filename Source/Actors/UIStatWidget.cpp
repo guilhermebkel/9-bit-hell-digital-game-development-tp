@@ -4,18 +4,18 @@
 #include "HUD.h"
 #include "../Components/Drawing/UITextComponent.h"
 
-UIStatWidget::UIStatWidget(Game* game, const std::string& label, int pointSize)
+UIStatWidget::UIStatWidget(Game* game, const std::string& label, int pointSize, int drawOrder)
     : mGame(game)
     , mPosition(Vector2::Zero)
     , mAlignment(HAlign::Left)
     , mPointSize(pointSize)
 {
     mLabelActor = new Actor(mGame);
-    mLabelText = new UITextComponent(mLabelActor, HUD::DRAW_ORDER);
+    mLabelText = new UITextComponent(mLabelActor, drawOrder);
     mLabelText->SetText(label, Color::White, mPointSize);
 
     mValueActor = new Actor(mGame);
-    mValueText = new UITextComponent(mValueActor, HUD::DRAW_ORDER);
+    mValueText = new UITextComponent(mValueActor, drawOrder);
     mValueText->SetText("", Color::White, mPointSize);
 }
 
