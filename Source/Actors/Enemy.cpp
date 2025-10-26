@@ -37,9 +37,9 @@ Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
     const int dy = (int)((Enemy::SPRITE_HEIGHT / 2.0f) - (Enemy::PHYSICS_HEIGHT / 2.0f));
     mColliderComponent = new AABBColliderComponent(this, 0, dy, Enemy::PHYSICS_WIDTH, Enemy::PHYSICS_HEIGHT, ColliderLayer::Enemy);
 
-    const float aggroWidth = PHYSICS_WIDTH * 2.0f;
-    const float aggroHeight = PHYSICS_HEIGHT * 2.0f;
-    mAggroCollider = new AABBColliderComponent(this, 0, dy, aggroWidth, aggroHeight, ColliderLayer::Enemy, true);
+    const float aggroWidth = AGGRO_AREA_SIZE;
+    const float aggroHeight = AGGRO_AREA_SIZE;
+    mAggroCollider = new AABBColliderComponent(this, 0, dy, aggroWidth, aggroHeight, ColliderLayer::EnemyAggro, true);
 
     Vector2 initialVelocity = Vector2::Zero;
     while (initialVelocity.Length() < 1.0f)
@@ -138,6 +138,16 @@ void Enemy::OnVerticalCollision(const float minOverlap, AABBColliderComponent* o
 void Enemy::UpdateAI(float deltaTime)
 {
     mStateTimer -= deltaTime;
+    const Player* player = GetGame()->GetPlayer();
+
+    if (!player)
+    {
+        mAIState = AIState::Moving;
+        return;
+    }
+
+    const float attackDistance = 30.0f;
+    auto playerCollider = player->GetComponent<AABBColliderComponent>();
 
     switch (mAIState)
     {
@@ -146,15 +156,42 @@ void Enemy::UpdateAI(float deltaTime)
             mRigidBodyComponent->SetEnabled(true);
             mDrawComponent->SetAnimation("walk");
 
-            for (auto* other : GetGame()->GetColliders())
+            if (playerCollider && mAggroCollider->Intersect(*playerCollider))
             {
-                if (other->GetLayer() == ColliderLayer::Player && mAggroCollider->Intersect(*other))
-                {
-                    mAIState = AIState::WindUp;
-                    mStateTimer = mAttackWindUpTime;
-                    mRigidBodyComponent->SetVelocity(Vector2::Zero);
-                    break;
-                }
+                mAIState = AIState::Chasing;
+            }
+            break;
+        }
+
+        case AIState::Chasing:
+        {
+            mRigidBodyComponent->SetEnabled(true);
+            mDrawComponent->SetAnimation("walk");
+
+            if (!playerCollider || !mAggroCollider->Intersect(*playerCollider))
+            {
+                mAIState = AIState::Moving;
+                Vector2 newVel = Random::GetVector(Vector2(-mForwardSpeed, -mForwardSpeed), Vector2(mForwardSpeed, mForwardSpeed));
+                mRigidBodyComponent->SetVelocity(newVel);
+                return;
+            }
+
+            Vector2 direction = player->GetPosition() - GetPosition();
+            direction.Normalize();
+
+            mRigidBodyComponent->SetVelocity(direction * mForwardSpeed);
+
+            if (direction.x < 0.0f) {
+                SetScale(Vector2(-1.0f, 1.0f));
+            } else {
+                SetScale(Vector2(1.0f, 1.0f));
+            }
+
+            if (Vector2::Distance(GetPosition(), player->GetPosition()) < attackDistance)
+            {
+                mAIState = AIState::WindUp;
+                mStateTimer = mAttackWindUpTime;
+                mRigidBodyComponent->SetVelocity(Vector2::Zero);
             }
             break;
         }
@@ -187,10 +224,14 @@ void Enemy::UpdateAI(float deltaTime)
         {
             if (mStateTimer <= 0.0f)
             {
-                mAIState = AIState::Moving;
-                Vector2 newVel = Vector2::Zero;
-                while (newVel.Length() < 1.0f) { newVel = Random::GetVector(Vector2(-mForwardSpeed, -mForwardSpeed), Vector2(mForwardSpeed, mForwardSpeed)); }
-                mRigidBodyComponent->SetVelocity(newVel);
+                if (playerCollider && mAggroCollider->Intersect(*playerCollider))
+                {
+                    mAIState = AIState::Chasing;
+                }
+                else
+                {
+                    mAIState = AIState::Moving;
+                }
             }
             break;
         }

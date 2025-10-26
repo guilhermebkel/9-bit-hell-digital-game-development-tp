@@ -9,6 +9,7 @@ enum class ColliderLayer
 {
     Player,
     Enemy,
+    EnemyAggro,
     Blocks,
     Collectable,
     Projectile

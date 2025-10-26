@@ -10,13 +10,15 @@ public:
         Moving,
         WindUp,
         Attacking,
-        Cooldown
+        Cooldown,
+        Chasing
     };
 
     static constexpr float SPRITE_WIDTH = 48.0f;
     static constexpr float SPRITE_HEIGHT = 48.0f;
     static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.50f;
     static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.25f;
+    static constexpr float AGGRO_AREA_SIZE = 256.0f;
 
     explicit Enemy(Game* game, float forwardSpeed = 100.0f, float deathTime = 0.5f);
 
