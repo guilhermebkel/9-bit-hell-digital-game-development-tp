@@ -1,4 +1,6 @@
 #include "Enemy.h"
+
+#include "Player.h"
 #include "../Game.h"
 #include "../Components/Drawing/AnimatorComponent.h"
 #include "../Components/Physics/RigidBodyComponent.h"
@@ -13,6 +15,8 @@ Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
         , mRigidBodyComponent(nullptr)
         , mColliderComponent(nullptr)
         , mDrawComponent(nullptr)
+        , mAIState(AIState::Moving)
+        , mStateTimer(0.0f)
 {
     mDrawComponent = new AnimatorComponent(
         this,
@@ -32,6 +36,10 @@ Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
     // Align collider base with sprite base
     const int dy = (int)((Enemy::SPRITE_HEIGHT / 2.0f) - (Enemy::PHYSICS_HEIGHT / 2.0f));
     mColliderComponent = new AABBColliderComponent(this, 0, dy, Enemy::PHYSICS_WIDTH, Enemy::PHYSICS_HEIGHT, ColliderLayer::Enemy);
+
+    const float aggroWidth = PHYSICS_WIDTH * 2.0f;
+    const float aggroHeight = PHYSICS_HEIGHT * 2.0f;
+    mAggroCollider = new AABBColliderComponent(this, 0, dy, aggroWidth, aggroHeight, ColliderLayer::Enemy, true);
 
     Vector2 initialVelocity = Vector2::Zero;
     while (initialVelocity.Length() < 1.0f)
@@ -64,6 +72,8 @@ void Enemy::OnUpdate(float deltaTime)
         return;
     }
 
+    UpdateAI(deltaTime);
+
     Vector2 pos = GetPosition();
     Vector2 vel = mRigidBodyComponent->GetVelocity();
 
@@ -90,8 +100,99 @@ void Enemy::OnUpdate(float deltaTime)
 
 void Enemy::OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other)
 {
+    if (other->GetLayer() == ColliderLayer::Player)
+    {
+        if (mAIState == AIState::Attacking)
+        {
+            Player* player = dynamic_cast<Player*>(other->GetOwner());
+
+            if (player)
+            {
+                player->TakeDamage(mAttackDamage);
+
+                mAIState = AIState::Cooldown;
+                mStateTimer = mAttackCooldown;
+            }
+        }
+    }
 }
 
 void Enemy::OnVerticalCollision(const float minOverlap, AABBColliderComponent* other)
 {
+    if (other->GetLayer() == ColliderLayer::Player)
+    {
+        if (mAIState == AIState::Attacking)
+        {
+            Player* player = dynamic_cast<Player*>(other->GetOwner());
+            if (player)
+            {
+                player->TakeDamage(mAttackDamage);
+
+                mAIState = AIState::Cooldown;
+                mStateTimer = mAttackCooldown;
+            }
+        }
+    }
+}
+
+void Enemy::UpdateAI(float deltaTime)
+{
+    mStateTimer -= deltaTime;
+
+    switch (mAIState)
+    {
+        case AIState::Moving:
+        {
+            mRigidBodyComponent->SetEnabled(true);
+            mDrawComponent->SetAnimation("walk");
+
+            for (auto* other : GetGame()->GetColliders())
+            {
+                if (other->GetLayer() == ColliderLayer::Player && mAggroCollider->Intersect(*other))
+                {
+                    mAIState = AIState::WindUp;
+                    mStateTimer = mAttackWindUpTime;
+                    mRigidBodyComponent->SetVelocity(Vector2::Zero);
+                    break;
+                }
+            }
+            break;
+        }
+
+        case AIState::WindUp:
+        {
+            mRigidBodyComponent->SetEnabled(false);
+
+            if (mStateTimer <= 0.0f)
+            {
+                mAIState = AIState::Attacking;
+                mStateTimer = mAttackDuration;
+                mDrawComponent->SetAnimation("attack");
+            }
+            break;
+        }
+
+        case AIState::Attacking:
+        {
+            if (mStateTimer <= 0.0f)
+            {
+                mAIState = AIState::Cooldown;
+                mStateTimer = mAttackCooldown;
+                mDrawComponent->SetAnimation("walk");
+            }
+            break;
+        }
+
+        case AIState::Cooldown:
+        {
+            if (mStateTimer <= 0.0f)
+            {
+                mAIState = AIState::Moving;
+                Vector2 newVel = Vector2::Zero;
+                while (newVel.Length() < 1.0f) { newVel = Random::GetVector(Vector2(-mForwardSpeed, -mForwardSpeed), Vector2(mForwardSpeed, mForwardSpeed)); }
+                mRigidBodyComponent->SetVelocity(newVel);
+            }
+            break;
+        }
+    }
 }

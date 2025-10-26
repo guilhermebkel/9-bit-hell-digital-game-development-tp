@@ -5,6 +5,14 @@
 class Enemy : public Actor
 {
 public:
+    enum class AIState
+    {
+        Moving,
+        WindUp,
+        Attacking,
+        Cooldown
+    };
+
     static constexpr float SPRITE_WIDTH = 48.0f;
     static constexpr float SPRITE_HEIGHT = 48.0f;
     static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.50f;
@@ -19,6 +27,17 @@ public:
     void Kill() override;
 
 private:
+    void UpdateAI(float deltaTime);
+    void PerformAttack();
+    AIState mAIState;
+    float mStateTimer;
+
+    const float mAttackWindUpTime = 0.5f;
+    const float mAttackDuration = 0.5f;
+    const float mAttackCooldown = 1.0f;
+    const float mAttackDamage = 10.0f;
+    AABBColliderComponent* mAggroCollider;
+
     bool mIsDying;
     float mForwardSpeed;
     float mDyingTimer;

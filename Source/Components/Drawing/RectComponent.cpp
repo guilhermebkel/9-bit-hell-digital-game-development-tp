@@ -22,7 +22,9 @@ void RectComponent::Draw(class Renderer *renderer)
 {
     if(mIsVisible)
     {
-        renderer->DrawRect(mOwner->GetPosition(), Vector2(mWidth, mHeight), mOwner->GetRotation(),
+        Vector2 finalSize(mWidth * mOwner->GetScale().x, mHeight * mOwner->GetScale().y);
+
+        renderer->DrawRect(mOwner->GetPosition(), finalSize, mOwner->GetRotation(),
                            mColor, GetGame()->GetCameraPos(), mMode);
     }
 }

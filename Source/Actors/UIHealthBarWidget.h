@@ -11,11 +11,9 @@ public:
     void SetVisible(bool visible);
 
 private:
-    class Actor* mBackgroundActor;
     class Actor* mFillActor;
     class Actor* mFrameActor;
 
-    class RectComponent* mBackgroundRect;
     class RectComponent* mFillRect;
 
     Vector2 mPosition;

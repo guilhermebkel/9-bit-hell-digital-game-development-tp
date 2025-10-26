@@ -21,7 +21,6 @@ UIHealthBarWidget::UIHealthBarWidget(Game* game, const Vector2& position, const 
 
 UIHealthBarWidget::~UIHealthBarWidget()
 {
-    mBackgroundActor->SetState(ActorState::Destroy);
     mFillActor->SetState(ActorState::Destroy);
     mFrameActor->SetState(ActorState::Destroy);
 }
@@ -42,7 +41,6 @@ void UIHealthBarWidget::Update(float currentValue, float maxValue)
 void UIHealthBarWidget::SetVisible(bool visible)
 {
     ActorState newState = visible ? ActorState::Active : ActorState::Paused;
-    mBackgroundActor->SetState(newState);
     mFillActor->SetState(newState);
     mFrameActor->SetState(newState);
 }
