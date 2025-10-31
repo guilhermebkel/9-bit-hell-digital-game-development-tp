@@ -2,15 +2,11 @@
 #include "Scene.h"
 #include <vector>
 
-class UIStatWidget;
-class UIButtonComponent;
-class Player;
-
-class UpgradeScene : public Scene
+class GameOverScene : public Scene
 {
 public:
-    explicit UpgradeScene(class Game* game);
-    ~UpgradeScene() override;
+    explicit GameOverScene(class Game* game);
+    ~GameOverScene() override;
 
     void Load() override;
     void Unload() override;
@@ -23,8 +19,8 @@ private:
     void ClickSelectedButton();
     void UpdateButtonSelection();
 
-    UIStatWidget* mCoinWidget;
-    std::vector<UIButtonComponent*> mButtons;
+    std::vector<class UIButtonComponent*> mButtons;
+    std::vector<class Actor*> mSceneActors;
 
     size_t mSelectedButtonIndex;
     bool mUpPressed = false;

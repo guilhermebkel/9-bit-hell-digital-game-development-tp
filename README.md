@@ -34,37 +34,25 @@ Para compilar e executar o projeto localmente, você precisará de um ambiente d
 
 ```bash
 sudo apt-get update
-sudo apt-get install build-essential cmake libsdl2-dev libsdl2-image-dev libglew-dev
-```
-
-#### Instalação das Dependências (Exemplo para macOS com Homebrew)
-
-```bash
-brew install cmake sdl2 sdl2_image glew
+sudo apt-get install build-essential cmake libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libglew-dev
 ```
 
 ### Instruções de Compilação
 
 O projeto utiliza CMake para gerar os arquivos de build. O processo a seguir é o padrão para compilação fora da árvore de fontes (*out-of-source build*).
 
-1.  **Clone o repositório:**
-    ```bash
-    git clone [URL_DO_SEU_REPOSITORIO]
-    cd 9-bit-Hell
-    ```
-
-2.  **Crie um diretório de build:**
+1.  **Crie um diretório de build:**
     ```bash
     mkdir build
     cd build
     ```
 
-3.  **Execute o CMake para gerar os arquivos de projeto:**
+2.  **Execute o CMake para gerar os arquivos de projeto:**
     ```bash
     cmake ..
     ```
 
-4.  **Compile o código:**
+3.  **Compile o código:**
     ```bash
     make
     ```
@@ -82,7 +70,9 @@ Após a compilação, o executável estará dentro da pasta `build`.
 ### Controles
 
 *   **W, A, S, D:** Movimento do Jogador
-*   **Espaço:** Ação de Ataque
+*   **J:** Ação de Ataque Corpo a Corpo
+*   **K:** Ação de Ataque à Distância
+*   **Enter:** Selecionar Opção
 
 ## Integrantes
 

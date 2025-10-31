@@ -6,6 +6,7 @@ DrawComponent::DrawComponent(class Actor *owner, int drawOrder)
         : Component(owner)
         , mDrawOrder(drawOrder)
         , mIsVisible(true)
+        , mColor(Vector3::One)
 {
     mOwner->GetGame()->AddDrawable(this);
 }

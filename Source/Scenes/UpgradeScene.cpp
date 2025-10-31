@@ -26,13 +26,11 @@ void UpgradeScene::Load()
     bgActor->SetPosition(Vector2(centerX, Game::WINDOW_HEIGHT / 2.0f));
     auto* bgRect = new RectComponent(bgActor, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT, RendererMode::TRIANGLES);
     bgRect->SetColor(Vector4(0.0f, 0.0f, 0.0f, 0.85f));
-    mSceneActors.push_back(bgActor);
 
     auto* titleActor = new Actor(GetGame());
     auto* titleText = new UITextComponent(titleActor);
     titleText->SetText("STORE", Color::White, 48);
     titleActor->SetPosition(Vector2(centerX, 100.0f));
-    mSceneActors.push_back(titleActor);
 
     mCoinWidget = new UIStatWidget(GetGame(), "COINS", 24);
     mCoinWidget->SetOutline(true);
@@ -53,7 +51,6 @@ void UpgradeScene::Load()
         }
     );
     mButtons.push_back(fireRateButton);
-    mSceneActors.push_back(fireRateActor);
 
     auto* nextLevelActor = new Actor(GetGame());
     nextLevelActor->SetPosition(Vector2(centerX, Game:: WINDOW_HEIGHT - 100.0f));
@@ -63,18 +60,12 @@ void UpgradeScene::Load()
         }
     );
     mButtons.push_back(nextLevelButton);
-    mSceneActors.push_back(nextLevelActor);
-    
+
     UpdateButtonSelection();
 }
 
 void UpgradeScene::Unload()
 {
-    for (auto actor : mSceneActors)
-    {
-        actor->SetState(ActorState::Destroy);
-    }
-    mSceneActors.clear();
 }
 
 void UpgradeScene::Update(float deltaTime)

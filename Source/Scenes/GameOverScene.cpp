@@ -1,20 +1,22 @@
-#include "MainMenuScene.h"
+#include "GameOverScene.h"
 #include "../Game.h"
+#include "../Actors/Actor.h"
 #include "../Actors/Background.h"
+#include "../Actors/HUD.h"
+#include "../Components/Drawing/RectComponent.h"
 #include "../Components/Drawing/UIButtonComponent.h"
 #include "../Components/Drawing/UITextComponent.h"
 
-MainMenuScene::MainMenuScene(Game* game) :
-    Scene(game)
+GameOverScene::GameOverScene(Game* game)
+    : Scene(game)
     , mSelectedButtonIndex(0)
 {}
 
-void MainMenuScene::Load()
-{
-    GetGame()->ResetPlayerUpgrades();
-    GetGame()->ResetCorruptionLevel();
+GameOverScene::~GameOverScene() {}
 
-    new Background(GetGame(), "../Assets/MenuBackground.png");
+void GameOverScene::Load()
+{
+    new Background(GetGame(), "../Assets/GameOverBackground.gif");
 
     const Vector2 buttonSize(300.0f, 40.0f);
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;
@@ -23,11 +25,11 @@ void MainMenuScene::Load()
     Actor* mTitleActor = new Actor(GetGame());
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor);
-    titleText->SetText("9-BIT HELL", Color::White, 48);
+    titleText->SetText("GAME OVER", Color::White, 48);
 
     Actor* startButtonActor = new Actor(GetGame());
     startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
-    auto startButton = new UIButtonComponent(startButtonActor, "START GAME", buttonSize,
+    auto startButton = new UIButtonComponent(startButtonActor, "TRY AGAIN", buttonSize,
         [this]() {
             GetGame()->SetScene(Game::GameScene::Gameplay);
         }
@@ -36,9 +38,9 @@ void MainMenuScene::Load()
 
     Actor* quitButtonActor = new Actor(GetGame());
     quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));
-    auto quitButton = new UIButtonComponent(quitButtonActor, "EXIT", buttonSize,
+    auto quitButton = new UIButtonComponent(quitButtonActor, "EXIT TO MAIN MENU", buttonSize,
         [this]() {
-            GetGame()->Quit();
+            GetGame()->SetScene(Game::GameScene::MainMenu);
         }
     );
     mButtons.push_back(quitButton);
@@ -46,15 +48,18 @@ void MainMenuScene::Load()
     UpdateButtonSelection();
 }
 
-void MainMenuScene::Unload()
+void GameOverScene::Unload()
 {
+    for (auto actor : mSceneActors)
+    {
+        actor->SetState(ActorState::Destroy);
+    }
+    mSceneActors.clear();
 }
 
-void MainMenuScene::Update(float deltaTime)
-{
-}
+void GameOverScene::Update(float deltaTime) {}
 
-void MainMenuScene::ProcessInput(const uint8_t* keyState)
+void GameOverScene::ProcessInput(const uint8_t* keyState)
 {
     if (keyState[SDL_SCANCODE_W] && !mUpPressed)
     {
@@ -87,13 +92,13 @@ void MainMenuScene::ProcessInput(const uint8_t* keyState)
     }
 }
 
-void MainMenuScene::SelectNextButton()
+void GameOverScene::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
     UpdateButtonSelection();
 }
 
-void MainMenuScene::SelectPreviousButton()
+void GameOverScene::SelectPreviousButton()
 {
     if (mSelectedButtonIndex == 0)
     {
@@ -106,7 +111,7 @@ void MainMenuScene::SelectPreviousButton()
     UpdateButtonSelection();
 }
 
-void MainMenuScene::ClickSelectedButton()
+void GameOverScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
@@ -114,7 +119,7 @@ void MainMenuScene::ClickSelectedButton()
     }
 }
 
-void MainMenuScene::UpdateButtonSelection()
+void GameOverScene::UpdateButtonSelection()
 {
     for (size_t i = 0; i < mButtons.size(); ++i)
     {

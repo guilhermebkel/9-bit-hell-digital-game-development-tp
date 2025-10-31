@@ -46,6 +46,15 @@ void GameplayScene::Update(float deltaTime)
         GetGame()->SetCurrentLevelID(mNextLevelID);
         GetGame()->SetScene(Game::GameScene::Upgrade);
     }
+
+    bool playerDiedByEnemy = GetGame()->GetPlayer()->GetHealth() <= 0.0f;
+    bool playerDiedByCorruption = GetGame()->GetCorruptionLevel() >= 1.0f;
+    bool isGameOver = playerDiedByEnemy || playerDiedByCorruption;
+
+    if (isGameOver)
+    {
+        GetGame()->SetScene(Game::GameScene::GameOver);
+    }
 }
 
 void GameplayScene::ProcessInput(const uint8_t* keyState)

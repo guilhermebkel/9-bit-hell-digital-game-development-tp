@@ -14,11 +14,17 @@ public:
         Chasing
     };
 
-    static constexpr float SPRITE_WIDTH = 48.0f;
-    static constexpr float SPRITE_HEIGHT = 48.0f;
+    static constexpr float SPRITE_WIDTH = 80.0f;
+    static constexpr float SPRITE_HEIGHT = 80.0f;
     static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.50f;
     static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.25f;
-    static constexpr float AGGRO_AREA_SIZE = 256.0f;
+    static constexpr float AGGRO_AREA_SIZE = 800.0f;
+
+    static constexpr float ATTACK_DISTANCE = 50.0f;
+    static constexpr float ATTACK_WIND_UP_TIME = 0.5f;
+    static constexpr float ATTACK_DURATION = 0.5f;
+    static constexpr float ATTACK_COOLDOWN = 1.0f;
+    static constexpr float ATTACK_DAMAGE = 10.0f;
 
     explicit Enemy(Game* game, float forwardSpeed = 100.0f, float deathTime = 0.5f);
 
@@ -34,10 +40,6 @@ private:
     AIState mAIState;
     float mStateTimer;
 
-    const float mAttackWindUpTime = 0.5f;
-    const float mAttackDuration = 0.5f;
-    const float mAttackCooldown = 1.0f;
-    const float mAttackDamage = 10.0f;
     AABBColliderComponent* mAggroCollider;
 
     bool mIsDying;

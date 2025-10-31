@@ -10,6 +10,7 @@
 #include <SDL_ttf.h>
 #include "Actors/PauseScreen.h"
 #include "Components/Drawing/UIButtonComponent.h"
+#include "Scenes/GameOverScene.h"
 #include "Scenes/MainMenuScene.h"
 #include "Scenes/GameplayScene.h"
 #include "Scenes/Scene.h"
@@ -26,7 +27,7 @@ Game::Game()
         ,mDrawSortRequested(false)
         ,mUpperBoundaryY(0.0f)
         ,mCorruptionLevel(0.0f)
-        ,mCorruptionRate(0.008f)
+        ,mCorruptionRate(Game::INITIAL_CORRUPTION_RATE)
         ,mPlayer(nullptr)
 {
 
@@ -101,6 +102,9 @@ void Game::ChangeScene()
             break;
         case GameScene::Upgrade:
             mCurrentScene = std::make_unique<UpgradeScene>(this);
+            break;
+        case GameScene::GameOver:
+            mCurrentScene = std::make_unique<GameOverScene>(this);
             break;
     }
 

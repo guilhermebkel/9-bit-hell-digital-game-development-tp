@@ -17,9 +17,12 @@ public:
     int GetDrawOrder() const { return mDrawOrder; }
     void SetDrawOrder(int drawOrder);
 
+    void SetColor(const Vector3& color) { mColor = color; }
+
     void SetVisible(bool visible) { mIsVisible = visible; }
 
 protected:
     int mDrawOrder;
     bool mIsVisible;
+    Vector3 mColor;
 };

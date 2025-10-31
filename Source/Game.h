@@ -9,6 +9,12 @@
 class Game
 {
 public:
+    static const int WINDOW_WIDTH   = 1024;
+    static const int WINDOW_HEIGHT  = 768;
+    static const int FPS = 60;
+
+    static const int INITIAL_CORRUPTION_RATE  = 0.008f;
+
     struct PlayerUpgrades
     {
         int coins = 0;
@@ -19,7 +25,8 @@ public:
     {
         MainMenu,
         Gameplay,
-        Upgrade
+        Upgrade,
+        GameOver
     };
 
     enum class SceneState
@@ -47,10 +54,6 @@ public:
     // Renderer
     class Renderer* GetRenderer() { return mRenderer; }
 
-    static const int WINDOW_WIDTH   = 1024;
-    static const int WINDOW_HEIGHT  = 768;
-    static const int FPS = 60;
-
     // Draw functions
     void AddDrawable(class DrawComponent* drawable);
     void RemoveDrawable(class DrawComponent* drawable);
@@ -69,6 +72,7 @@ public:
     void SpendCoins(int amount) { mPlayerUpgrades.coins -= amount; }
     void UpgradeFireRate();
     float GetPlayerFireRate() const { return mPlayerUpgrades.fireRate; }
+    void ResetPlayerUpgrades() { mPlayerUpgrades = PlayerUpgrades(); }
 
     // Camera functions
     Vector2& GetCameraPos() { return mCameraPos; };
@@ -84,6 +88,7 @@ public:
         mCorruptionLevel = Math::Clamp(mCorruptionLevel, 0.0f, 1.0f);
     }
     float GetCorruptionRate() const { return mCorruptionRate; }
+    void ResetCorruptionLevel() { mCorruptionLevel = 0.0f; }
 
     // Limitation in Y-axis for movement inside Scenario
     float GetUpperBoundary() const { return mUpperBoundaryY; }

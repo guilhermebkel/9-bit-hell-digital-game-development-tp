@@ -26,7 +26,8 @@ in vec2 fragTexCoord;
 void main()
 {
     vec4 texColor = texture(uTexture, fragTexCoord);
+    vec4 tintedTexColor = vec4(uColor, 1.0) * texColor;
 
-    outColor = mix(vec4(uColor, 1.0), texColor, uTextureFactor);
+    outColor = mix(vec4(uColor, 1.0), tintedTexColor, uTextureFactor);
     outColor.a *= uAlpha;
 }

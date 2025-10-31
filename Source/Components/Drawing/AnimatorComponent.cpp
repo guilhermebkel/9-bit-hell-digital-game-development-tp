@@ -92,7 +92,7 @@ void AnimatorComponent::Draw(Renderer* renderer)
                 mOwner->GetPosition(),
                 size,
                 mOwner->GetRotation(),
-                Vector3(1.0f, 1.0f, 1.0f),
+                mColor,
                 mTexture,
                 texRect,
                 mOwner->GetGame()->GetCameraPos(),

@@ -29,6 +29,8 @@ Player::Player(Game* game, const float forwardSpeed)
         Player::SPRITE_HEIGHT
     );
 
+    mDrawComponent->SetColor(Vector3(1.0f, 1.0f, 1.0f));
+
     mDrawComponent->AddAnimation("idle", {1, 2});
     mDrawComponent->AddAnimation("run", {8, 9, 10, 11, 12, 13, 14, 15, 16});
     mDrawComponent->AddAnimation("attack", {3, 4, 5, 6});

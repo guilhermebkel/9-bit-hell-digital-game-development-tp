@@ -20,16 +20,21 @@ Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
 {
     mDrawComponent = new AnimatorComponent(
         this,
-        "../Assets/Sprites/Goomba/Goomba.png",
-        "../Assets/Sprites/Goomba/Goomba.json",
+        "../Assets/Sprites/Player/Player.png",
+        "../Assets/Sprites/Player/Player.json",
         Enemy::SPRITE_WIDTH,
         Enemy::SPRITE_HEIGHT
     );
 
-    mDrawComponent->AddAnimation("walk", {1, 2});
-    mDrawComponent->AddAnimation("dead", {0});
+    mDrawComponent->SetColor(Vector3(1.0f, 0.39f, 0.39f));
+
+    mDrawComponent->AddAnimation("idle", {1, 2});
+    mDrawComponent->AddAnimation("walk", {8, 9, 10, 11, 12, 13, 14, 15, 16});
+    mDrawComponent->AddAnimation("attack", {3, 4, 5, 6});
+    mDrawComponent->AddAnimation("dead", {7, 0});
+
     mDrawComponent->SetAnimation("walk");
-    mDrawComponent->SetAnimFPS(5.0f);
+    mDrawComponent->SetAnimFPS(8.0f);
 
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);
 
@@ -92,6 +97,15 @@ void Enemy::OnUpdate(float deltaTime)
 
     mRigidBodyComponent->SetVelocity(vel);
 
+    if (vel.x < -1.0f)
+    {
+        SetScale(Vector2(-1.0f, 1.0f));
+    }
+    else if (vel.x > 1.0f)
+    {
+        SetScale(Vector2(1.0f, 1.0f));
+    }
+
     if (mDrawComponent)
     {
         mDrawComponent->SetDrawOrder(100 + static_cast<int>(GetPosition().y));
@@ -108,10 +122,10 @@ void Enemy::OnHorizontalCollision(const float minOverlap, AABBColliderComponent*
 
             if (player)
             {
-                player->TakeDamage(mAttackDamage);
+                player->TakeDamage(Enemy::ATTACK_DAMAGE);
 
                 mAIState = AIState::Cooldown;
-                mStateTimer = mAttackCooldown;
+                mStateTimer = Enemy::ATTACK_COOLDOWN;
             }
         }
     }
@@ -126,10 +140,10 @@ void Enemy::OnVerticalCollision(const float minOverlap, AABBColliderComponent* o
             Player* player = dynamic_cast<Player*>(other->GetOwner());
             if (player)
             {
-                player->TakeDamage(mAttackDamage);
+                player->TakeDamage(Enemy::ATTACK_DAMAGE);
 
                 mAIState = AIState::Cooldown;
-                mStateTimer = mAttackCooldown;
+                mStateTimer = Enemy::ATTACK_COOLDOWN;
             }
         }
     }
@@ -146,7 +160,6 @@ void Enemy::UpdateAI(float deltaTime)
         return;
     }
 
-    const float attackDistance = 30.0f;
     auto playerCollider = player->GetComponent<AABBColliderComponent>();
 
     switch (mAIState)
@@ -187,10 +200,10 @@ void Enemy::UpdateAI(float deltaTime)
                 SetScale(Vector2(1.0f, 1.0f));
             }
 
-            if (Vector2::Distance(GetPosition(), player->GetPosition()) < attackDistance)
+            if (Vector2::Distance(GetPosition(), player->GetPosition()) < Enemy::ATTACK_DISTANCE)
             {
                 mAIState = AIState::WindUp;
-                mStateTimer = mAttackWindUpTime;
+                mStateTimer = Enemy::ATTACK_WIND_UP_TIME;
                 mRigidBodyComponent->SetVelocity(Vector2::Zero);
             }
             break;
@@ -203,7 +216,7 @@ void Enemy::UpdateAI(float deltaTime)
             if (mStateTimer <= 0.0f)
             {
                 mAIState = AIState::Attacking;
-                mStateTimer = mAttackDuration;
+                mStateTimer = Enemy::ATTACK_DURATION;
                 mDrawComponent->SetAnimation("attack");
             }
             break;
@@ -214,7 +227,7 @@ void Enemy::UpdateAI(float deltaTime)
             if (mStateTimer <= 0.0f)
             {
                 mAIState = AIState::Cooldown;
-                mStateTimer = mAttackCooldown;
+                mStateTimer = Enemy::ATTACK_COOLDOWN;
                 mDrawComponent->SetAnimation("walk");
             }
             break;
