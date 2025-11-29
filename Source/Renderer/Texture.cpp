@@ -65,15 +65,25 @@ void Texture::CreateFromSurface(SDL_Surface* surface)
 {
     if (!surface)
     {
+        SDL_Log("Surface is null, cannot create texture from it.");
         return;
     }
 
-    mWidth = surface->w;
-    mHeight = surface->h;
+    SDL_Surface* convertedSurface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
+    if (!convertedSurface)
+    {
+        SDL_Log("Failed to convert surface to RGBA32. SDL Error: %s", SDL_GetError());
+        return;
+    }
+
+    mWidth = convertedSurface->w;
+    mHeight = convertedSurface->h;
 
     glGenTextures(1, &mTextureID);
     glBindTexture(GL_TEXTURE_2D, mTextureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, convertedSurface->pixels);
+
+    SDL_FreeSurface(convertedSurface);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
