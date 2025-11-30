@@ -4,7 +4,8 @@
 
 ## Screenshots
 
-...
+![Main Menu](screenshot-main-menu.png)
+![Game Over](screenshot-game-over.png)
 
 ## Título
 
