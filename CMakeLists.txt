@@ -120,7 +120,7 @@ if(WIN32)
             ${SDL2MAIN_LIBRARY}
             ${SDL2_IMAGE_LIBRARY}
             ${SDL2_TTF_LIBRARY}
-            ${SDL2_MIXER_LIBRARIES}
+            ${SDL2_MIXER_LIBRARY}
             ${GLEW_LIBRARY}
             opengl32
     )
