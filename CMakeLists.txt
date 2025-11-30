@@ -83,23 +83,28 @@ add_executable(${PROJECT_NAME}
         Source/Scenes/UpgradeScene.h
         Source/Scenes/GameOverScene.cpp
         Source/Scenes/GameOverScene.h
+        Source/Audio/AudioSystem.cpp
+        Source/Audio/AudioSystem.h
 )
 
 if(WIN32)
     set(SDL2_PATH "C:/Program Files/SDL2")
     set(SDL2_IMAGE_PATH "C:/Program Files/SDL2_image")
     set(SDL2_TTF_PATH "C:/Program Files/SDL2_ttf")
+    set(SDL2_MIXER_PATH "C:/Program Files/SDL2_mixer")
     set(GLEW_PATH "C:/Program Files/GLEW")
 
     set(SDL2_INCLUDE_DIR "${SDL2_PATH}/include")
     set(SDL2_IMAGE_INCLUDE_DIR "${SDL2_IMAGE_PATH}/include/SDL2")
     set(SDL2_TTF_INCLUDE_DIR "${SDL2_TTF_PATH}/include/SDL2")
+    set(SDL2_MIXER_INCLUDE_DIR "${SDL2_MIXER_PATH}/include/SDL2")
     set(GLEW_INCLUDE_DIR "${GLEW_PATH}/include")
 
     set(SDL2_LIBRARY "${SDL2_PATH}/lib/x64/SDL2.lib")
     set(SDL2MAIN_LIBRARY "${SDL2_PATH}/lib/x64/SDL2main.lib")
     set(SDL2_IMAGE_LIBRARY "${SDL2_IMAGE_PATH}/lib/x64/SDL2_image.lib")
     set(SDL2_TTF_LIBRARY "${SDL2_TTF_PATH}/lib/x64/SDL2_ttf.lib")
+    set(SDL2_MIXER_LIBRARY "${SDL2_MIXER_PATH}/lib/x64/SDL2_mixer.lib")
     set(GLEW_LIBRARY "${GLEW_PATH}/lib/Release/x64/glew32.lib")
 
     target_include_directories(${PROJECT_NAME} PRIVATE
@@ -107,6 +112,7 @@ if(WIN32)
             ${SDL2_IMAGE_INCLUDE_DIR}
             ${SDL2_TTF_INCLUDE_DIR}
             ${GLEW_INCLUDE_DIR}
+            ${SDL2_MIXER_INCLUDE_DIR}
     )
 
     target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -114,22 +120,29 @@ if(WIN32)
             ${SDL2MAIN_LIBRARY}
             ${SDL2_IMAGE_LIBRARY}
             ${SDL2_TTF_LIBRARY}
+            ${SDL2_MIXER_LIBRARIES}
             ${GLEW_LIBRARY}
             opengl32
     )
 
 elseif(UNIX)
-    find_package(SDL2 2.32.2 EXACT REQUIRED)
+    find_package(SDL2 EXACT REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_ttf REQUIRED)
+    find_package(SDL2_mixer REQUIRED)
+    find_library(SDL2_MIXER_LIBRARY SDL2_mixer)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_MIXER_LIBRARY})
     find_package(GLEW REQUIRED)
     find_package(OpenGL REQUIRED)
+
 
     target_include_directories(${PROJECT_NAME} PRIVATE
             ${SDL2_TTF_INCLUDE_DIR}
             ${SDL2_INCLUDE_DIR}
             ${SDL2_IMAGE_INCLUDE_DIR}
+            ${SDL2_MIXER_INCLUDE_DIR}
             ${GLEW_INCLUDE_DIR}
+
     )
 
     target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -137,6 +150,8 @@ elseif(UNIX)
             SDL2::SDL2
             ${SDL2_IMAGE_LIBRARIES}
             ${SDL2_TTF_LIBRARIES}
+            ${SDL2_MIXER_LIBRARIES}
             OpenGL::GL
+
     )
 endif()

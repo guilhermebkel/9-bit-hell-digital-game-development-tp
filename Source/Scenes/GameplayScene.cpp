@@ -6,6 +6,8 @@
 #include "../Actors/Enemy.h"
 #include "../Actors/Spawner.h"
 #include "../Actors/HUD.h"
+#include "../Audio/AudioSystem.h"
+
 
 GameplayScene::GameplayScene(Game* game, LevelID level)
     : Scene(game)
@@ -18,7 +20,7 @@ void GameplayScene::Load()
 
     new CorruptionOverlay(GetGame());
     new HUD(GetGame());
-
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/gameplay_03-M1-Stage-5-Synapse-Retrogenesis.ogg");
     switch (mLevelID)
     {
         case LevelID::Tutorial:

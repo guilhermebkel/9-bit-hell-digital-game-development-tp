@@ -5,6 +5,7 @@
 #include "Renderer/Renderer.h"
 #include "Scenes/GameplayScene.h"
 #include "Scenes/Scene.h"
+#include "Audio/AudioSystem.h"
 
 class Game
 {
@@ -53,6 +54,9 @@ public:
 
     // Renderer
     class Renderer* GetRenderer() { return mRenderer; }
+
+    // Audio
+    class AudioSystem* GetAudioSystem() { return mAudioSystem; }
 
     // Draw functions
     void AddDrawable(class DrawComponent* drawable);
@@ -132,6 +136,7 @@ private:
     // SDL stuff
     SDL_Window* mWindow;
     class Renderer* mRenderer;
+    class AudioSystem* mAudioSystem;
 
     // Track elapsed time since game start
     Uint32 mTicksCount;

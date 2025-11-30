@@ -6,6 +6,7 @@
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Random.h" // Precisamos para a velocidade aleatória
+#include "../Audio/AudioSystem.h"
 
 Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         : Actor(game)
@@ -74,6 +75,7 @@ void Enemy::Kill()
 {
     if (mIsDying) return;
     mIsDying = true;
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/projetil_sfx_throw.wav");
     mDrawComponent->SetAnimation("dead");
     mRigidBodyComponent->SetEnabled(false);
     mColliderComponent->SetEnabled(false);

@@ -14,6 +14,7 @@
 #include "Scenes/MainMenuScene.h"
 #include "Scenes/GameplayScene.h"
 #include "Scenes/Scene.h"
+#include "Audio/AudioSystem.h"
 #include "Scenes/UpgradeScene.h"
 
 Game::Game()
@@ -29,6 +30,7 @@ Game::Game()
         ,mCorruptionLevel(0.0f)
         ,mCorruptionRate(Game::INITIAL_CORRUPTION_RATE)
         ,mPlayer(nullptr)
+        ,mAudioSystem(nullptr)
 {
 
 }
@@ -37,7 +39,7 @@ bool Game::Initialize()
 {
     Random::Init();
 
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
     {
         SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
         return false;
@@ -58,6 +60,13 @@ bool Game::Initialize()
 
     mRenderer = new Renderer(mWindow);
     mRenderer->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    mAudioSystem = new AudioSystem();
+    if (!mAudioSystem->Initialize())
+    {
+        SDL_Log("Failed to initialize Audio System");
+        return false;
+    }
 
     mNextScene = GameScene::MainMenu;
     ChangeScene();
@@ -405,6 +414,9 @@ void Game::Shutdown()
     mRenderer->Shutdown();
     delete mRenderer;
     mRenderer = nullptr;
+
+    mAudioSystem->Shutdown();
+    delete mAudioSystem;
 
     SDL_DestroyWindow(mWindow);
 

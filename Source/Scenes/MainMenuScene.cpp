@@ -3,6 +3,7 @@
 #include "../Actors/Background.h"
 #include "../Components/Drawing/UIButtonComponent.h"
 #include "../Components/Drawing/UITextComponent.h"
+#include "../Audio/AudioSystem.h"
 
 MainMenuScene::MainMenuScene(Game* game) :
     Scene(game)
@@ -11,6 +12,9 @@ MainMenuScene::MainMenuScene(Game* game) :
 
 void MainMenuScene::Load()
 {
+    // Toca a música de fundo do menu em loop
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/Menu_22_Stage 2_ The Way Ahead Feels Lonely.mp3");
+
     GetGame()->ResetPlayerUpgrades();
     GetGame()->ResetCorruptionLevel();
 
