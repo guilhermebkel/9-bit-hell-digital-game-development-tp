@@ -32,5 +32,7 @@ A vitória depende da capacidade de avançar pelos círculos do Inferno enquanto
 ## Créditos
 
 **Gabriel Vieira Pereira da Silva** – 2020105777
+
 **Guilherme Mota Bromonschenkel Lima** – 2019027571
+
 **Pedro Medina Lara Silva** – 2022423431
