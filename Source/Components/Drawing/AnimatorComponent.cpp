@@ -84,7 +84,21 @@ void AnimatorComponent::Draw(Renderer* renderer)
 
                 int spriteSheetIndex = animFrames[frameIndex];
 
+                // Correção: impede crash caso o index seja inválido
+                if (spriteSheetIndex < 0 || spriteSheetIndex >= static_cast<int>(mSpriteSheetData.size()))
+                {
+                    SDL_Log("ERRO: spriteSheetIndex fora do range! index=%d size=%zu anim=%s frameIndex=%d totalFrames=%d",
+                            spriteSheetIndex,
+                            mSpriteSheetData.size(),
+                            mAnimName.c_str(),
+                            frameIndex,
+                            totalFrames
+                    );
+                    return; // Evita crash
+                }
+
                 texRect = mSpriteSheetData[spriteSheetIndex];
+
             }
         }
 

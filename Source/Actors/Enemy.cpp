@@ -9,55 +9,54 @@
 #include "../Audio/AudioSystem.h"
 
 Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
-        : Actor(game)
-        , mIsDying(false)
-        , mForwardSpeed(forwardSpeed)
-        , mDyingTimer(deathTime)
-        , mRigidBodyComponent(nullptr)
-        , mColliderComponent(nullptr)
-        , mDrawComponent(nullptr)
-        , mAIState(AIState::Moving)
-        , mStateTimer(0.0f)
+    : Actor(game)
+      , mIsDying(false)
+      , mForwardSpeed(forwardSpeed)
+      , mDyingTimer(deathTime)
+      , mRigidBodyComponent(nullptr)
+      , mColliderComponent(nullptr)
+      , mDrawComponent(nullptr)
+      , mAIState(AIState::Moving)
+      , mStateTimer(0.0f)
 {
     std::string texturePath;
     std::string jsonPath;
 
     switch (type)
     {
-        case EnemyType::Eye:
-            texturePath = "../Assets/Sprites/EyeEnemy/EyeEnemy.png";
-            jsonPath = "../Assets/Sprites/EyeEnemy/EyeEnemy.json";
-            mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
-            mDrawComponent->SetColor(Vector3(1.0f, 0.39f, 0.39f)); // Vermelho
-            mDrawComponent->AddAnimation("attack", {0, 1});
-            mDrawComponent->AddAnimation("idle", {2, 3});
-            mDrawComponent->AddAnimation("walk", {4, 5});
-            mDrawComponent->AddAnimation("dead", {2}); // Placeholder
-            mDrawComponent->SetAnimation("walk");
-            mDrawComponent->SetAnimFPS(4.0f);
-            break;
+    case EnemyType::Eye:
+        texturePath = "../Assets/Sprites/EyeEnemy/EyeEnemy.png";
+        jsonPath = "../Assets/Sprites/EyeEnemy/EyeEnemy.json";
+        mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
+        mDrawComponent->SetColor(Vector3(1.0f, 0.39f, 0.39f)); // Vermelho
+        mDrawComponent->AddAnimation("attack", {0, 1});
+        mDrawComponent->AddAnimation("idle", {2, 3});
+        mDrawComponent->AddAnimation("walk", {4, 5});
+        mDrawComponent->AddAnimation("dead", {2});
+        mDrawComponent->SetAnimation("walk");
+        mDrawComponent->SetAnimFPS(4.0f);
+        break;
 
-        case EnemyType::Horn:
-            texturePath = "../Assets/Sprites/HornEnemy/HornEnemy.png";
-            jsonPath = "../Assets/Sprites/HornEnemy/HornEnemy.json";
-            mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
-            mDrawComponent->SetColor(Vector3(0.5f, 1.0f, 0.5f)); // Verde
-            mDrawComponent->AddAnimation("attack", {0, 1});
-            mDrawComponent->AddAnimation("idle", {2, 3});
-            // Nota: O frame 5 ("Walk1.png") no seu HornEnemy.json parece estar incorreto.
-            // Estou usando os frames 2 e 4 para a animação de andar.
-            mDrawComponent->AddAnimation("walk", {2, 4});
-            mDrawComponent->AddAnimation("dead", {2}); // Placeholder
-            mDrawComponent->SetAnimation("walk");
-            mDrawComponent->SetAnimFPS(4.0f);
-            break;
+    case EnemyType::Horn:
+        texturePath = "../Assets/Sprites/HornEnemy/HornEnemy.png";
+        jsonPath = "../Assets/Sprites/HornEnemy/HornEnemy.json";
+        mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
+        mDrawComponent->SetColor(Vector3(0.5f, 1.0f, 0.5f)); // Verde
+        mDrawComponent->AddAnimation("attack", {0, 1});
+        mDrawComponent->AddAnimation("idle", {2, 3});
+        mDrawComponent->AddAnimation("walk", {5, 4});
+        mDrawComponent->AddAnimation("dead", {2});
+        mDrawComponent->SetAnimation("walk");
+        mDrawComponent->SetAnimFPS(4.0f);
+        break;
     }
 
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);
 
     // Align collider base with sprite base
     const int dy = (int)((Enemy::SPRITE_HEIGHT / 2.0f) - (Enemy::PHYSICS_HEIGHT / 2.0f));
-    mColliderComponent = new AABBColliderComponent(this, 0, dy, Enemy::PHYSICS_WIDTH, Enemy::PHYSICS_HEIGHT, ColliderLayer::Enemy);
+    mColliderComponent = new AABBColliderComponent(this, 0, dy, Enemy::PHYSICS_WIDTH, Enemy::PHYSICS_HEIGHT,
+                                                   ColliderLayer::Enemy);
 
     const float aggroWidth = AGGRO_AREA_SIZE;
     const float aggroHeight = AGGRO_AREA_SIZE;
@@ -66,7 +65,8 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
     Vector2 initialVelocity = Vector2::Zero;
     while (initialVelocity.Length() < 1.0f)
     {
-        initialVelocity = Random::GetVector(Vector2(-mForwardSpeed, -mForwardSpeed), Vector2(mForwardSpeed, mForwardSpeed));
+        initialVelocity = Random::GetVector(Vector2(-mForwardSpeed, -mForwardSpeed),
+                                            Vector2(mForwardSpeed, mForwardSpeed));
     }
     mRigidBodyComponent->SetVelocity(initialVelocity);
 }
@@ -108,7 +108,8 @@ void Enemy::OnUpdate(float deltaTime)
         vel.x *= -1.0f;
     }
 
-    if ((pos.y <= GetGame()->GetUpperBoundary() + halfHeight && vel.y < 0.0f) || (pos.y >= Game::WINDOW_HEIGHT - halfHeight && vel.y > 0.0f))
+    if ((pos.y <= GetGame()->GetUpperBoundary() + halfHeight && vel.y < 0.0f) || (pos.y >= Game::WINDOW_HEIGHT -
+        halfHeight && vel.y > 0.0f))
     {
         vel.y *= -1.0f;
     }
@@ -182,7 +183,7 @@ void Enemy::UpdateAI(float deltaTime)
 
     switch (mAIState)
     {
-        case AIState::Moving:
+    case AIState::Moving:
         {
             mRigidBodyComponent->SetEnabled(true);
             mDrawComponent->SetAnimation("walk");
@@ -194,7 +195,7 @@ void Enemy::UpdateAI(float deltaTime)
             break;
         }
 
-        case AIState::Chasing:
+    case AIState::Chasing:
         {
             mRigidBodyComponent->SetEnabled(true);
             mDrawComponent->SetAnimation("walk");
@@ -202,7 +203,8 @@ void Enemy::UpdateAI(float deltaTime)
             if (!playerCollider || !mAggroCollider->Intersect(*playerCollider))
             {
                 mAIState = AIState::Moving;
-                Vector2 newVel = Random::GetVector(Vector2(-mForwardSpeed, -mForwardSpeed), Vector2(mForwardSpeed, mForwardSpeed));
+                Vector2 newVel = Random::GetVector(Vector2(-mForwardSpeed, -mForwardSpeed),
+                                                   Vector2(mForwardSpeed, mForwardSpeed));
                 mRigidBodyComponent->SetVelocity(newVel);
                 return;
             }
@@ -212,9 +214,12 @@ void Enemy::UpdateAI(float deltaTime)
 
             mRigidBodyComponent->SetVelocity(direction * mForwardSpeed);
 
-            if (direction.x < 0.0f) {
+            if (direction.x < 0.0f)
+            {
                 SetScale(Vector2(-1.0f, 1.0f));
-            } else {
+            }
+            else
+            {
                 SetScale(Vector2(1.0f, 1.0f));
             }
 
@@ -227,7 +232,7 @@ void Enemy::UpdateAI(float deltaTime)
             break;
         }
 
-        case AIState::WindUp:
+    case AIState::WindUp:
         {
             mRigidBodyComponent->SetEnabled(false);
 
@@ -240,7 +245,7 @@ void Enemy::UpdateAI(float deltaTime)
             break;
         }
 
-        case AIState::Attacking:
+    case AIState::Attacking:
         {
             if (mStateTimer <= 0.0f)
             {
@@ -251,7 +256,7 @@ void Enemy::UpdateAI(float deltaTime)
             break;
         }
 
-        case AIState::Cooldown:
+    case AIState::Cooldown:
         {
             if (mStateTimer <= 0.0f)
             {

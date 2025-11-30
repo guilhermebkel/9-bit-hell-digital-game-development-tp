@@ -30,11 +30,10 @@ Player::Player(Game* game, const float forwardSpeed)
     );
 
     mDrawComponent->SetColor(Vector3(1.0f, 1.0f, 1.0f));
-
-    mDrawComponent->AddAnimation("idle", {1, 2});
-    mDrawComponent->AddAnimation("run", {8, 9, 10, 11, 12, 13, 14, 15, 16});
-    mDrawComponent->AddAnimation("attack", {3, 4, 5, 6});
-    mDrawComponent->AddAnimation("being-hit", {7, 0});
+    mDrawComponent->AddAnimation("idle", {8, 9});
+    mDrawComponent->AddAnimation("walk", {10, 11, 12});
+    mDrawComponent->AddAnimation("attack", {0, 1});
+    mDrawComponent->AddAnimation("being-hit", {2, 3});
 
     mDrawComponent->SetAnimation("idle");
     mDrawComponent->SetAnimFPS(8.0f);
@@ -156,7 +155,7 @@ void Player::ManageAnimations()
     }
     else if (mIsRunning)
     {
-        anim->SetAnimation("run");
+        anim->SetAnimation("walk");
     }
     else
     {
