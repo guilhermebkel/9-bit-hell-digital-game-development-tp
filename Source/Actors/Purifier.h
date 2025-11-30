@@ -4,8 +4,8 @@
 class Purifier : public Collectable
 {
 public:
-    static constexpr int SPRITE_WIDTH = 16;
-    static constexpr int SPRITE_HEIGHT = 16;
+    static constexpr int SPRITE_WIDTH = 32.0f;
+    static constexpr int SPRITE_HEIGHT = 32.0f;
 
     explicit Purifier(class Game* game);
 
