@@ -29,7 +29,7 @@ void UpgradeScene::Load()
 
     auto* titleActor = new Actor(GetGame());
     auto* titleText = new UITextComponent(titleActor);
-    titleText->SetText("SCORE", Color::White, 48);
+    titleText->SetText("Store", Color::White, 48);
     titleActor->SetPosition(Vector2(centerX, 100.0f));
 
     mCoinWidget = new UIStatWidget(GetGame(), "COINS", 24);
