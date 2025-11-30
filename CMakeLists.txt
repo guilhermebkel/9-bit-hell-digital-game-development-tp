@@ -125,11 +125,18 @@ elseif(UNIX)
     find_package(GLEW REQUIRED)
     find_package(OpenGL REQUIRED)
 
+    target_include_directories(${PROJECT_NAME} PRIVATE
+            ${SDL2_TTF_INCLUDE_DIR}
+            ${SDL2_INCLUDE_DIR}
+            ${SDL2_IMAGE_INCLUDE_DIR}
+            ${GLEW_INCLUDE_DIR}
+    )
+
     target_link_libraries(${PROJECT_NAME} PRIVATE
             GLEW::GLEW
             SDL2::SDL2
-            SDL2_image::SDL2_image
-            SDL2_ttf::SDL2_ttf
+            ${SDL2_IMAGE_LIBRARIES}
+            ${SDL2_TTF_LIBRARIES}
             OpenGL::GL
     )
 endif()
