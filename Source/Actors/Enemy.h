@@ -5,6 +5,12 @@
 class Enemy : public Actor
 {
 public:
+    enum class EnemyType
+    {
+        Eye,
+        Horn
+    };
+
     enum class AIState
     {
         Moving,
@@ -14,8 +20,8 @@ public:
         Chasing
     };
 
-    static constexpr float SPRITE_WIDTH = 80.0f;
-    static constexpr float SPRITE_HEIGHT = 80.0f;
+    static constexpr float SPRITE_WIDTH = 60.0f;
+    static constexpr float SPRITE_HEIGHT = 60.0f;
     static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.50f;
     static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.25f;
     static constexpr float AGGRO_AREA_SIZE = 800.0f;
@@ -26,7 +32,7 @@ public:
     static constexpr float ATTACK_COOLDOWN = 1.0f;
     static constexpr float ATTACK_DAMAGE = 10.0f;
 
-    explicit Enemy(Game* game, float forwardSpeed = 100.0f, float deathTime = 0.5f);
+    explicit Enemy(Game* game, EnemyType type, float forwardSpeed = 100.0f, float deathTime = 0.5f);
 
     void OnUpdate(float deltaTime) override;
     void OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other) override;

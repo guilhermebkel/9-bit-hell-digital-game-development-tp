@@ -38,7 +38,9 @@ void Spawner::OnUpdate(float deltaTime)
             {
                 case SpawnType::Enemy:
                 {
-                    Enemy* enemy = new Enemy(GetGame());
+                    // Escolhe um tipo de inimigo aleatoriamente
+                    auto enemyType = Random::GetIntRange(0, 1) == 0 ? Enemy::EnemyType::Eye : Enemy::EnemyType::Horn;
+                    Enemy* enemy = new Enemy(GetGame(), enemyType);
                     enemy->SetPosition(spawnPos);
                     break;
                 }

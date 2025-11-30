@@ -7,7 +7,7 @@
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Random.h" // Precisamos para a velocidade aleatória
 
-Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
+Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         : Actor(game)
         , mIsDying(false)
         , mForwardSpeed(forwardSpeed)
@@ -18,23 +18,39 @@ Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
         , mAIState(AIState::Moving)
         , mStateTimer(0.0f)
 {
-    mDrawComponent = new AnimatorComponent(
-        this,
-        "../Assets/Sprites/Principal/Principal.png",
-        "../Assets/Sprites/Principal/Principal.json",
-        Enemy::SPRITE_WIDTH,
-        Enemy::SPRITE_HEIGHT
-    );
+    std::string texturePath;
+    std::string jsonPath;
 
-    mDrawComponent->SetColor(Vector3(1.0f, 0.39f, 0.39f));
+    switch (type)
+    {
+        case EnemyType::Eye:
+            texturePath = "../Assets/Sprites/EyeEnemy/EyeEnemy.png";
+            jsonPath = "../Assets/Sprites/EyeEnemy/EyeEnemy.json";
+            mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
+            mDrawComponent->SetColor(Vector3(1.0f, 0.39f, 0.39f)); // Vermelho
+            mDrawComponent->AddAnimation("attack", {0, 1});
+            mDrawComponent->AddAnimation("idle", {2, 3});
+            mDrawComponent->AddAnimation("walk", {4, 5});
+            mDrawComponent->AddAnimation("dead", {2}); // Placeholder
+            mDrawComponent->SetAnimation("walk");
+            mDrawComponent->SetAnimFPS(4.0f);
+            break;
 
-    mDrawComponent->AddAnimation("idle", {1, 2});
-    mDrawComponent->AddAnimation("walk", {8, 9, 10, 11, 12, 13, 14, 15, 16});
-    mDrawComponent->AddAnimation("attack", {3, 4, 5, 6});
-    mDrawComponent->AddAnimation("dead", {7, 0});
-
-    mDrawComponent->SetAnimation("walk");
-    mDrawComponent->SetAnimFPS(8.0f);
+        case EnemyType::Horn:
+            texturePath = "../Assets/Sprites/HornEnemy/HornEnemy.png";
+            jsonPath = "../Assets/Sprites/HornEnemy/HornEnemy.json";
+            mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
+            mDrawComponent->SetColor(Vector3(0.5f, 1.0f, 0.5f)); // Verde
+            mDrawComponent->AddAnimation("attack", {0, 1});
+            mDrawComponent->AddAnimation("idle", {2, 3});
+            // Nota: O frame 5 ("Walk1.png") no seu HornEnemy.json parece estar incorreto.
+            // Estou usando os frames 2 e 4 para a animação de andar.
+            mDrawComponent->AddAnimation("walk", {2, 4});
+            mDrawComponent->AddAnimation("dead", {2}); // Placeholder
+            mDrawComponent->SetAnimation("walk");
+            mDrawComponent->SetAnimFPS(4.0f);
+            break;
+    }
 
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);
 
