@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 
 Purifier::Purifier(class Game* game)
-    : Collectable(game, "../Assets/Sprites/Collectables/Mushroom.png", Purifier::SPRITE_WIDTH, Purifier::SPRITE_HEIGHT)
+    : Collectable(game, "../Assets/Sprites/Collectables/PowerUp.png", Purifier::SPRITE_WIDTH, Purifier::SPRITE_HEIGHT)
 {
 }
 

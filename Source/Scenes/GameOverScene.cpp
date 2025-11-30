@@ -16,7 +16,7 @@ GameOverScene::~GameOverScene() {}
 
 void GameOverScene::Load()
 {
-    new Background(GetGame(), "../Assets/GameOverBackground.gif");
+    new Background(GetGame(), "../Assets/GameOverBackground.png");
 
     const Vector2 buttonSize(300.0f, 40.0f);
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;

@@ -65,7 +65,7 @@ void GameplayScene::LoadTutorial()
 {
     SetNextLevelID(LevelID::Tutorial);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/Background.png");
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 5);

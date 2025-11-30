@@ -20,8 +20,8 @@ Enemy::Enemy(Game* game, float forwardSpeed, float deathTime)
 {
     mDrawComponent = new AnimatorComponent(
         this,
-        "../Assets/Sprites/Player/Player.png",
-        "../Assets/Sprites/Player/Player.json",
+        "../Assets/Sprites/Principal/Principal.png",
+        "../Assets/Sprites/Principal/Principal.json",
         Enemy::SPRITE_WIDTH,
         Enemy::SPRITE_HEIGHT
     );

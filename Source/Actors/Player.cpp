@@ -23,8 +23,8 @@ Player::Player(Game* game, const float forwardSpeed)
 {
     mDrawComponent = new AnimatorComponent(
         this,
-        "../Assets/Sprites/Player/Player.png",
-        "../Assets/Sprites/Player/Player.json",
+        "../Assets/Sprites/Principal/Principal.png",
+        "../Assets/Sprites/Principal/Principal.json",
         Player::SPRITE_WIDTH,
         Player::SPRITE_HEIGHT
     );
