@@ -6,6 +6,7 @@
 #include "../Components/Drawing/StaticSpriteComponent.h"
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
+#include "../Audio/AudioSystem.h"
 
 Projectile::Projectile(Game* game)
     : Actor(game)
@@ -36,6 +37,7 @@ void Projectile::HandleCollision(AABBColliderComponent* other)
         if (enemy)
         {
             enemy->Kill();
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/projetil_sfx_throw.wav");
         }
 
         mState = ActorState::Destroy;
