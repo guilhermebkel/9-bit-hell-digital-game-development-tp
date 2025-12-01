@@ -70,8 +70,8 @@ void GameplayScene::LoadTutorial()
     new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
     GetGame()->SetUpperBoundary(423.0f);
 
-    new Spawner(GetGame(), SpawnType::Enemy, 5);
-    new Spawner(GetGame(), SpawnType::Coin, 10);
+    new Spawner(GetGame(), SpawnType::Enemy, 10);
+    new Spawner(GetGame(), SpawnType::Coin, 12);
     new Spawner(GetGame(), SpawnType::Purifier, 2);
 }
 
