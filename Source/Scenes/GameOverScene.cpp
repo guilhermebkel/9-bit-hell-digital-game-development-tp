@@ -6,6 +6,7 @@
 #include "../Components/Drawing/RectComponent.h"
 #include "../Components/Drawing/UIButtonComponent.h"
 #include "../Components/Drawing/UITextComponent.h"
+#include "../Audio/AudioSystem.h"
 
 GameOverScene::GameOverScene(Game* game)
     : Scene(game)
@@ -31,6 +32,7 @@ void GameOverScene::Load()
     startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
     auto startButton = new UIButtonComponent(startButtonActor, "TRY AGAIN", buttonSize,
         [this]() {
+            GetGame()->ResetCorruptionLevel();
             GetGame()->SetScene(Game::GameScene::Gameplay);
         }
     );
@@ -96,6 +98,7 @@ void GameOverScene::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
     UpdateButtonSelection();
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void GameOverScene::SelectPreviousButton()
@@ -109,12 +112,14 @@ void GameOverScene::SelectPreviousButton()
         mSelectedButtonIndex--;
     }
     UpdateButtonSelection();
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void GameOverScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
+        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
         mButtons[mSelectedButtonIndex]->Click();
     }
 }

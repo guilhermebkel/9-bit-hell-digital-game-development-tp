@@ -56,6 +56,7 @@ void UpgradeScene::Load()
     nextLevelActor->SetPosition(Vector2(centerX, Game:: WINDOW_HEIGHT - 100.0f));
     auto nextLevelButton = new UIButtonComponent(nextLevelActor, "CONTINUE", buttonSize,
         [this]() {
+            GetGame()->ResetCorruptionLevel();
             GetGame()->SetScene(Game::GameScene::Gameplay);
         }
     );
@@ -110,6 +111,7 @@ void UpgradeScene::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
     UpdateButtonSelection();
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void UpgradeScene::SelectPreviousButton()
@@ -123,12 +125,14 @@ void UpgradeScene::SelectPreviousButton()
         mSelectedButtonIndex--;
     }
     UpdateButtonSelection();
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void UpgradeScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
+        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
         mButtons[mSelectedButtonIndex]->Click();
     }
 }

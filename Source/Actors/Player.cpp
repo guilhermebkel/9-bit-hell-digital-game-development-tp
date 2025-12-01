@@ -6,6 +6,8 @@
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Components/ParticleSystemComponent.h"
+#include "../Audio/AudioSystem.h"
+#include "../Random.h"
 
 Player::Player(Game* game, const float forwardSpeed)
         : Actor(game)
@@ -13,9 +15,16 @@ Player::Player(Game* game, const float forwardSpeed)
         , mIsDead(false)
         , mIsMeleeAttacking(false)
         , mMeleeAttackAnimationTimer(0.0f)
+        , mHasKilledEnemyInCurrentAttack(false)
         , mIsRangedAttacking(false)
         , mRangedAttackAnimationTimer(0.0f)
         , mRangedAttackCooldownTimer(0.0f)
+        , mIsBeingHit(false)
+        , mBeingHitAnimationTimer(0.0f)
+        , mIsInvincible(false)
+        , mInvincibilityTimer(0.0f)
+        , mHitFreezeTimer(0.0f)
+        , mBlinkTimer(0.0f)
         , mForwardSpeed(forwardSpeed)
         , mRigidBodyComponent(nullptr)
         , mHealth(100.0f)
@@ -47,6 +56,12 @@ Player::Player(Game* game, const float forwardSpeed)
 
 void Player::OnProcessInput(const uint8_t* state)
 {
+    // Bloqueia input durante o congelamento por dano
+    if (mHitFreezeTimer > 0.0f)
+    {
+        return;
+    }
+    
     mIsRunning = false;
     Vector2 force = Vector2::Zero;
 
@@ -76,10 +91,16 @@ void Player::OnProcessInput(const uint8_t* state)
         mIsRunning = true;
     }
 
-    if (state[SDL_SCANCODE_J])
+    if (state[SDL_SCANCODE_J] && !mIsMeleeAttacking)
     {
         mIsMeleeAttacking = true;
         mMeleeAttackAnimationTimer = Player::MELEE_ATTACK_ANIMATION_DURATION;
+        mHasKilledEnemyInCurrentAttack = false;
+        
+        // Tocar aleatoriamente um dos 4 sons de ataque
+        int soundIndex = Random::GetIntRange(1, 4);
+        std::string soundFile = "../Assets/Sounds/sword-attack-" + std::to_string(soundIndex) + ".wav";
+        GetGame()->GetAudioSystem()->PlaySound(soundFile);
     }
 
     if (state[SDL_SCANCODE_K] && mRangedAttackCooldownTimer <= 0.0f)
@@ -90,11 +111,15 @@ void Player::OnProcessInput(const uint8_t* state)
         mRangedAttackAnimationTimer = Player::RANGED_ATTACK_ANIMATION_DURATION;
 
         float direction = GetScale().x;
-        Vector2 startPosition = GetPosition() + Vector2(direction * 20.0f, 0.0f);
+
+        Vector2 startPosition = GetPosition() + Vector2(direction * 20.0f, 20.0f);
 
         Projectile* projectile = new Projectile(GetGame());
         projectile->SetPosition(startPosition);
+        projectile->SetScale(Vector2(direction, 1.0f));
         projectile->GetComponent<RigidBodyComponent>()->SetVelocity(Vector2(direction * Projectile::SPEED, 0.0f));
+        
+        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/sword-throw.wav");
     }
 
     mRigidBodyComponent->ApplyForce(force);
@@ -141,7 +166,65 @@ void Player::OnUpdate(float deltaTime)
         mRangedAttackCooldownTimer -= deltaTime;
     }
 
+    if (mIsBeingHit)
+    {
+        mBeingHitAnimationTimer -= deltaTime;
+        if (mBeingHitAnimationTimer <= 0.0f && mHitFreezeTimer <= 0.0f)
+        {
+            mIsBeingHit = false;
+        }
+    }
+
+    if (mIsInvincible)
+    {
+        mInvincibilityTimer -= deltaTime;
+        mBlinkTimer += deltaTime;
+        
+        // Pisca a cada X segundos
+        bool shouldShow = (static_cast<int>(mBlinkTimer * 10.0f) % 2) == 0;
+        if (mDrawComponent)
+        {
+            mDrawComponent->SetVisible(shouldShow);
+        }
+        
+        if (mInvincibilityTimer <= 0.0f)
+        {
+            mIsInvincible = false;
+            if (mDrawComponent)
+            {
+                mDrawComponent->SetVisible(true);
+            }
+        }
+    }
+
     ManageAnimations();
+    
+    // Gerencia congelamento por dano (após ManageAnimations)
+    if (mHitFreezeTimer > 0.0f)
+    {
+        if (mDrawComponent)
+        {
+            mDrawComponent->SetAnimation("being-hit");
+            mDrawComponent->SetIsPaused(true);
+        }
+        
+        mHitFreezeTimer -= deltaTime;
+        
+        if (mHitFreezeTimer <= 0.0f)
+        {
+            mRigidBodyComponent->SetEnabled(true);
+            
+            if (mDrawComponent)
+            {
+                mDrawComponent->SetIsPaused(false);
+            }
+            
+            // Inicia invencibilidade após o congelamento
+            mIsInvincible = true;
+            mInvincibilityTimer = Player::INVINCIBILITY_DURATION;
+            mBlinkTimer = 0.0f;
+        }
+    }
 }
 
 void Player::ManageAnimations()
@@ -149,7 +232,11 @@ void Player::ManageAnimations()
     AnimatorComponent* anim = GetComponent<AnimatorComponent>();
     if (!anim || mIsDead) return;
 
-    if (mIsMeleeAttacking || mIsRangedAttacking)
+    if (mIsBeingHit)
+    {
+        anim->SetAnimation("being-hit");
+    }
+    else if (mIsMeleeAttacking || mIsRangedAttacking)
     {
         anim->SetAnimation("attack");
     }
@@ -179,12 +266,13 @@ void Player::OnHorizontalCollision(const float minOverlap, AABBColliderComponent
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        if (mIsMeleeAttacking)
+        if (mIsMeleeAttacking && !mHasKilledEnemyInCurrentAttack)
         {
             Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
             if (enemy)
             {
                 enemy->Kill();
+                mHasKilledEnemyInCurrentAttack = true; // Marca que já matou 1 inimigo
             }
         }
     }
@@ -194,12 +282,13 @@ void Player::OnVerticalCollision(const float minOverlap, AABBColliderComponent* 
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        if (mIsMeleeAttacking)
+        if (mIsMeleeAttacking && !mHasKilledEnemyInCurrentAttack)
         {
             Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
             if (enemy)
             {
                 enemy->Kill();
+                mHasKilledEnemyInCurrentAttack = true; // Marca que já matou 1 inimigo
             }
         }
     }
@@ -207,9 +296,24 @@ void Player::OnVerticalCollision(const float minOverlap, AABBColliderComponent* 
 
 void Player::TakeDamage(float amount)
 {
-    if (mIsDead) return;
+    if (mIsDead || mIsInvincible || mHitFreezeTimer > 0.0f) return;
 
     mHealth -= amount;
+    
+    // Ativa animação de dano
+    mIsBeingHit = true;
+    mBeingHitAnimationTimer = Player::BEING_HIT_ANIMATION_DURATION;
+    
+    // Ativa congelamento por 1s (sprite e movimento congelados)
+    mHitFreezeTimer = Player::HIT_FREEZE_DURATION;
+    mRigidBodyComponent->SetVelocity(Vector2::Zero);
+    mRigidBodyComponent->SetEnabled(false);
+        
+    // Tocar aleatoriamente um dos 3 sons de dano do player
+    int soundIndex = Random::GetIntRange(1, 3);
+    std::string soundFile = "../Assets/Sounds/player-hurt-" + std::to_string(soundIndex) + ".wav";
+    GetGame()->GetAudioSystem()->PlaySound(soundFile);
+    
     if (mHealth <= 0.0f)
     {
         mHealth = 0.0f;

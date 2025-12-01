@@ -20,7 +20,8 @@ void GameplayScene::Load()
 
     new CorruptionOverlay(GetGame());
     new HUD(GetGame());
-    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/gameplay_03-M1-Stage-5-Synapse-Retrogenesis.ogg");
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/gameplay-m1-stage5-synapse-retrogenesis.ogg");
+    GetGame()->GetAudioSystem()->SetMusicVolume(0.33f);
     switch (mLevelID)
     {
         case LevelID::Tutorial:

@@ -13,7 +13,7 @@ MainMenuScene::MainMenuScene(Game* game) :
 void MainMenuScene::Load()
 {
     // Toca a música de fundo do menu em loop
-    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/Menu_22_Stage 2_ The Way Ahead Feels Lonely.mp3");
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/menu-d5-stage2-the-way-ahead-feels-lonely.mp3");
 
     GetGame()->ResetPlayerUpgrades();
     GetGame()->ResetCorruptionLevel();
@@ -95,6 +95,7 @@ void MainMenuScene::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
     UpdateButtonSelection();
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void MainMenuScene::SelectPreviousButton()
@@ -108,12 +109,14 @@ void MainMenuScene::SelectPreviousButton()
         mSelectedButtonIndex--;
     }
     UpdateButtonSelection();
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void MainMenuScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
+        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
         mButtons[mSelectedButtonIndex]->Click();
     }
 }

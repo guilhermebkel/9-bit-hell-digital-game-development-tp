@@ -7,13 +7,16 @@ public:
     static constexpr float MASS = 1.0f;
     static constexpr float FRICTION = 10.0f;
 
-    static constexpr float SPRITE_WIDTH = 80.0f;
-    static constexpr float SPRITE_HEIGHT = 80.0f;
+    static constexpr float SPRITE_WIDTH = 68.0f;
+    static constexpr float SPRITE_HEIGHT = 68.0f;
     static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.50f;
     static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.25f;
 
     static constexpr float MELEE_ATTACK_ANIMATION_DURATION = 0.3f;
     static constexpr float RANGED_ATTACK_ANIMATION_DURATION = 0.3f;
+    static constexpr float BEING_HIT_ANIMATION_DURATION = 0.3f;
+    static constexpr float HIT_FREEZE_DURATION = 0.5f;
+    static constexpr float INVINCIBILITY_DURATION = 1.0f;
 
     explicit Player(Game* game, float forwardSpeed = 2500.0f);
 
@@ -37,10 +40,19 @@ private:
 
     bool mIsMeleeAttacking;
     float mMeleeAttackAnimationTimer;
+    bool mHasKilledEnemyInCurrentAttack;
 
     bool mIsRangedAttacking;
     float mRangedAttackAnimationTimer;
     float mRangedAttackCooldownTimer;
+
+    bool mIsBeingHit;
+    float mBeingHitAnimationTimer;
+    
+    bool mIsInvincible;
+    float mInvincibilityTimer;
+    float mHitFreezeTimer;
+    float mBlinkTimer;
 
     int mCoinCount;
 

@@ -10,6 +10,7 @@
 
 Projectile::Projectile(Game* game)
     : Actor(game)
+    , mHasHitEnemy(false)
 {
     new StaticSpriteComponent(this, "../Assets/Projectile.png", Projectile::SPRITE_WIDTH, Projectile::SPRITE_HEIGHT);
 
@@ -31,13 +32,13 @@ void Projectile::OnUpdate(float deltaTime)
 
 void Projectile::HandleCollision(AABBColliderComponent* other)
 {
-    if (other->GetLayer() == ColliderLayer::Enemy)
+    if (other->GetLayer() == ColliderLayer::Enemy && !mHasHitEnemy)
     {
         Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
         if (enemy)
         {
             enemy->Kill();
-            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/projetil_sfx_throw.wav");
+            mHasHitEnemy = true;
         }
 
         mState = ActorState::Destroy;

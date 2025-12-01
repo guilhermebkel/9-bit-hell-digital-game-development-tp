@@ -89,3 +89,12 @@ void AudioSystem::StopMusic()
 		mMusic = nullptr;
 	}
 }
+
+void AudioSystem::SetMusicVolume(float volume)
+{
+	if (volume < 0.0f) volume = 0.0f;
+	if (volume > 1.0f) volume = 1.0f;
+	
+	int sdlVolume = static_cast<int>(volume * MIX_MAX_VOLUME);
+	Mix_VolumeMusic(sdlVolume);
+}

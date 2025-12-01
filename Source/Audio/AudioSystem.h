@@ -17,6 +17,7 @@ public:
 	// Para música de fundo
 	void PlayMusic(const std::string& fileName, int loops = -1);
 	void StopMusic();
+	void SetMusicVolume(float volume);
 
 private:
 	// Mapeamento de nomes de eventos para dados de som

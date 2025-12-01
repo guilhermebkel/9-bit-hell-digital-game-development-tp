@@ -3,6 +3,7 @@
 #include "../Components/Drawing/UIButtonComponent.h"
 #include "../Components/Drawing/UITextComponent.h"
 #include "../Components/Drawing/RectComponent.h"
+#include "../Audio/AudioSystem.h"
 
 PauseScreen::PauseScreen(Game* game)
     : Actor(game)
@@ -88,6 +89,7 @@ void PauseScreen::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
     UpdateButtonSelection();
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void PauseScreen::SelectPreviousButton()
@@ -101,12 +103,14 @@ void PauseScreen::SelectPreviousButton()
         mSelectedButtonIndex--;
     }
     UpdateButtonSelection();
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void PauseScreen::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
+        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
         mButtons[mSelectedButtonIndex]->Click();
     }
 }
@@ -121,12 +125,4 @@ void PauseScreen::UpdateButtonSelection()
 
 PauseScreen::~PauseScreen()
 {
-    for (auto button : mButtons)
-    {
-        button->GetOwner()->SetState(ActorState::Destroy);
-    }
-    if (mTitleActor)
-    {
-        mTitleActor->SetState(ActorState::Destroy);
-    }
 }

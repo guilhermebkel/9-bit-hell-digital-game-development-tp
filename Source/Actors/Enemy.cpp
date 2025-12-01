@@ -11,6 +11,7 @@
 Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
     : Actor(game)
       , mIsDying(false)
+      , mHasDealtDamage(false)
       , mForwardSpeed(forwardSpeed)
       , mDyingTimer(deathTime)
       , mRigidBodyComponent(nullptr)
@@ -18,6 +19,9 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
       , mDrawComponent(nullptr)
       , mAIState(AIState::Moving)
       , mStateTimer(0.0f)
+      , mIsFlashing(false)
+      , mFlashTimer(0.0f)
+      , mOriginalColor(Vector3::Zero)
 {
     std::string texturePath;
     std::string jsonPath;
@@ -27,8 +31,9 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
     case EnemyType::Eye:
         texturePath = "../Assets/Sprites/EyeEnemy/EyeEnemy.png";
         jsonPath = "../Assets/Sprites/EyeEnemy/EyeEnemy.json";
-        mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
-        mDrawComponent->SetColor(Vector3(1.0f, 0.39f, 0.39f)); // Vermelho
+        mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::EYE_SPRITE_WIDTH, Enemy::EYE_SPRITE_HEIGHT);
+        mOriginalColor = Vector3(1.0f, 0.39f, 0.39f); // Vermelho
+        mDrawComponent->SetColor(mOriginalColor);
         mDrawComponent->AddAnimation("attack", {0, 1});
         mDrawComponent->AddAnimation("idle", {2, 3});
         mDrawComponent->AddAnimation("walk", {4, 5});
@@ -41,7 +46,8 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         texturePath = "../Assets/Sprites/HornEnemy/HornEnemy.png";
         jsonPath = "../Assets/Sprites/HornEnemy/HornEnemy.json";
         mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
-        mDrawComponent->SetColor(Vector3(0.5f, 1.0f, 0.5f)); // Verde
+        mOriginalColor = Vector3(0.5f, 1.0f, 0.5f); // Verde
+        mDrawComponent->SetColor(mOriginalColor);
         mDrawComponent->AddAnimation("attack", {0, 1});
         mDrawComponent->AddAnimation("idle", {2, 3});
         mDrawComponent->AddAnimation("walk", {5, 4});
@@ -75,15 +81,31 @@ void Enemy::Kill()
 {
     if (mIsDying) return;
     mIsDying = true;
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/projetil_sfx_throw.wav");
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/monster-hurt.wav");
     mDrawComponent->SetAnimation("dead");
     mRigidBodyComponent->SetEnabled(false);
     mColliderComponent->SetEnabled(false);
+    
+    // Ativar flash branco ao morrer (100% branco puro - valores altos para forçar branco)
+    mIsFlashing = true;
+    mFlashTimer = HIT_FLASH_DURATION;
+    mDrawComponent->SetColor(Vector3(10.0f, 10.0f, 10.0f));
 }
 
 void Enemy::OnUpdate(float deltaTime)
 {
     Actor::OnUpdate(deltaTime);
+
+    // Atualizar flash branco
+    if (mIsFlashing)
+    {
+        mFlashTimer -= deltaTime;
+        if (mFlashTimer <= 0.0f)
+        {
+            mIsFlashing = false;
+            mDrawComponent->SetColor(mOriginalColor);
+        }
+    }
 
     if (mIsDying)
     {
@@ -135,13 +157,19 @@ void Enemy::OnHorizontalCollision(const float minOverlap, AABBColliderComponent*
 {
     if (other->GetLayer() == ColliderLayer::Player)
     {
-        if (mAIState == AIState::Attacking)
+        if (mAIState == AIState::Attacking && !mHasDealtDamage)
         {
             Player* player = dynamic_cast<Player*>(other->GetOwner());
 
             if (player)
             {
-                player->TakeDamage(Enemy::ATTACK_DAMAGE);
+                // Só causa dano se o player ainda estiver dentro da distância de ataque
+                float distance = Vector2::Distance(GetPosition(), player->GetPosition());
+                if (distance < Enemy::ATTACK_DISTANCE)
+                {
+                    player->TakeDamage(Enemy::ATTACK_DAMAGE);
+                    mHasDealtDamage = true;
+                }
 
                 mAIState = AIState::Cooldown;
                 mStateTimer = Enemy::ATTACK_COOLDOWN;
@@ -154,12 +182,18 @@ void Enemy::OnVerticalCollision(const float minOverlap, AABBColliderComponent* o
 {
     if (other->GetLayer() == ColliderLayer::Player)
     {
-        if (mAIState == AIState::Attacking)
+        if (mAIState == AIState::Attacking && !mHasDealtDamage)
         {
             Player* player = dynamic_cast<Player*>(other->GetOwner());
             if (player)
             {
-                player->TakeDamage(Enemy::ATTACK_DAMAGE);
+                // Só causa dano se o player ainda estiver dentro da distância de ataque
+                float distance = Vector2::Distance(GetPosition(), player->GetPosition());
+                if (distance < Enemy::ATTACK_DISTANCE)
+                {
+                    player->TakeDamage(Enemy::ATTACK_DAMAGE);
+                    mHasDealtDamage = true;
+                }
 
                 mAIState = AIState::Cooldown;
                 mStateTimer = Enemy::ATTACK_COOLDOWN;
@@ -240,6 +274,7 @@ void Enemy::UpdateAI(float deltaTime)
             {
                 mAIState = AIState::Attacking;
                 mStateTimer = Enemy::ATTACK_DURATION;
+                mHasDealtDamage = false;
                 mDrawComponent->SetAnimation("attack");
             }
             break;
