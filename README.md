@@ -5,6 +5,8 @@
 ## Screenshots
 
 ![Main Menu](screenshot-main-menu.png)
+![GamePlay](screenshot-gameplay.png)
+![Store](screenshot-store.png)
 ![Game Over](screenshot-game-over.png)
 
 ## Título
@@ -13,11 +15,20 @@
 
 ## Descrição
 
-"9-bit Hell" é um jogo de ação *top-down shooter* em pixel art, inspirado nos nove círculos do Inferno de Dante Alighieri. O jogador controla uma alma perdida que busca redenção enfrentando criaturas sombrias enquanto avança por diferentes regiões do submundo. A movimentação é feita pelas teclas **W, A, S, D**, enquanto os ataques são executados com **J** (corpo a corpo) e **K** (ataque à distância), oferecendo um estilo de combate rápido e responsivo.
+"9-bit Hell" é um jogo de ação *top-down shooter* em pixel art, inspirado nos nove círculos do Inferno de Dante Alighieri. 
+O jogador controla uma alma perdida que busca redenção enfrentando criaturas sombrias enquanto avança por diferentes regiões do submundo.
+A movimentação é feita pelas teclas **W, A, S, D**, enquanto os ataques são executados com **J** (corpo a corpo) e **K** (ataque à distância), 
+oferecendo um estilo de combate rápido e responsivo.
 
-O jogo apresenta a mecânica central de **Corrupção Progressiva**, onde a visão do jogador é gradualmente reduzida por uma vinheta escurecedora conforme o tempo passa na fase. Isso cria um ciclo de tensão crescente que exige decisões rápidas e precisas, incentivando o jogador a buscar itens de purificação para restaurar temporariamente a clareza visual. Navegar e sobreviver torna-se cada vez mais difícil conforme inimigos se acumulam e o campo de visão se fecha.
+O jogo apresenta a mecânica central de **Corrupção Progressiva**, onde a visão do jogador é gradualmente reduzida por uma vinheta escurecedora 
+conforme o tempo passa na fase. Isso cria um ciclo de tensão crescente que exige decisões rápidas e precisas, 
+incentivando o jogador a buscar itens de purificação para restaurar temporariamente a clareza visual. Navegar e sobreviver torna-se cada vez mais
+difícil conforme inimigos se acumulam e o campo de visão se fecha.
 
-A vitória depende da capacidade de avançar pelos círculos do Inferno enquanto administra a corrupção, derrota hordas de inimigos e coleta moedas para melhorias futuras. A derrota ocorre ao perder toda a vida ou quando a corrupção torna o ambiente incontrolável. A jornada reflete a luta interna contra a decadência, simbolizada tanto na estética quanto nas mecânicas de jogo.
+A vitória depende da capacidade de avançar pelos círculos do Inferno enquanto administra a corrupção, derrota hordas de inimigos e coleta
+moedas para melhorias futuras. A derrota ocorre ao perder toda a vida ou quando a corrupção torna o ambiente incontrolável.
+Ao ser acertado, o personagem sofre um breve congelamento de 1 segundo, exibe animação de impacto e ganha 1.5 segundos de invencibilidade com
+efeito de piscada.Tanto ataques corpo a corpo quanto projéteis causam um efeito de flash ao atingir inimigos, reforçando o feedback visual do combate.
 
 ## Funcionalidades a serem testadas
 
