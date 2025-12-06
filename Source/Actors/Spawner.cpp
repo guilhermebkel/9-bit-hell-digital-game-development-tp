@@ -38,8 +38,15 @@ void Spawner::OnUpdate(float deltaTime)
             {
                 case SpawnType::Enemy:
                 {
+                    std::array<Enemy::EnemyType, 3> enemyTypes = {
+                        Enemy::EnemyType::Eye,
+                        Enemy::EnemyType::Horn,
+                        Enemy::EnemyType::Fat
+                    };
+
                     // Escolhe um tipo de inimigo aleatoriamente
-                    auto enemyType = Random::GetIntRange(0, 1) == 0 ? Enemy::EnemyType::Eye : Enemy::EnemyType::Horn;
+                    auto randomIndex = Random::GetIntRange(0, enemyTypes.size() - 1);
+                    auto enemyType = enemyTypes[randomIndex];
                     Enemy* enemy = new Enemy(GetGame(), enemyType);
                     enemy->SetPosition(spawnPos);
                     break;

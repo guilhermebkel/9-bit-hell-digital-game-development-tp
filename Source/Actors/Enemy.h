@@ -8,7 +8,8 @@ public:
     enum class EnemyType
     {
         Eye,
-        Horn
+        Horn,
+        Fat
     };
 
     enum class AIState

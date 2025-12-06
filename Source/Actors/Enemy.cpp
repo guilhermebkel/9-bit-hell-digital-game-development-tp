@@ -55,6 +55,21 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         mDrawComponent->SetAnimation("walk");
         mDrawComponent->SetAnimFPS(4.0f);
         break;
+
+    case EnemyType::Fat:
+        texturePath = "../Assets/Sprites/FatEnemy/FatEnemy.png";
+        jsonPath = "../Assets/Sprites/FatEnemy/FatEnemy.json";
+        mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
+        mOriginalColor = Vector3(0.44f, 0.56f, 0.25f); // Verde Musgo
+        mDrawComponent->SetColor(mOriginalColor);
+        mDrawComponent->AddAnimation("attack", {0, 1, 2});
+        mDrawComponent->AddAnimation("being-hit", {3});
+        mDrawComponent->AddAnimation("idle", {4, 5});
+        mDrawComponent->AddAnimation("walk", {6, 7});
+        mDrawComponent->AddAnimation("dead", {4});
+        mDrawComponent->SetAnimation("walk");
+        mDrawComponent->SetAnimFPS(4.0f);
+        break;
     }
 
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);
