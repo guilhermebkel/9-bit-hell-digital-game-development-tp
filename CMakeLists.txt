@@ -87,6 +87,14 @@ add_executable(${PROJECT_NAME}
         Source/Audio/AudioSystem.h
         Source/Actors/Healer.cpp
         Source/Actors/Healer.h
+        Source/Actors/SlimeProjectile.cpp
+        Source/Actors/SlimeProjectile.h
+        Source/Actors/SlimePuddle.cpp
+        Source/Actors/SlimePuddle.h
+        Source/Actors/FatMiniboss.cpp
+        Source/Actors/FatMiniboss.h
+        Source/Actors/Miniboss.cpp
+        Source/Actors/Miniboss.h
 )
 
 if(WIN32)

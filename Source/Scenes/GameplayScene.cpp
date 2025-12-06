@@ -4,6 +4,7 @@
 #include "../Actors/Player.h"
 #include "../Actors/CorruptionOverlay.h"
 #include "../Actors/Enemy.h"
+#include "../Actors/Miniboss.h"
 #include "../Actors/Spawner.h"
 #include "../Actors/HUD.h"
 #include "../Audio/AudioSystem.h"
@@ -83,6 +84,7 @@ void GameplayScene::LoadTutorial()
     new Spawner(GetGame(), SpawnType::Coin, 12);
     new Spawner(GetGame(), SpawnType::Purifier, 2);
     new Spawner(GetGame(), SpawnType::Healer, 1);
+    new Spawner(GetGame(), SpawnType::FatMiniboss, 1);
 }
 
 void GameplayScene::LoadLevel1()
@@ -94,7 +96,12 @@ bool GameplayScene::IsLevelComplete()
 {
     for (auto actor : GetGame()->GetActors())
     {
-        if (dynamic_cast<Enemy*>(actor))
+        /**
+         *  TODO:
+         *  - Using a more robust validation to avoid breaking this
+         *   business rule for new kind of enemies or bosses.
+         */
+        if (dynamic_cast<Enemy*>(actor) || dynamic_cast<Miniboss*>(actor))
         {
             return false;
         }

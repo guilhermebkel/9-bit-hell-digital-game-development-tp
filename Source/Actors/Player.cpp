@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Enemy.h"
+#include "Miniboss.h"
 #include "Projectile.h"
 #include "../Game.h"
 #include "../Components/Drawing/AnimatorComponent.h"
@@ -273,6 +274,12 @@ void Player::OnHorizontalCollision(const float minOverlap, AABBColliderComponent
             {
                 enemy->Kill();
                 mHasKilledEnemyInCurrentAttack = true; // Marca que já matou 1 inimigo
+            }
+
+            Miniboss* miniboss = dynamic_cast<Miniboss*>(other->GetOwner());
+            if (miniboss)
+            {
+                miniboss->TakeDamage(10);
             }
         }
     }

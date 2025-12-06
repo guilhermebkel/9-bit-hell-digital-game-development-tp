@@ -117,8 +117,9 @@ void MainMenuScene::ClickSelectedButton()
     if (!mButtons.empty())
     {
         /**
-         * TODO:
-         * - Using a more robust validation to avoid breaking this business rule in case the index of 'Start Button' changes.
+         *  TODO:
+         *  - Using a more robust validation to avoid breaking this
+         *  business rule in case the index of 'Start Button' changes.
          */
         bool clickedOnStartGameButton = mSelectedButtonIndex == 0;
 

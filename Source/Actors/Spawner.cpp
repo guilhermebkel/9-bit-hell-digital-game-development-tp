@@ -5,6 +5,7 @@
 #include "Coin.h"
 #include "Purifier.h"
 #include "Healer.h"
+#include "FatMiniboss.h"
 #include "../Random.h"
 #include <cmath>
 
@@ -45,7 +46,6 @@ void Spawner::OnUpdate(float deltaTime)
                         Enemy::EnemyType::Fat
                     };
 
-                    // Escolhe um tipo de inimigo aleatoriamente
                     auto randomIndex = Random::GetIntRange(0, enemyTypes.size() - 1);
                     auto enemyType = enemyTypes[randomIndex];
                     Enemy* enemy = new Enemy(GetGame(), enemyType);
@@ -70,6 +70,12 @@ void Spawner::OnUpdate(float deltaTime)
                     healer->SetPosition(spawnPos);
                     break;
                 }
+                case SpawnType::FatMiniboss:
+                    {
+                        FatMiniboss* fatMiniboss = new FatMiniboss(GetGame());
+                        fatMiniboss->SetPosition(spawnPos);
+                        break;
+                    }
             }
         }
 

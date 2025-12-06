@@ -14,7 +14,7 @@ public:
     static const int WINDOW_HEIGHT  = 768;
     static const int FPS = 60;
 
-    static constexpr float INITIAL_CORRUPTION_RATE = 0.05f; // 5% por segundo
+    static constexpr float INITIAL_CORRUPTION_RATE = 0.03f;
 
     struct PlayerUpgrades
     {
