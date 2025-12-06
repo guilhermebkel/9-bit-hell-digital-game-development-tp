@@ -6,7 +6,8 @@ class EyeProjectile : public Actor
 public:
     static constexpr float SPEED = 350.0f;
     static constexpr float DAMAGE = 10.0f;
-    static constexpr float SIZE = 24.0f;
+    static constexpr float SPRITE_WIDTH = 8.0f * 3.0f;
+    static constexpr float SPRITE_HEIGHT = 10.0f * 3.0f;
 
     explicit EyeProjectile(class Game* game, const Vector2& direction);
 

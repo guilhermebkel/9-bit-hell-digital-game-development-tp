@@ -8,12 +8,12 @@
 EyeProjectile::EyeProjectile(Game* game, const Vector2& direction)
     : Actor(game)
 {
-    new StaticSpriteComponent(this, "../Assets/EyeProjectile.png", SIZE, SIZE);
+    new StaticSpriteComponent(this, "../Assets/EyeProjectile.png", SPRITE_WIDTH, SPRITE_HEIGHT);
 
     auto rb = new RigidBodyComponent(this, 1.0f, 0.0f);
     rb->SetVelocity(direction * SPEED);
 
-    mCollider = new AABBColliderComponent(this, 0, 0, SIZE, SIZE, ColliderLayer::Enemy);
+    mCollider = new AABBColliderComponent(this, 0, 0, SPRITE_WIDTH, SPRITE_HEIGHT, ColliderLayer::Enemy);
     
     SetRotation(Math::Atan2(direction.y, direction.x));
 }

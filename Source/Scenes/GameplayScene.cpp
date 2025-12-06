@@ -80,12 +80,12 @@ void GameplayScene::LoadTutorial()
     new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
     GetGame()->SetUpperBoundary(423.0f);
 
-    // new Spawner(GetGame(), SpawnType::Enemy, 10);
-    // new Spawner(GetGame(), SpawnType::Coin, 12);
-    // new Spawner(GetGame(), SpawnType::Purifier, 2);
-    // new Spawner(GetGame(), SpawnType::Healer, 1);
-    // new Spawner(GetGame(), SpawnType::FatMiniboss, 1);
-    // new Spawner(GetGame(), SpawnType::HornMiniboss, 1);
+    new Spawner(GetGame(), SpawnType::Enemy, 10);
+    new Spawner(GetGame(), SpawnType::Coin, 12);
+    new Spawner(GetGame(), SpawnType::Purifier, 2);
+    new Spawner(GetGame(), SpawnType::Healer, 1);
+    new Spawner(GetGame(), SpawnType::FatMiniboss, 1);
+    new Spawner(GetGame(), SpawnType::HornMiniboss, 1);
     new Spawner(GetGame(), SpawnType::EyeMiniboss, 1);
 }
 

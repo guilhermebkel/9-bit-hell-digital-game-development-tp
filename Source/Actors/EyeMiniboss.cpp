@@ -19,8 +19,8 @@ EyeMiniboss::EyeMiniboss(Game* game)
         this, 
         "../Assets/Sprites/EyeMiniboss/EyeMiniboss.png", 
         "../Assets/Sprites/EyeMiniboss/EyeMiniboss.json", 
-        SPRITE_W, 
-        SPRITE_H
+        SPRITE_WIDTH,
+        SPRITE_HEIGHT
     );
     
     mAnimator->AddAnimation("attack", {2, 5});
@@ -34,7 +34,7 @@ EyeMiniboss::EyeMiniboss(Game* game)
 
     mRigidBody = new RigidBodyComponent(this, 2.0f, 0.0f);
     
-    mCollider = new AABBColliderComponent(this, 0, 0, PHYSICS_W, PHYSICS_H, ColliderLayer::Enemy);
+    mCollider = new AABBColliderComponent(this, 0, 0, PHYSICS_WIDTH, PHYSICS_HEIGHT, ColliderLayer::Enemy);
 }
 
 void EyeMiniboss::OnUpdate(float deltaTime)
