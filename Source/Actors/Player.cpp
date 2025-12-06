@@ -115,7 +115,7 @@ void Player::OnProcessInput(const uint8_t* state)
 
         Vector2 startPosition = GetPosition() + Vector2(direction * 20.0f, 20.0f);
 
-        Projectile* projectile = new Projectile(GetGame());
+        Projectile* projectile = new Projectile(GetGame(), GetGame()->GetPlayerRangedDamage());
         projectile->SetPosition(startPosition);
         projectile->SetScale(Vector2(direction, 1.0f));
         projectile->GetComponent<RigidBodyComponent>()->SetVelocity(Vector2(direction * Projectile::SPEED, 0.0f));
@@ -279,7 +279,7 @@ void Player::OnHorizontalCollision(const float minOverlap, AABBColliderComponent
             Miniboss* miniboss = dynamic_cast<Miniboss*>(other->GetOwner());
             if (miniboss)
             {
-                miniboss->TakeDamage(10);
+                miniboss->TakeDamage(GetGame()->GetPlayerMeleeDamage());
             }
         }
     }

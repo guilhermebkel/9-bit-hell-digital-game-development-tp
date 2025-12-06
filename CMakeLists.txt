@@ -105,6 +105,9 @@ add_executable(${PROJECT_NAME}
         Source/Actors/EyeProjectile.h
         Source/Actors/EyeMiniboss.cpp
         Source/Actors/EyeMiniboss.h
+        Source/Scenes/VictoryScene.cpp
+        Source/Scenes/VictoryScene.cpp
+        Source/Scenes/VictoryScene.h
 )
 
 if(WIN32)

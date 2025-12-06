@@ -16,6 +16,7 @@
 #include "Scenes/Scene.h"
 #include "Audio/AudioSystem.h"
 #include "Scenes/UpgradeScene.h"
+#include "Scenes/VictoryScene.h"
 
 Game::Game()
         :mWindow(nullptr)
@@ -114,6 +115,9 @@ void Game::ChangeScene()
             break;
         case GameScene::GameOver:
             mCurrentScene = std::make_unique<GameOverScene>(this);
+            break;
+        case GameScene::Victory:
+            mCurrentScene = std::make_unique<VictoryScene>(this);
             break;
     }
 

@@ -15,6 +15,9 @@ public:
     void Draw(Renderer* renderer) override;
     void Update(float deltaTime) override;
 
+    int GetWidth() { return mWidth; }
+    int GetHeight() { return mHeight; }
+
     // Use to change the FPS of the animation
     void SetAnimFPS(float fps) { mAnimFPS = fps; }
 

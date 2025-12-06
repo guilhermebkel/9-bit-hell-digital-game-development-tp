@@ -20,6 +20,8 @@ public:
     {
         int coins = 0;
         float fireRate = 0.3f;
+        int meleeDamage = 10;
+        int rangedDamage = 5;
     };
 
     enum class GameScene
@@ -27,7 +29,8 @@ public:
         MainMenu,
         Gameplay,
         Upgrade,
-        GameOver
+        GameOver,
+        Victory,
     };
 
     enum class SceneState
@@ -76,6 +79,8 @@ public:
     void SpendCoins(int amount) { mPlayerUpgrades.coins -= amount; }
     void UpgradeFireRate();
     float GetPlayerFireRate() const { return mPlayerUpgrades.fireRate; }
+    float GetPlayerMeleeDamage() const { return mPlayerUpgrades.meleeDamage; }
+    float GetPlayerRangedDamage() const { return mPlayerUpgrades.rangedDamage; }
     void ResetPlayerUpgrades() { mPlayerUpgrades = PlayerUpgrades(); }
 
     // Camera functions
@@ -106,6 +111,7 @@ public:
     bool IsPaused() const { return mIsPaused; }
 
     void SetCurrentLevelID(LevelID currentLevelID) { mCurrentLevelID = currentLevelID; }
+    LevelID GetCurrentLevelID() { return mCurrentLevelID; }
 
     std::vector<class Actor*> GetActors() { return mActors; }
 

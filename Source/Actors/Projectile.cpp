@@ -3,14 +3,16 @@
 #include "Projectile.h"
 #include "../Game.h"
 #include "Enemy.h"
+#include "Miniboss.h"
 #include "../Components/Drawing/StaticSpriteComponent.h"
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Audio/AudioSystem.h"
 
-Projectile::Projectile(Game* game)
+Projectile::Projectile(Game* game, int damage)
     : Actor(game)
     , mHasHitEnemy(false)
+    , mDamage(damage)
 {
     new StaticSpriteComponent(this, "../Assets/Projectile.png", Projectile::SPRITE_WIDTH, Projectile::SPRITE_HEIGHT);
 
@@ -32,12 +34,20 @@ void Projectile::OnUpdate(float deltaTime)
 
 void Projectile::HandleCollision(AABBColliderComponent* other)
 {
+
     if (other->GetLayer() == ColliderLayer::Enemy && !mHasHitEnemy)
     {
         Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
         if (enemy)
         {
             enemy->Kill();
+            mHasHitEnemy = true;
+        }
+
+        Miniboss* miniboss = dynamic_cast<Miniboss*>(other->GetOwner());
+        if (miniboss)
+        {
+            miniboss->TakeDamage(mDamage);
             mHasHitEnemy = true;
         }
 

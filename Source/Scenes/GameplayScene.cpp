@@ -21,17 +21,22 @@ void GameplayScene::Load()
 
     new CorruptionOverlay(GetGame());
     new HUD(GetGame());
-    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/gameplay-m1-stage5-synapse-retrogenesis.ogg");
-    GetGame()->GetAudioSystem()->SetMusicVolume(0.33f);
+
     switch (mLevelID)
     {
-        case LevelID::Tutorial:
-            LoadTutorial();
-            break;
-        case LevelID::Level1:
-            LoadLevel1();
-            break;
+        case LevelID::Tutorial: LoadTutorial(); break;
+        case LevelID::Level1: LoadLevel1(); break;
+        case LevelID::Level2: LoadLevel2(); break;
+        case LevelID::Level3: LoadLevel3(); break;
+        case LevelID::Level4: LoadLevel4(); break;
+        case LevelID::Level5: LoadLevel5(); break;
+        case LevelID::Level6: LoadLevel6(); break;
+        case LevelID::Level7: LoadLevel7(); break;
+        case LevelID::Level8: LoadLevel8(); break;
+        case LevelID::Level9: LoadLevel9(); break;
     }
+
+    GetGame()->GetAudioSystem()->SetMusicVolume(0.33f);
 }
 
 void GameplayScene::Unload()
@@ -47,8 +52,16 @@ void GameplayScene::Update(float deltaTime)
 
     if (IsLevelComplete())
     {
-        GetGame()->SetCurrentLevelID(mNextLevelID);
-        GetGame()->SetScene(Game::GameScene::Upgrade);
+        bool isFinalLevel = GetGame()->GetCurrentLevelID() == LevelID::Level9;
+
+        if (isFinalLevel)
+        {
+            GetGame()->SetScene(Game::GameScene::Victory);
+        } else
+        {
+            GetGame()->SetCurrentLevelID(mNextLevelID);
+            GetGame()->SetScene(Game::GameScene::Upgrade);
+        }
     }
 
     bool playerDiedByEnemy = GetGame()->GetPlayer()->GetHealth() <= 0.0f;
@@ -75,35 +88,148 @@ void GameplayScene::ProcessInput(const uint8_t* keyState)
 
 void GameplayScene::LoadTutorial()
 {
-    SetNextLevelID(LevelID::Tutorial);
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/gameplay-m1-stage5-synapse-retrogenesis.ogg");
+
+    SetNextLevelID(LevelID::Level1);
 
     new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
     GetGame()->SetUpperBoundary(423.0f);
 
-    new Spawner(GetGame(), SpawnType::Enemy, 10);
-    new Spawner(GetGame(), SpawnType::Coin, 12);
-    new Spawner(GetGame(), SpawnType::Purifier, 2);
-    new Spawner(GetGame(), SpawnType::Healer, 1);
-    new Spawner(GetGame(), SpawnType::FatMiniboss, 1);
-    new Spawner(GetGame(), SpawnType::HornMiniboss, 1);
-    new Spawner(GetGame(), SpawnType::EyeMiniboss, 1);
+    new Spawner(GetGame(), SpawnType::Enemy, 5);
+    new Spawner(GetGame(), SpawnType::Coin, 5);
 }
 
 void GameplayScene::LoadLevel1()
 {
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level_1_c2_misplaced_in_time.mp3");
 
+    SetNextLevelID(LevelID::Level2);
+
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    GetGame()->SetUpperBoundary(423.0f);
+
+    new Spawner(GetGame(), SpawnType::Enemy, 15, 5, 2);
+    new Spawner(GetGame(), SpawnType::Coin, 10);
+    new Spawner(GetGame(), SpawnType::Purifier, 2);
+}
+
+void GameplayScene::LoadLevel2()
+{
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level_2_d5_the_way_ahead_feels_lonely.mp3");
+
+    SetNextLevelID(LevelID::Level3);
+
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    GetGame()->SetUpperBoundary(423.0f);
+
+    new Spawner(GetGame(), SpawnType::Enemy, 25, 6, 3);
+    new Spawner(GetGame(), SpawnType::Coin, 15);
+    new Spawner(GetGame(), SpawnType::Healer, 1);
+}
+
+void GameplayScene::LoadLevel3()
+{
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level_3_e2_and_heart_breaks.mp3");
+
+    SetNextLevelID(LevelID::Level4);
+
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    GetGame()->SetUpperBoundary(423.0f);
+
+    new Spawner(GetGame(), SpawnType::Enemy, 10, 5, 2);
+    new Spawner(GetGame(), SpawnType::EyeMiniboss, 1, 1, 0, true);
+    new Spawner(GetGame(), SpawnType::Purifier, 3);
+}
+
+void GameplayScene::LoadLevel4()
+{
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level_4_e6_sublime_beyond_loss.mp3");
+
+    SetNextLevelID(LevelID::Level5);
+
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    GetGame()->SetUpperBoundary(423.0f);
+
+    new Spawner(GetGame(), SpawnType::Enemy, 35, 7, 3);
+    new Spawner(GetGame(), SpawnType::Coin, 20);
+}
+
+void GameplayScene::LoadLevel5()
+{
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level_5_f7_libet_delay.mp3");
+
+    SetNextLevelID(LevelID::Level6);
+
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    GetGame()->SetUpperBoundary(423.0f);
+
+    new Spawner(GetGame(), SpawnType::Enemy, 40, 8, 4);
+    new Spawner(GetGame(), SpawnType::Healer, 2);
+}
+
+void GameplayScene::LoadLevel6()
+{
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level_6_g1_stage_4_post_awareness_confusions.mp3");
+
+    SetNextLevelID(LevelID::Level7);
+
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    GetGame()->SetUpperBoundary(423.0f);
+
+    new Spawner(GetGame(), SpawnType::Enemy, 12, 6, 0);
+    new Spawner(GetGame(), SpawnType::FatMiniboss, 1, 1, 0, true);
+    new Spawner(GetGame(), SpawnType::Purifier, 1);
+}
+
+void GameplayScene::LoadLevel7()
+{
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level_7_l1_stage_5_advanced_plaque_entanglements.mp3");
+
+    SetNextLevelID(LevelID::Level8);
+
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    GetGame()->SetUpperBoundary(423.0f);
+
+    new Spawner(GetGame(), SpawnType::Enemy, 50, 10, 5);
+}
+
+void GameplayScene::LoadLevel8()
+{
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level_8_o1_stage_6_a_confusion_so_thick_you_forget_forgetting.mp3");
+
+    SetNextLevelID(LevelID::Level9);
+
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    GetGame()->SetUpperBoundary(423.0f);
+
+    new Spawner(GetGame(), SpawnType::Enemy, 60, 10, 5);
+    new Spawner(GetGame(), SpawnType::Healer, 3);
+}
+
+void GameplayScene::LoadLevel9()
+{
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level_9_q1_stage_6_long_decline_is_over.mp3");
+
+    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    GetGame()->SetUpperBoundary(423.0f);
+
+    new Spawner(GetGame(), SpawnType::Enemy, 20, 10, 0);
+    new Spawner(GetGame(), SpawnType::HornMiniboss, 1, 1, 0, true);
+    new Spawner(GetGame(), SpawnType::Purifier, 1);
 }
 
 bool GameplayScene::IsLevelComplete()
 {
     for (auto actor : GetGame()->GetActors())
     {
-        /**
-         *  TODO:
-         *  - Using a more robust validation to avoid breaking this
-         *   business rule for new kind of enemies or bosses.
-         */
-        if (dynamic_cast<Enemy*>(actor) || dynamic_cast<Miniboss*>(actor))
+        if (actor->GetState() != ActorState::Active)
+        {
+            continue;
+        }
+
+        if (dynamic_cast<Enemy*>(actor) ||
+            dynamic_cast<Miniboss*>(actor) ||
+            dynamic_cast<Spawner*>(actor))
         {
             return false;
         }

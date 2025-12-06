@@ -31,6 +31,39 @@ void Miniboss::OnUpdate(float deltaTime)
             mAnimator->SetColor(mOriginalColor);
         }
     }
+
+    Vector2 pos = GetPosition();
+    Vector2 vel = mRigidBody->GetVelocity();
+
+    const float halfWidth = mAnimator->GetWidth() / 2.0f;
+    const float halfHeight = mAnimator->GetHeight() / 2.0f;
+
+    if ((pos.x <= halfWidth && vel.x < 0.0f) || (pos.x >= Game::WINDOW_WIDTH - halfWidth && vel.x > 0.0f))
+    {
+        vel.x *= -1.0f;
+    }
+
+    if ((pos.y <= GetGame()->GetUpperBoundary() + halfHeight && vel.y < 0.0f) || (pos.y >= Game::WINDOW_HEIGHT -
+        halfHeight && vel.y > 0.0f))
+    {
+        vel.y *= -1.0f;
+    }
+
+    mRigidBody->SetVelocity(vel);
+
+    if (vel.x < -1.0f)
+    {
+        SetScale(Vector2(-1.0f, 1.0f));
+    }
+    else if (vel.x > 1.0f)
+    {
+        SetScale(Vector2(1.0f, 1.0f));
+    }
+
+    if (mAnimator)
+    {
+        mAnimator->SetDrawOrder(100 + static_cast<int>(GetPosition().y));
+    }
 }
 
 void Miniboss::TakeDamage(float amount)
@@ -72,18 +105,8 @@ void Miniboss::Kill()
 
 void Miniboss::OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other)
 {
-    if (other->GetLayer() == ColliderLayer::Player && !mIsDead)
-    {
-        Player* player = dynamic_cast<Player*>(other->GetOwner());
-        if (player) player->TakeDamage(BODY_DAMAGE);
-    }
 }
 
 void Miniboss::OnVerticalCollision(const float minOverlap, AABBColliderComponent* other)
 {
-    if (other->GetLayer() == ColliderLayer::Player && !mIsDead)
-    {
-        Player* player = dynamic_cast<Player*>(other->GetOwner());
-        if (player) player->TakeDamage(BODY_DAMAGE);
-    }
 }

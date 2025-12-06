@@ -17,6 +17,7 @@ private:
     UIStatWidget* mCoinWidget;
     UIStatWidget* mCorruptionWidget;
     UIHealthBarWidget* mHealthBarWidget;
+    std::string GetCurrentLevelTitle(LevelID levelId);
 
     void OnUpdate();
 };

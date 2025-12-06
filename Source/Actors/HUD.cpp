@@ -16,6 +16,10 @@ HUD::HUD(Game* game)
     mCoinWidget->SetPosition(Vector2(20.0f, 56.0f), HAlign::Left);
     mCoinWidget->SetValue(std::to_string(GetGame()->GetCoinCount()));
 
+    mCorruptionWidget = new UIStatWidget(game, GetCurrentLevelTitle(game->GetCurrentLevelID()), pointSize, HUD::DRAW_ORDER);
+    mCorruptionWidget->SetOutline(true);
+    mCorruptionWidget->SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f + 48.0f, 56.0f * 2.0f), HAlign::Center);
+
     mCorruptionWidget = new UIStatWidget(game, "CORRUPTION", pointSize, HUD::DRAW_ORDER);
     mCorruptionWidget->SetOutline(true);
     mCorruptionWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, 56.0f), HAlign::Right);
@@ -42,4 +46,25 @@ void HUD::OnUpdate(float deltaTime)
     mCorruptionWidget->SetValue(std::to_string(corruptionPercent) + "%");
 
     mHealthBarWidget->Update(player->GetHealth(), player->GetMaxHealth());
+}
+
+std::string HUD::GetCurrentLevelTitle (LevelID levelId)
+{
+    std::string levelTitle;
+
+    switch (levelId)
+    {
+        case LevelID::Tutorial: levelTitle = "TUTORIAL"; break;
+        case LevelID::Level1: levelTitle = "LEVEL 1"; break;
+        case LevelID::Level2: levelTitle = "LEVEL 2"; break;
+        case LevelID::Level3: levelTitle = "LEVEL 3"; break;
+        case LevelID::Level4: levelTitle = "LEVEL 4"; break;
+        case LevelID::Level5: levelTitle = "LEVEL 5"; break;
+        case LevelID::Level6: levelTitle = "LEVEL 6"; break;
+        case LevelID::Level7: levelTitle = "LEVEL 7"; break;
+        case LevelID::Level8: levelTitle = "LEVEL 8"; break;
+        case LevelID::Level9: levelTitle = "LEVEL 9"; break;
+    }
+
+    return levelTitle;
 }

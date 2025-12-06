@@ -125,14 +125,27 @@ void UpgradeScene::SelectPreviousButton()
         mSelectedButtonIndex--;
     }
     UpdateButtonSelection();
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void UpgradeScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+        /**
+         *  TODO:
+         *  - Using a more robust validation to avoid breaking this
+         *  business rule in case the index of 'Continue Button' changes.
+         */
+        bool clickedOnContinueButton = mSelectedButtonIndex == mButtons.size() - 1;
+
+        if (clickedOnContinueButton)
+        {
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/level-transition.wav");
+        } else
+        {
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+        }
+
         mButtons[mSelectedButtonIndex]->Click();
     }
 }

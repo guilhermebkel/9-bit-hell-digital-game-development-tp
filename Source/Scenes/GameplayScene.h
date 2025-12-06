@@ -5,6 +5,14 @@ enum class LevelID
 {
     Tutorial,
     Level1,
+    Level2,
+    Level3,
+    Level4,
+    Level5,
+    Level6,
+    Level7,
+    Level8,
+    Level9,
 };
 
 class GameplayScene : public Scene
@@ -22,6 +30,14 @@ public:
 private:
     void LoadTutorial();
     void LoadLevel1();
+    void LoadLevel2();
+    void LoadLevel3();
+    void LoadLevel4();
+    void LoadLevel5();
+    void LoadLevel6();
+    void LoadLevel7();
+    void LoadLevel8();
+    void LoadLevel9();
     bool IsLevelComplete();
     LevelID mLevelID;
     LevelID mNextLevelID;

@@ -9,92 +9,137 @@
 #include "HornMiniboss.h"
 #include "EyeMiniboss.h"
 #include "../Random.h"
-#include <cmath>
+#include <algorithm>
 
-
-
-Spawner::Spawner(Game* game, SpawnType type, int count, bool spawnOnStart)
+Spawner::Spawner(Game* game, SpawnType type, int totalCount, int waveSize, int keepPopulation, bool waitForClear)
     : Actor(game)
     , mSpawnType(type)
-    , mSpawnCount(count)
-    , mHasSpawned(!spawnOnStart)
-{}
+    , mTotalCount(totalCount)
+    , mRemainingCount(totalCount)
+    , mWaveSize(waveSize)
+    , mKeepPopulation(keepPopulation)
+    , mWaitForClear(waitForClear)
+{
+    if (mWaveSize <= 0) mWaveSize = totalCount;
+    if (mKeepPopulation < 0) mKeepPopulation = 0;
+}
 
 void Spawner::OnUpdate(float deltaTime)
 {
-    Actor::OnUpdate(deltaTime);
-
-    if (mHasSpawned)
+    if (mRemainingCount <= 0)
     {
-        mState = ActorState::Destroy;
+        SetState(ActorState::Destroy);
         return;
     }
 
-    const class Player* player = GetGame()->GetPlayer();
-    if (player)
+    int activeEnemies = CountActiveEnemies();
+
+    if (mWaitForClear)
     {
-        for (int i = 0; i < mSpawnCount; ++i)
+        bool areThereEnemySpawners = false;
+        for (auto actor : GetGame()->GetActors())
         {
-            Vector2 spawnPos = Vector2(
-                Random::GetFloatRange(100.0f, Game::WINDOW_WIDTH - 100.0f),
-                Random::GetFloatRange(GetGame()->GetUpperBoundary() + 100.0f, Game::WINDOW_HEIGHT - 100.0f)
-            );
+            if (actor == this || actor->GetState() != ActorState::Active) continue;
 
-            switch (mSpawnType)
+            auto otherSpawner = dynamic_cast<Spawner*>(actor);
+            if (otherSpawner && !otherSpawner->mWaitForClear)
             {
-                case SpawnType::Enemy:
-                {
-                    std::array<Enemy::EnemyType, 3> enemyTypes = {
-                        Enemy::EnemyType::Eye,
-                        Enemy::EnemyType::Horn,
-                        Enemy::EnemyType::Fat
-                    };
-
-                    auto randomIndex = Random::GetIntRange(0, enemyTypes.size() - 1);
-                    auto enemyType = enemyTypes[randomIndex];
-                    Enemy* enemy = new Enemy(GetGame(), enemyType);
-                    enemy->SetPosition(spawnPos);
-                    break;
-                }
-                case SpawnType::Coin:
-                {
-                    Coin* coin = new Coin(GetGame());
-                    coin->SetPosition(spawnPos);
-                    break;
-                }
-                case SpawnType::Purifier:
-                {
-                    Purifier* purifier = new Purifier(GetGame());
-                    purifier->SetPosition(spawnPos);
-                    break;
-                }
-                case SpawnType::Healer:
-                {
-                    Healer* healer = new Healer(GetGame());
-                    healer->SetPosition(spawnPos);
-                    break;
-                }
-                case SpawnType::FatMiniboss:
-                {
-                        FatMiniboss* fatMiniboss = new FatMiniboss(GetGame());
-                        fatMiniboss->SetPosition(spawnPos);
-                        break;
-                }
-                case SpawnType::HornMiniboss:
-                {
-                        HornMiniboss* hornMiniboss = new HornMiniboss(GetGame());
-                        hornMiniboss->SetPosition(spawnPos);
-                        break;
-                }
-                case SpawnType::EyeMiniboss:
-                {
-                    EyeMiniboss* eyeMiniboss = new EyeMiniboss(GetGame());
-                    eyeMiniboss->SetPosition(spawnPos);
-                    break;
-                }
+                areThereEnemySpawners = true;
+                break;
             }
         }
 
-        mHasSpawned = true;
+        if (activeEnemies == 0 && !areThereEnemySpawners)
+        {
+            SpawnOne();
+            mRemainingCount--;
+        }
+        return;
+    }
+
+    if (activeEnemies <= mKeepPopulation)
+    {
+        int countToSpawn = std::min(mWaveSize, mRemainingCount);
+        for (int i = 0; i < countToSpawn; ++i)
+        {
+            SpawnOne();
+        }
+        mRemainingCount -= countToSpawn;
+    }
+}
+
+int Spawner::CountActiveEnemies()
+{
+    int count = 0;
+    for (auto actor : GetGame()->GetActors())
+    {
+        if (actor->GetState() == ActorState::Active)
+        {
+            if (dynamic_cast<Enemy*>(actor) || dynamic_cast<Miniboss*>(actor))
+            {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+void Spawner::SpawnOne()
+{
+    Vector2 spawnPos = Vector2(
+        Random::GetFloatRange(100.0f, Game::WINDOW_WIDTH - 100.0f),
+        Random::GetFloatRange(GetGame()->GetUpperBoundary() + 100.0f, Game::WINDOW_HEIGHT - 100.0f)
+    );
+
+    switch (mSpawnType)
+    {
+        case SpawnType::Enemy:
+        {
+            std::array<Enemy::EnemyType, 3> enemyTypes = {
+                Enemy::EnemyType::Eye,
+                Enemy::EnemyType::Horn,
+                Enemy::EnemyType::Fat
+            };
+            auto randomIndex = Random::GetIntRange(0, enemyTypes.size() - 1);
+            Enemy* enemy = new Enemy(GetGame(), enemyTypes[randomIndex]);
+            enemy->SetPosition(spawnPos);
+            break;
+        }
+        case SpawnType::Coin:
+        {
+            Coin* coin = new Coin(GetGame());
+            coin->SetPosition(spawnPos);
+            break;
+        }
+        case SpawnType::Purifier:
+        {
+            Purifier* purifier = new Purifier(GetGame());
+            purifier->SetPosition(spawnPos);
+            break;
+        }
+        case SpawnType::Healer:
+        {
+            Healer* healer = new Healer(GetGame());
+            healer->SetPosition(spawnPos);
+            break;
+        }
+        case SpawnType::FatMiniboss:
+        {
+            FatMiniboss* fatMiniboss = new FatMiniboss(GetGame());
+            fatMiniboss->SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, spawnPos.y));
+            break;
+        }
+        case SpawnType::HornMiniboss:
+        {
+            HornMiniboss* hornMiniboss = new HornMiniboss(GetGame());
+            hornMiniboss->SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, spawnPos.y));
+            break;
+        }
+        case SpawnType::EyeMiniboss:
+        {
+            EyeMiniboss* eyeMiniboss = new EyeMiniboss(GetGame());
+            eyeMiniboss->SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, spawnPos.y));
+            break;
+        }
     }
 }
