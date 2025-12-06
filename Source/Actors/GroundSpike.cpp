@@ -25,23 +25,19 @@ void GroundSpike::OnUpdate(float deltaTime)
 {
     mTimer += deltaTime;
 
-    // Fase 1: Crescendo (Aviso)
     if (mTimer < RISE_TIME)
     {
         float pct = mTimer / RISE_TIME;
-        SetScale(Vector2(1.0f, pct)); // Cresce verticalmente
+        SetScale(Vector2(1.0f, pct));
     }
-    // Fase 2: Ativo e Letal
     else if (mTimer < LIFE_TIME)
     {
         SetScale(Vector2(1.0f, 1.0f));
         if (!mCollider->IsEnabled())
         {
             mCollider->SetEnabled(true);
-            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/spike-rise.wav"); // Som hipotético
         }
     }
-    // Fim da vida
     else
     {
         SetState(ActorState::Destroy);

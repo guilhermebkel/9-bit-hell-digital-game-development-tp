@@ -4,8 +4,8 @@
 class EyeMiniboss : public Miniboss
 {
 public:
-    static constexpr float SPRITE_WIDTH = 64.0f;
-    static constexpr float SPRITE_HEIGHT = 64.0f;
+    static constexpr float SPRITE_WIDTH = 24.0f * 4.0f;
+    static constexpr float SPRITE_HEIGHT = 24.0f * 4.0f;
     static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.60f;
     static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.60f;
     
