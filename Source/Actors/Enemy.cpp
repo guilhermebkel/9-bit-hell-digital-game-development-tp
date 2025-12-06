@@ -65,7 +65,7 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         mDrawComponent->AddAnimation("attack", {0, 1, 2});
         mDrawComponent->AddAnimation("being-hit", {3});
         mDrawComponent->AddAnimation("idle", {4, 5});
-        mDrawComponent->AddAnimation("walk", {6, 7});
+        mDrawComponent->AddAnimation("walk", {7, 6});
         mDrawComponent->AddAnimation("dead", {4});
         mDrawComponent->SetAnimation("walk");
         mDrawComponent->SetAnimFPS(4.0f);

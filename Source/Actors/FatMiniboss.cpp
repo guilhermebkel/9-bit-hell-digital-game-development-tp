@@ -22,12 +22,12 @@ FatMiniboss::FatMiniboss(Game* game)
         SPRITE_HEIGHT
     );
 
-    mAnimator->AddAnimation("idle", {4, 5});
+    mAnimator->AddAnimation("idle", {3, 4});
     mAnimator->AddAnimation("walk", {7, 6});
     mAnimator->AddAnimation("attack", {0, 1});
-    mAnimator->AddAnimation("special", {2});
-    mAnimator->AddAnimation("being-hit", {3});
-    mAnimator->AddAnimation("dead", {4});
+    mAnimator->AddAnimation("special", {5});
+    mAnimator->AddAnimation("being-hit", {2});
+    mAnimator->AddAnimation("dead", {3});
 
     mAnimator->SetAnimation("idle");
     mAnimator->SetAnimFPS(4.0f);

@@ -23,11 +23,11 @@ EyeMiniboss::EyeMiniboss(Game* game)
         SPRITE_HEIGHT
     );
     
-    mAnimator->AddAnimation("attack", {2, 5});
-    mAnimator->AddAnimation("being-hit", {0});
-    mAnimator->AddAnimation("idle", {1, 3});
-    mAnimator->AddAnimation("walk", {7, 4, 6});
-    mAnimator->AddAnimation("dead", {1});
+    mAnimator->AddAnimation("attack", {0, 1});
+    mAnimator->AddAnimation("being-hit", {2});
+    mAnimator->AddAnimation("idle", {3, 4});
+    mAnimator->AddAnimation("walk", {7, 5, 6});
+    mAnimator->AddAnimation("dead", {3});
     
     mAnimator->SetAnimation("idle");
     mAnimator->SetAnimFPS(6.0f);

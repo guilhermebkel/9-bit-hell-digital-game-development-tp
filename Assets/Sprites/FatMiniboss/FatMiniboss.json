@@ -5,15 +5,15 @@
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 20,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 2,
+        "x": 0,
         "y": 0,
-        "w": 20,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -30,41 +30,16 @@
       "frame": {
         "x": 0,
         "y": 24,
-        "w": 20,
-        "h": 24
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 2,
-        "y": 0,
-        "w": 20,
-        "h": 24
-      },
-      "sourceSize": {
         "w": 24,
         "h": 24
       },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "special/pixil-frame-1.png",
-      "frame": {
-        "x": 20,
-        "y": 0,
-        "w": 22,
-        "h": 22
-      },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 1,
-        "y": 2,
-        "w": 22,
-        "h": 22
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 24
       },
       "sourceSize": {
         "w": 24,
@@ -78,17 +53,17 @@
     {
       "filename": "being-hit/pixil-frame-4.png",
       "frame": {
-        "x": 0,
-        "y": 48,
-        "w": 19,
+        "x": 24,
+        "y": 0,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 2,
+        "x": 0,
         "y": 0,
-        "w": 19,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -103,17 +78,17 @@
     {
       "filename": "idle/pixil-frame-0.png",
       "frame": {
-        "x": 20,
-        "y": 22,
-        "w": 20,
+        "x": 0,
+        "y": 48,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 2,
+        "x": 0,
         "y": 0,
-        "w": 20,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -128,17 +103,42 @@
     {
       "filename": "idle/pixil-frame-3.png",
       "frame": {
-        "x": 42,
-        "y": 0,
-        "w": 20,
+        "x": 24,
+        "y": 24,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 2,
+        "x": 0,
         "y": 0,
-        "w": 20,
+        "w": 24,
+        "h": 24
+      },
+      "sourceSize": {
+        "w": 24,
+        "h": 24
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "special/pixil-frame-1.png",
+      "frame": {
+        "x": 48,
+        "y": 0,
+        "w": 24,
+        "h": 24
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -155,15 +155,15 @@
       "frame": {
         "x": 0,
         "y": 72,
-        "w": 18,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 3,
+        "x": 0,
         "y": 0,
-        "w": 18,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -178,17 +178,17 @@
     {
       "filename": "walking/pixil-frame-0.png",
       "frame": {
-        "x": 20,
-        "y": 22,
-        "w": 20,
+        "x": 0,
+        "y": 48,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 2,
+        "x": 0,
         "y": 0,
-        "w": 20,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -207,7 +207,7 @@
     "image": "texture.png",
     "format": "RGBA8888",
     "size": {
-      "w": 62,
+      "w": 72,
       "h": 96
     },
     "scale": 1

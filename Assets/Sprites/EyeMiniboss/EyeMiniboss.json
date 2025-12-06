@@ -1,19 +1,69 @@
 {
   "frames": [
     {
-      "filename": "being-hit/pixil-frame-3.png",
+      "filename": "attacking/pixil-frame-4.png",
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 16,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
+        "x": 0,
         "y": 0,
-        "w": 16,
+        "w": 24,
+        "h": 24
+      },
+      "sourceSize": {
+        "w": 24,
+        "h": 24
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "attacking/pixil-frame-5.png",
+      "frame": {
+        "x": 0,
+        "y": 24,
+        "w": 24,
+        "h": 24
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 24
+      },
+      "sourceSize": {
+        "w": 24,
+        "h": 24
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "filename": "being-hit/pixil-frame-3.png",
+      "frame": {
+        "x": 24,
+        "y": 0,
+        "w": 24,
+        "h": 24
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -29,42 +79,17 @@
       "filename": "idle/pixil-frame-0.png",
       "frame": {
         "x": 0,
-        "y": 24,
-        "w": 16,
-        "h": 24
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 4,
-        "y": 0,
-        "w": 16,
-        "h": 24
-      },
-      "sourceSize": {
+        "y": 48,
         "w": 24,
         "h": 24
       },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "attacking/pixil-frame-4.png",
-      "frame": {
-        "x": 16,
-        "y": 0,
-        "w": 16,
-        "h": 23
-      },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
-        "y": 1,
-        "w": 16,
-        "h": 23
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 24
       },
       "sourceSize": {
         "w": 24,
@@ -78,17 +103,17 @@
     {
       "filename": "idle/pixil-frame-2.png",
       "frame": {
-        "x": 0,
-        "y": 48,
-        "w": 16,
+        "x": 24,
+        "y": 24,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
+        "x": 0,
         "y": 0,
-        "w": 16,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -103,43 +128,18 @@
     {
       "filename": "walking/pixil-frame-1.png",
       "frame": {
-        "x": 16,
-        "y": 23,
-        "w": 14,
-        "h": 24
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 5,
+        "x": 48,
         "y": 0,
-        "w": 14,
-        "h": 24
-      },
-      "sourceSize": {
         "w": 24,
         "h": 24
       },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "attacking/pixil-frame-5.png",
-      "frame": {
-        "x": 32,
-        "y": 0,
-        "w": 16,
-        "h": 22
-      },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
-        "y": 2,
-        "w": 16,
-        "h": 22
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 24
       },
       "sourceSize": {
         "w": 24,
@@ -155,15 +155,15 @@
       "frame": {
         "x": 0,
         "y": 72,
-        "w": 12,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 6,
+        "x": 0,
         "y": 0,
-        "w": 12,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -178,17 +178,17 @@
     {
       "filename": "walking/pixil-frame-0.png",
       "frame": {
-        "x": 0,
-        "y": 48,
-        "w": 16,
+        "x": 24,
+        "y": 24,
+        "w": 24,
         "h": 24
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 4,
+        "x": 0,
         "y": 0,
-        "w": 16,
+        "w": 24,
         "h": 24
       },
       "sourceSize": {
@@ -207,7 +207,7 @@
     "image": "texture.png",
     "format": "RGBA8888",
     "size": {
-      "w": 48,
+      "w": 72,
       "h": 96
     },
     "scale": 1
