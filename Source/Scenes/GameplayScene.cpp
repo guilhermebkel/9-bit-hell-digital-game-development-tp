@@ -57,6 +57,14 @@ void GameplayScene::Update(float deltaTime)
     if (isGameOver)
     {
         GetGame()->SetScene(Game::GameScene::GameOver);
+
+        if (playerDiedByCorruption)
+        {
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/game-over-by-corruption.ogg");
+        } else
+        {
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/game-over.mp3");
+        }
     }
 }
 
