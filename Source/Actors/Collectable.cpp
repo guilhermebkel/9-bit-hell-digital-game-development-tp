@@ -5,11 +5,9 @@
 #include "../Components/Drawing/StaticSpriteComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
 
-Collectable::Collectable(Game* game, const std::string& texturePath, int width, int height)
+Collectable::Collectable(Game* game, int width, int height)
     : Actor(game)
 {
-    new StaticSpriteComponent(this, texturePath, width, height, 90);
-
     float physicsWidth = width * 0.50f;
     float physicsHeight = height * 0.25f;
     // Align collider base with sprite base

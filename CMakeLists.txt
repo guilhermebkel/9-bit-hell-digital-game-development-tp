@@ -85,6 +85,8 @@ add_executable(${PROJECT_NAME}
         Source/Scenes/GameOverScene.h
         Source/Audio/AudioSystem.cpp
         Source/Audio/AudioSystem.h
+        Source/Actors/Healer.cpp
+        Source/Actors/Healer.h
 )
 
 if(WIN32)

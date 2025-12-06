@@ -28,6 +28,7 @@ public:
 
     void Kill() override;
     void TakeDamage(float amount);
+    void Heal(float amount);
     float GetHealth() const { return mHealth; }
     float GetMaxHealth() const { return mMaxHealth; }
 

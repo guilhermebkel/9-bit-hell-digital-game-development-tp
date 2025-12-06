@@ -5,7 +5,7 @@
 class Collectable : public Actor
 {
 public:
-    Collectable(class Game* game, const std::string& texturePath, int width, int height);
+    Collectable(class Game* game, int width, int height);
 
     void OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other) override;
     void OnVerticalCollision(const float minOverlap, AABBColliderComponent* other) override;

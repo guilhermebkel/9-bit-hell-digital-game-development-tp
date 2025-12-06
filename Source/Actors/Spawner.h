@@ -5,7 +5,8 @@ enum class SpawnType
 {
     Enemy,
     Coin,
-    Purifier
+    Purifier,
+    Healer
 };
 
 class Spawner : public Actor

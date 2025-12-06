@@ -74,6 +74,7 @@ void GameplayScene::LoadTutorial()
     new Spawner(GetGame(), SpawnType::Enemy, 10);
     new Spawner(GetGame(), SpawnType::Coin, 12);
     new Spawner(GetGame(), SpawnType::Purifier, 2);
+    new Spawner(GetGame(), SpawnType::Healer, 1);
 }
 
 void GameplayScene::LoadLevel1()

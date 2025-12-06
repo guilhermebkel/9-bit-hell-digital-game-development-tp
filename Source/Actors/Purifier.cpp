@@ -1,26 +1,29 @@
 #include "Purifier.h"
 #include "Player.h"
 #include "../Game.h"
-#include "../Math.h"
 #include "../Random.h"
 #include "../Audio/AudioSystem.h"
-#include <SDL2/SDL.h>
-#include <cmath>
+#include "../Components/Drawing/AnimatorComponent.h"
 
 Purifier::Purifier(class Game* game)
-    : Collectable(game, "../Assets/Sprites/Collectables/PowerUp.png", Purifier::SPRITE_WIDTH, Purifier::SPRITE_HEIGHT)
+    : Collectable(game, Purifier::SPRITE_WIDTH, Purifier::SPRITE_HEIGHT)
     , mPulseTimer(Random::GetFloatRange(0.0f, 6.28f))
 {
+    class AnimatorComponent* mDrawComponent = new AnimatorComponent(
+        this,
+        "../Assets/Sprites/Collectables/Light/Light.png",
+        "../Assets/Sprites/Collectables/Light/Light.json",
+        Purifier::SPRITE_WIDTH,
+        Purifier::SPRITE_HEIGHT
+    );
+    mDrawComponent->AddAnimation("idle", {0, 1, 2});
+    mDrawComponent->SetAnimation("idle");
+    mDrawComponent->SetAnimFPS(4.0f);
 }
 
 void Purifier::OnUpdate(float deltaTime)
 {
     Actor::OnUpdate(deltaTime);
-    
-    mPulseTimer += deltaTime * 1.33f;
-    
-    float pulseScale = 1.0f + (std::sin(mPulseTimer) * 0.17f);
-    SetScale(Vector2(pulseScale, pulseScale));
 }
 
 void Purifier::OnCollect(Player* player)

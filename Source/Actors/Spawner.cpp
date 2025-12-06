@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Coin.h"
 #include "Purifier.h"
+#include "Healer.h"
 #include "../Random.h"
 #include <cmath>
 
@@ -61,6 +62,12 @@ void Spawner::OnUpdate(float deltaTime)
                 {
                     Purifier* purifier = new Purifier(GetGame());
                     purifier->SetPosition(spawnPos);
+                    break;
+                }
+                case SpawnType::Healer:
+                {
+                    Healer* healer = new Healer(GetGame());
+                    healer->SetPosition(spawnPos);
                     break;
                 }
             }

@@ -4,13 +4,21 @@
 #include "../Math.h"
 #include "../Random.h"
 #include "../Audio/AudioSystem.h"
+#include "../Components/Drawing/StaticSpriteComponent.h"
 #include <cmath>
 
 Coin::Coin(class Game* game)
-    : Collectable(game, "../Assets/Sprites/Collectables/Coin.png", Coin::SPRITE_WIDTH, Coin::SPRITE_HEIGHT)
+    : Collectable(game, Coin::SPRITE_WIDTH, Coin::SPRITE_HEIGHT)
     , mFloatTimer(Random::GetFloatRange(0.0f, 6.28f))
     , mInitialPosition(Vector2::Zero)
 {
+    new StaticSpriteComponent(
+        this,
+        "../Assets/Sprites/Collectables/Coin.png",
+        Coin::SPRITE_WIDTH,
+        Coin::SPRITE_HEIGHT,
+        90
+    );
 }
 
 void Coin::OnUpdate(float deltaTime)

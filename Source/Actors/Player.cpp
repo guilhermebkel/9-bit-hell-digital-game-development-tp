@@ -320,3 +320,10 @@ void Player::TakeDamage(float amount)
         Kill();
     }
 }
+
+void Player::Heal(float amount)
+{
+    if (mIsDead || mIsInvincible || mHitFreezeTimer > 0.0f) return;
+
+    mHealth += amount;
+}
