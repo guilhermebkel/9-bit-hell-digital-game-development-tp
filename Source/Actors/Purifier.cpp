@@ -16,9 +16,9 @@ Purifier::Purifier(class Game* game)
         Purifier::SPRITE_WIDTH,
         Purifier::SPRITE_HEIGHT
     );
-    mDrawComponent->AddAnimation("idle", {0, 1, 2});
+    mDrawComponent->AddAnimation("idle", {0, 1, 2, 1});
     mDrawComponent->SetAnimation("idle");
-    mDrawComponent->SetAnimFPS(4.0f);
+    mDrawComponent->SetAnimFPS(3.0f);
 }
 
 void Purifier::OnUpdate(float deltaTime)

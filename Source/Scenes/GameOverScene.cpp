@@ -48,6 +48,8 @@ void GameOverScene::Load()
     mButtons.push_back(quitButton);
 
     UpdateButtonSelection();
+
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/game-over.wav");
 }
 
 void GameOverScene::Unload()
