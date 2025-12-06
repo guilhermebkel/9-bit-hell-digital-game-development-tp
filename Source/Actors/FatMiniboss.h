@@ -6,8 +6,8 @@ class FatMiniboss : public Miniboss
 public:
     static constexpr float SPRITE_WIDTH = 96.0f;
     static constexpr float SPRITE_HEIGHT = 96.0f;
-    static constexpr float PHYSICS_WIDTH = 60.0f;
-    static constexpr float PHYSICS_HEIGHT = 80.0f;
+    static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.60f;
+    static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.60f;
 
     static constexpr float MAX_HP = 500.0f;
     static constexpr float WALK_SPEED = 80.0f;

@@ -85,6 +85,7 @@ void GameplayScene::LoadTutorial()
     new Spawner(GetGame(), SpawnType::Purifier, 2);
     new Spawner(GetGame(), SpawnType::Healer, 1);
     new Spawner(GetGame(), SpawnType::FatMiniboss, 1);
+    new Spawner(GetGame(), SpawnType::HornMiniboss, 1);
 }
 
 void GameplayScene::LoadLevel1()

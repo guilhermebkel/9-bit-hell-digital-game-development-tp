@@ -7,7 +7,8 @@ enum class SpawnType
     Coin,
     Purifier,
     Healer,
-    FatMiniboss
+    FatMiniboss,
+    HornMiniboss
 };
 
 class Spawner : public Actor

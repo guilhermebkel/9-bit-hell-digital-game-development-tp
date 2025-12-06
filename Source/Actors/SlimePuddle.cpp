@@ -8,9 +8,9 @@ SlimePuddle::SlimePuddle(Game* game)
     : Actor(game)
     , mLifeTimer(LIFETIME)
 {
-    new StaticSpriteComponent(this, "../Assets/SlimePuddle.png", SIZE, SIZE, 80);
+    new StaticSpriteComponent(this, "../Assets/SlimePuddle.png", SPRITE_WIDTH, SPRITE_HEIGHT, 80);
     
-    mCollider = new AABBColliderComponent(this, 0, 0, SIZE, SIZE, ColliderLayer::Enemy, true);
+    mCollider = new AABBColliderComponent(this, 0, 0, SPRITE_WIDTH, SPRITE_HEIGHT, ColliderLayer::Enemy, true);
 }
 
 void SlimePuddle::OnUpdate(float deltaTime)

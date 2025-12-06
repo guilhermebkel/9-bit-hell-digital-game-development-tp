@@ -8,13 +8,13 @@
 SlimeProjectile::SlimeProjectile(Game* game, const Vector2& direction)
     : Actor(game)
 {
-    new StaticSpriteComponent(this, "../Assets/SlimeProjectile.png", SIZE, SIZE);
+    new StaticSpriteComponent(this, "../Assets/SlimeProjectile.png", SPRITE_WIDTH, SPRITE_HEIGHT);
 
     auto rb = new RigidBodyComponent(this, 1.0f, 0.0f);
     mVelocity = direction * SPEED;
     rb->SetVelocity(mVelocity);
 
-    mCollider = new AABBColliderComponent(this, 0, 0, SIZE, SIZE, ColliderLayer::Enemy);
+    mCollider = new AABBColliderComponent(this, 0, 0, SPRITE_WIDTH, SPRITE_HEIGHT, ColliderLayer::Enemy);
     
     float angle = Math::Atan2(direction.y, direction.x);
     SetRotation(angle);

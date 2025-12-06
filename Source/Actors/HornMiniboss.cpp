@@ -1,43 +1,44 @@
-#include "FatMiniboss.h"
+#include "HornMiniboss.h"
 #include "Player.h"
-#include "SlimeProjectile.h"
-#include "SlimePuddle.h"
+#include "FallingHand.h"
+#include "GroundSpike.h"
 #include "../Game.h"
+#include "../Random.h"
 #include "../Components/Drawing/AnimatorComponent.h"
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Audio/AudioSystem.h"
 
-FatMiniboss::FatMiniboss(Game* game)
+HornMiniboss::HornMiniboss(Game* game)
     : Miniboss(game, MAX_HP)
     , mState(BossState::Moving)
+    , mNextAttack(AttackType::HandDrop)
     , mStateTimer(0.0f)
-    , mPuddleTimer(0.0f)
 {
     mAnimator = new AnimatorComponent(
-        this,
-        "../Assets/Sprites/FatMiniboss/FatMiniboss.png",
-        "../Assets/Sprites/FatMiniboss/FatMiniboss.json",
+        this, 
+        "../Assets/Sprites/HornMiniboss/HornMiniboss.png", 
+        "../Assets/Sprites/HornMiniboss/HornMiniboss.json", 
         SPRITE_WIDTH,
         SPRITE_HEIGHT
     );
-
-    mAnimator->AddAnimation("idle", {4, 5});
-    mAnimator->AddAnimation("walk", {6, 7});
+    
     mAnimator->AddAnimation("attack", {0, 1});
-    mAnimator->AddAnimation("special", {2});
+    mAnimator->AddAnimation("special", {2, 4});
     mAnimator->AddAnimation("being-hit", {3});
-    mAnimator->AddAnimation("dead", {4});
-
+    mAnimator->AddAnimation("idle", {5, 6});
+    mAnimator->AddAnimation("walk", {7, 8});
+    mAnimator->AddAnimation("dead", {5});
+    
     mAnimator->SetAnimation("idle");
-    mAnimator->SetAnimFPS(4.0f);
+    mAnimator->SetAnimFPS(5.0f);
 
-    mRigidBody = new RigidBodyComponent(this, 10.0f, 0.0f);
-
+    mRigidBody = new RigidBodyComponent(this, 8.0f, 0.0f);
+    
     mCollider = new AABBColliderComponent(this, 0, 0, PHYSICS_WIDTH, PHYSICS_HEIGHT, ColliderLayer::Enemy);
 }
 
-void FatMiniboss::OnUpdate(float deltaTime)
+void HornMiniboss::OnUpdate(float deltaTime)
 {
     Miniboss::OnUpdate(deltaTime);
 
@@ -62,7 +63,7 @@ void FatMiniboss::OnUpdate(float deltaTime)
     }
 }
 
-void FatMiniboss::UpdateAI(float deltaTime)
+void HornMiniboss::UpdateAI(float deltaTime)
 {
     const Player* player = GetGame()->GetPlayer();
     if (!player) return;
@@ -78,25 +79,27 @@ void FatMiniboss::UpdateAI(float deltaTime)
         Vector2 direction = playerPos - myPos;
         direction.Normalize();
         mRigidBody->SetVelocity(direction * WALK_SPEED);
-
+        
         SetScale(Vector2(direction.x < 0 ? -1.0f : 1.0f, 1.0f));
         mAnimator->SetAnimation("walk");
 
-        mPuddleTimer -= deltaTime;
-        if (mPuddleTimer <= 0.0f)
-        {
-            SpawnPuddle();
-            mPuddleTimer = PUDDLE_SPAWN_INTERVAL;
-        }
-
         mStateTimer += deltaTime;
-        if (mStateTimer >= 3.0f && distance < 450.0f)
+        if (mStateTimer >= 2.0f && distance < 600.0f)
         {
             mState = BossState::WindUp;
             mStateTimer = ATTACK_WINDUP;
             mRigidBody->SetVelocity(Vector2::Zero);
-
-            mAnimator->SetAnimation("special");
+            
+            if (Random::GetFloat() > 0.5f)
+            {
+                mNextAttack = AttackType::GroundSpikes;
+                mAnimator->SetAnimation("special");
+            }
+            else
+            {
+                mNextAttack = AttackType::HandDrop;
+                mAnimator->SetAnimation("attack");
+            }
         }
         break;
     }
@@ -106,9 +109,17 @@ void FatMiniboss::UpdateAI(float deltaTime)
         if (mStateTimer <= 0.0f)
         {
             mState = BossState::Attacking;
-            mAnimator->SetAnimation("attack");
-            ShootSlime();
-            mStateTimer = 0.5f;
+            
+            if (mNextAttack == AttackType::GroundSpikes)
+            {
+                PerformSpikeAttack();
+            }
+            else
+            {
+                PerformHandAttack();
+            }
+            
+            mStateTimer = 0.8f;
         }
         break;
 
@@ -130,14 +141,14 @@ void FatMiniboss::UpdateAI(float deltaTime)
             mStateTimer = 0.0f;
         }
         break;
-
+        
     case BossState::Dead:
         mAnimator->SetAnimation("dead");
         break;
     }
 }
 
-void FatMiniboss::TakeDamage(float amount)
+void HornMiniboss::TakeDamage(float amount)
 {
     Miniboss::TakeDamage(amount);
 
@@ -150,25 +161,39 @@ void FatMiniboss::TakeDamage(float amount)
         }
     }
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-hurt.wav");
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-hurt.wav");
 }
 
-void FatMiniboss::SpawnPuddle()
-{
-    SlimePuddle* puddle = new SlimePuddle(GetGame());
-    puddle->SetPosition(GetPosition() + Vector2(0.0f, SPRITE_HEIGHT/2.0f - 15.0f));
-}
-
-void FatMiniboss::ShootSlime()
+void HornMiniboss::PerformSpikeAttack()
 {
     const Player* player = GetGame()->GetPlayer();
     if (!player) return;
 
-    Vector2 dir = player->GetPosition() - GetPosition();
-    dir.Normalize();
+    Vector2 targetPos = player->GetPosition();
+    float spacing = 50.0f;
 
-    SlimeProjectile* proj = new SlimeProjectile(GetGame(), dir);
-    proj->SetPosition(GetPosition() + Vector2(0.0f, -10.0f));
+    for (int i = -1; i <= 1; ++i)
+    {
+        GroundSpike* spike = new GroundSpike(GetGame());
+        spike->SetPosition(Vector2(targetPos.x + (i * spacing), targetPos.y));
+    }
+    
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-attack.wav");
+}
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-attack.wav");
+void HornMiniboss::PerformHandAttack()
+{
+    const Player* player = GetGame()->GetPlayer();
+    if (!player) return;
+
+    Vector2 targetPos = player->GetPosition();
+    
+    FallingHand* h1 = new FallingHand(GetGame());
+    h1->SetPosition(Vector2(targetPos.x, -50.0f));
+
+    FallingHand* h2 = new FallingHand(GetGame());
+    float offset = Random::GetFloatRange(-100.0f, 100.0f);
+    h2->SetPosition(Vector2(targetPos.x + offset, -150.0f));
+    
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-special-launch.wav");
 }
