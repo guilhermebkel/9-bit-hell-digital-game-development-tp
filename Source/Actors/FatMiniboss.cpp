@@ -23,7 +23,7 @@ FatMiniboss::FatMiniboss(Game* game)
     );
 
     mAnimator->AddAnimation("idle", {4, 5});
-    mAnimator->AddAnimation("walk", {6, 7});
+    mAnimator->AddAnimation("walk", {7, 6});
     mAnimator->AddAnimation("attack", {0, 1});
     mAnimator->AddAnimation("special", {2});
     mAnimator->AddAnimation("being-hit", {3});

@@ -27,7 +27,7 @@ HornMiniboss::HornMiniboss(Game* game)
     mAnimator->AddAnimation("special", {2, 4});
     mAnimator->AddAnimation("being-hit", {3});
     mAnimator->AddAnimation("idle", {5, 6});
-    mAnimator->AddAnimation("walk", {7, 8});
+    mAnimator->AddAnimation("walk", {8, 7});
     mAnimator->AddAnimation("dead", {5});
     
     mAnimator->SetAnimation("idle");

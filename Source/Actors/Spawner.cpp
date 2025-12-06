@@ -7,8 +7,10 @@
 #include "Healer.h"
 #include "FatMiniboss.h"
 #include "HornMiniboss.h"
+#include "EyeMiniboss.h"
 #include "../Random.h"
 #include <cmath>
+
 
 
 Spawner::Spawner(Game* game, SpawnType type, int count, bool spawnOnStart)
@@ -83,6 +85,12 @@ void Spawner::OnUpdate(float deltaTime)
                         HornMiniboss* hornMiniboss = new HornMiniboss(GetGame());
                         hornMiniboss->SetPosition(spawnPos);
                         break;
+                }
+                case SpawnType::EyeMiniboss:
+                {
+                    EyeMiniboss* eyeMiniboss = new EyeMiniboss(GetGame());
+                    eyeMiniboss->SetPosition(spawnPos);
+                    break;
                 }
             }
         }
