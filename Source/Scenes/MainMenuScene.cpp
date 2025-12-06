@@ -116,7 +116,20 @@ void MainMenuScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+        /**
+         * TODO:
+         * - Using a more robust validation to avoid breaking this business rule in case the index of 'Start Button' changes.
+         */
+        bool clickedOnStartGameButton = mSelectedButtonIndex == 0;
+
+        if (clickedOnStartGameButton)
+        {
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/start-game.wav");
+        } else
+        {
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+        }
+
         mButtons[mSelectedButtonIndex]->Click();
     }
 }
