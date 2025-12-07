@@ -235,7 +235,9 @@ void UpgradeScene::ProcessInput(const uint8_t* keyState)
 void UpgradeScene::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
+
     UpdateButtonSelection();
+
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
@@ -249,7 +251,10 @@ void UpgradeScene::SelectPreviousButton()
     {
         mSelectedButtonIndex--;
     }
+
     UpdateButtonSelection();
+
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
 void UpgradeScene::ClickSelectedButton()

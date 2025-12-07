@@ -87,7 +87,9 @@ void VictoryScene::ProcessInput(const uint8_t* keyState)
 void VictoryScene::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
+
     UpdateButtonSelection();
+
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
@@ -101,7 +103,9 @@ void VictoryScene::SelectPreviousButton()
     {
         mSelectedButtonIndex--;
     }
+
     UpdateButtonSelection();
+
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
