@@ -29,11 +29,6 @@ UIButtonComponent::UIButtonComponent(Actor* owner, const std::string& text, Vect
 UIButtonComponent::~UIButtonComponent()
 {
     mTextActor->SetState(ActorState::Destroy);
-
-    if (mIconActor)
-    {
-        mIconActor->SetState(ActorState::Destroy);
-    }
 }
 
 void UIButtonComponent::Draw(class Renderer* renderer)
