@@ -109,7 +109,7 @@ void LevelSelectionScene::Load()
         Vector2 pos(centerX, startY + (i * spacingY));
 
         int maxUnlockedLevel = GetGame()->GetMaxUnlockedLevel();
-        int currentLevelIndex = static_cast<int>(i);
+        int currentLevelIndex = static_cast<int>(i) + 1;
         bool isLocked = currentLevelIndex > maxUnlockedLevel;
 
         int imageSpriteWidth = 20 * 2.5f;
@@ -228,7 +228,7 @@ void LevelSelectionScene::ClickSelectedButton()
     if (clickedOnAnyLevelButton)
     {
         int maxUnlockedLevel = GetGame()->GetMaxUnlockedLevel();
-        int currentLevelIndex = mSelectedButtonIndex;
+        int currentLevelIndex = mSelectedButtonIndex + 1;
         bool isLocked = currentLevelIndex > maxUnlockedLevel;
 
         if (isLocked)
