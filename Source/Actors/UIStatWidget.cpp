@@ -15,7 +15,7 @@ UIStatWidget::UIStatWidget(Game* game, const std::string& label, int pointSize, 
     mLabelText->SetText(label, Color::White, mPointSize);
 
     mValueActor = new Actor(mGame);
-    mValueText = new UITextComponent(mValueActor, drawOrder + 1);
+    mValueText = new UITextComponent(mValueActor, drawOrder);
     mValueText->SetText("", Color::White, mPointSize);
 }
 

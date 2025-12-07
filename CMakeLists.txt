@@ -112,6 +112,10 @@ add_executable(${PROJECT_NAME}
         Source/Scenes/LevelSelectionScene.h
         Source/Components/Drawing/UIImageButtonComponent.cpp
         Source/Components/Drawing/UIImageButtonComponent.h
+        Source/Components/Drawing/SolidShapeComponent.cpp
+        Source/Components/Drawing/SolidShapeComponent.h
+        Source/Components/Drawing/ShapeComponent.cpp
+        Source/Components/Drawing/ShapeComponent.h
 )
 
 if(WIN32)

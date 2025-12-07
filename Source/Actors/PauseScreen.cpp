@@ -22,9 +22,9 @@ PauseScreen::PauseScreen(Game* game)
         Game::WINDOW_WIDTH,
         Game::WINDOW_HEIGHT,
         RendererMode::TRIANGLES,
-        PauseScreen::DRAW_ORDER
+        PauseScreen::DRAW_ORDER + 1
     );
-    background->SetColor(Vector4(0.0f, 0.0f, 0.0f, 0.7f));
+    background->SetColor(Vector4(0.0f, 0.0f, 0.0f, 0.8f));
 
     const Vector2 buttonSize(300.0f, 40.0f);
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;
@@ -32,7 +32,7 @@ PauseScreen::PauseScreen(Game* game)
 
     mTitleActor = new Actor(game);
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
-    auto* titleText = new UITextComponent(mTitleActor, PauseScreen::DRAW_ORDER);
+    auto* titleText = new UITextComponent(mTitleActor, PauseScreen::DRAW_ORDER + 2);
     titleText->SetText("PAUSED", Color::White, 48);
 
     Actor* resumeButtonActor = new Actor(game);
@@ -41,7 +41,7 @@ PauseScreen::PauseScreen(Game* game)
         [this]() {
             GetGame()->TogglePause();
         },
-        PauseScreen::DRAW_ORDER
+        PauseScreen::DRAW_ORDER + 3
     );
     mButtons.push_back(resumeButton);
     mButtonActors.push_back(resumeButtonActor);
@@ -53,7 +53,7 @@ PauseScreen::PauseScreen(Game* game)
             GetGame()->SetScene(Game::GameScene::MainMenu);
             GetGame()->TogglePause();
         },
-        PauseScreen::DRAW_ORDER
+        PauseScreen::DRAW_ORDER + 4
     );
     mButtons.push_back(quitButton);
     mButtonActors.push_back(quitButtonActor);
@@ -63,19 +63,19 @@ PauseScreen::PauseScreen(Game* game)
     const float statusX = windowCenterX + 250.0f;  // Right side, moved +100px
     const float statusCenterY = windowCenterY;      // Center vertical
     
-    mHealthWidget = new UIStatWidget(GetGame(), "HEALTH", 20, PauseScreen::DRAW_ORDER);
+    mHealthWidget = new UIStatWidget(GetGame(), "HEALTH", 20, PauseScreen::DRAW_ORDER + 5);
     mHealthWidget->SetPosition(Vector2(statusX, statusCenterY - 130.0f));
     mHealthWidget->SetValue(std::to_string(GetGame()->GetPlayerHealth()) + "/" + std::to_string(GetGame()->GetPlayerMaxHealth()));
 
-    mMeleeWidget = new UIStatWidget(GetGame(), "MELEE ATK", 20, PauseScreen::DRAW_ORDER);
+    mMeleeWidget = new UIStatWidget(GetGame(), "MELEE ATK", 20, PauseScreen::DRAW_ORDER + 6);
     mMeleeWidget->SetPosition(Vector2(statusX, statusCenterY - 65.0f));
     mMeleeWidget->SetValue(std::to_string(static_cast<int>(GetGame()->GetPlayerMeleeDamage())));
 
-    mRangedWidget = new UIStatWidget(GetGame(), "RANGED ATK", 20, PauseScreen::DRAW_ORDER);
+    mRangedWidget = new UIStatWidget(GetGame(), "RANGED ATK", 20, PauseScreen::DRAW_ORDER + 7);
     mRangedWidget->SetPosition(Vector2(statusX, statusCenterY));
     mRangedWidget->SetValue(std::to_string(static_cast<int>(GetGame()->GetPlayerRangedDamage())));
 
-    mFireRateWidget = new UIStatWidget(GetGame(), "FIRE RATE", 20, PauseScreen::DRAW_ORDER);
+    mFireRateWidget = new UIStatWidget(GetGame(), "FIRE RATE", 20, PauseScreen::DRAW_ORDER + 8);
     mFireRateWidget->SetPosition(Vector2(statusX, statusCenterY + 65.0f));
     {
         char fireRateStr[16];
@@ -83,11 +83,11 @@ PauseScreen::PauseScreen(Game* game)
         mFireRateWidget->SetValue(fireRateStr);
     }
 
-    mSpeedWidget = new UIStatWidget(GetGame(), "SPEED", 20, PauseScreen::DRAW_ORDER);
+    mSpeedWidget = new UIStatWidget(GetGame(), "SPEED", 20, PauseScreen::DRAW_ORDER + 9);
     mSpeedWidget->SetPosition(Vector2(statusX, statusCenterY + 130.0f));
     mSpeedWidget->SetValue(GetGame()->GetSpeedDisplayValue());
 
-    mPiercingWidget = new UIStatWidget(GetGame(), "PIERCING", 20, PauseScreen::DRAW_ORDER);
+    mPiercingWidget = new UIStatWidget(GetGame(), "PIERCING", 20, PauseScreen::DRAW_ORDER + 10);
     mPiercingWidget->SetPosition(Vector2(statusX, statusCenterY + 195.0f));
     mPiercingWidget->SetValue(std::to_string(GetGame()->GetPlayerPiercing()));
 

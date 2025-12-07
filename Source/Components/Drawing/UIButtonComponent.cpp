@@ -4,7 +4,7 @@
 #include "UITextComponent.h"
 
 UIButtonComponent::UIButtonComponent(Actor* owner, const std::string& text, Vector2 size, std::function<void()> onClick, int drawOrder)
-    : DrawComponent(owner, drawOrder)
+    : DrawComponent(owner, drawOrder - 1)
     , mOnClick(std::move(onClick))
     , mSize(size)
     , mSelected(false)

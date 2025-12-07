@@ -5,6 +5,7 @@
 // Forward declarations
 class UIImageButtonComponent;
 class UIButtonComponent;
+class SolidShapeComponent;
 
 class LevelSelectionScene : public Scene
 {
@@ -24,6 +25,7 @@ private:
     void UpdateButtonSelection();
 
     std::vector<UIImageButtonComponent*> mLevelButtons;
+    std::vector<class Actor*> mHighlightActors;
 
     UIButtonComponent* mBackButton;
     class Actor* mBackButtonActor;
