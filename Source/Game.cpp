@@ -266,8 +266,6 @@ void Game::TogglePause()
     }
 }
 
-
-
 void Game::UpdateGame(float deltaTime)
 {
     UpdateSceneManager(deltaTime);

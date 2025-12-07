@@ -16,6 +16,7 @@ Player::Player(Game* game, const float forwardSpeed)
         , mIsDead(false)
         , mIsMeleeAttacking(false)
         , mMeleeAttackAnimationTimer(0.0f)
+        , mMeleeAttackCooldownTimer(0.0f)
         , mEnemiesHitInCurrentAttack(0)
         , mIsRangedAttacking(false)
         , mRangedAttackAnimationTimer(0.0f)
@@ -92,10 +93,11 @@ void Player::OnProcessInput(const uint8_t* state)
         mIsRunning = true;
     }
 
-    if (state[SDL_SCANCODE_J] && !mIsMeleeAttacking)
+    if (state[SDL_SCANCODE_J] && !mIsMeleeAttacking && mMeleeAttackCooldownTimer <= 0.0f)
     {
         mIsMeleeAttacking = true;
         mMeleeAttackAnimationTimer = Player::MELEE_ATTACK_ANIMATION_DURATION;
+        mMeleeAttackCooldownTimer = Player::MELEE_ATTACK_COOLDOWN;
         mEnemiesHitInCurrentAttack = 0;
         
         int soundIndex = Random::GetIntRange(1, 4);
@@ -150,6 +152,11 @@ void Player::OnUpdate(float deltaTime)
         {
             mIsMeleeAttacking = false;
         }
+    }
+
+    if (mMeleeAttackCooldownTimer > 0.0f)
+    {
+        mMeleeAttackCooldownTimer -= deltaTime;
     }
 
     if (mIsRangedAttacking)

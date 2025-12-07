@@ -122,7 +122,7 @@ void HornMiniboss::UpdateAI(float deltaTime)
         mAnimator->SetAnimation("walk");
 
         mStateTimer += deltaTime;
-        if (mStateTimer >= 2.0f && distance < 900.0f)
+        if (mStateTimer >= 2.0f && distance < 1200.0f)
         {
             mState = BossState::WindUp;
             mStateTimer = ATTACK_WINDUP;

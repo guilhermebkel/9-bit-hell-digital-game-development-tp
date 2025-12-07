@@ -97,9 +97,11 @@ void Spawner::SpawnOne()
     const Player* player = GetGame()->GetPlayer();
     Vector2 spawnPos;
     
-    const float MIN_SPAWN_DISTANCE = 100.0f;
+    const float MIN_SPAWN_DISTANCE = 68.0f;
     bool validSpawn = false;
     int maxAttempts = 10;
+    
+    bool isCollectable = (mSpawnType == SpawnType::Coin || mSpawnType == SpawnType::Purifier || mSpawnType == SpawnType::Healer);
     
     for (int attempt = 0; attempt < maxAttempts && !validSpawn; ++attempt)
     {
@@ -108,7 +110,7 @@ void Spawner::SpawnOne()
             Random::GetFloatRange(GetGame()->GetUpperBoundary() + 100.0f, Game::WINDOW_HEIGHT - 100.0f)
         );
         
-        if (!player || Vector2::Distance(spawnPos, player->GetPosition()) >= MIN_SPAWN_DISTANCE)
+        if (isCollectable || !player || Vector2::Distance(spawnPos, player->GetPosition()) >= MIN_SPAWN_DISTANCE)
         {
             validSpawn = true;
         }

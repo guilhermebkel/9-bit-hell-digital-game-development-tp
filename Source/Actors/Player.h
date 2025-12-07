@@ -13,12 +13,13 @@ public:
     static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.25f;
 
     static constexpr float MELEE_ATTACK_ANIMATION_DURATION = 0.3f;
+    static constexpr float MELEE_ATTACK_COOLDOWN = 0.6f;
     static constexpr float RANGED_ATTACK_ANIMATION_DURATION = 0.3f;
     static constexpr float BEING_HIT_ANIMATION_DURATION = 0.3f;
     static constexpr float HIT_FREEZE_DURATION = 0.5f;
     static constexpr float INVINCIBILITY_DURATION = 1.0f;
 
-    explicit Player(Game* game, float forwardSpeed = 1500.0f);
+    explicit Player(Game* game, float forwardSpeed = 1125.0f);
 
     void OnProcessInput(const Uint8* keyState) override;
     void OnUpdate(float deltaTime) override;
@@ -41,6 +42,7 @@ private:
 
     bool mIsMeleeAttacking;
     float mMeleeAttackAnimationTimer;
+    float mMeleeAttackCooldownTimer;
     int mEnemiesHitInCurrentAttack;
 
     bool mIsRangedAttacking;

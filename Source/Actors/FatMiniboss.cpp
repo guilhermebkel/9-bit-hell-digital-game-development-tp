@@ -57,7 +57,7 @@ void FatMiniboss::OnUpdate(float deltaTime)
         {
             mState = BossState::ForcedAttack;
             mStateTimer = 0.8f;
-            mAnimator->SetAnimation("special");
+            mAnimator->SetAnimation("attack");
             mForcedAttackCount = 0;
             mForcedAttackIntervalTimer = 0.0f;
         }
