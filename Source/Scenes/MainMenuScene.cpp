@@ -30,6 +30,7 @@ void MainMenuScene::Load()
     startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
     auto startButton = new UIButtonComponent(startButtonActor, "START GAME", buttonSize,
         [this]() {
+            GetGame()->SetCurrentLevelID(LevelID::Tutorial);
             GetGame()->SetScene(Game::GameScene::Gameplay, 0.5f);
         }
     );
