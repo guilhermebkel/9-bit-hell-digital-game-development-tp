@@ -41,7 +41,7 @@ void GameOverScene::Load()
     shopButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
     auto shopButton = new UIButtonComponent(shopButtonActor, "GO TO SHOP", buttonSize,
         [this]() {
-            GetGame()->SetScene(Game::GameScene::Upgrade);
+            GetGame()->SetScene(Game::GameScene::Store);
         }
     );
     mButtons.push_back(shopButton);

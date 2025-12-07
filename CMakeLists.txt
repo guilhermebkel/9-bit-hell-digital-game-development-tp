@@ -79,8 +79,8 @@ add_executable(${PROJECT_NAME}
         Source/Actors/UIStatWidget.h
         Source/Actors/UIHealthBarWidget.cpp
         Source/Actors/UIHealthBarWidget.h
-        Source/Scenes/UpgradeScene.cpp
-        Source/Scenes/UpgradeScene.h
+        Source/Scenes/StoreScene.cpp
+        Source/Scenes/StoreScene.h
         Source/Scenes/GameOverScene.cpp
         Source/Scenes/GameOverScene.h
         Source/Audio/AudioSystem.cpp

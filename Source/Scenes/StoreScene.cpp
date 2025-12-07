@@ -1,4 +1,4 @@
-#include "UpgradeScene.h"
+#include "StoreScene.h"
 #include "../Game.h"
 #include "../Actors/Actor.h"
 #include "../Actors/UIStatWidget.h"
@@ -7,7 +7,7 @@
 #include "../Components/Drawing/UITextComponent.h"
 #include "../Audio/AudioSystem.h"
 
-UpgradeScene::UpgradeScene(Game* game)
+StoreScene::StoreScene(Game* game)
     : Scene(game)
     , mCoinWidget(nullptr)
     , mHealthWidget(nullptr)
@@ -24,12 +24,12 @@ UpgradeScene::UpgradeScene(Game* game)
 {
 }
 
-UpgradeScene::~UpgradeScene()
+StoreScene::~StoreScene()
 {
     delete mCoinWidget;
 }
 
-void UpgradeScene::Load()
+void StoreScene::Load()
 {
     GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level-transition.wav");
 
@@ -96,7 +96,10 @@ void UpgradeScene::Load()
             {
                 GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought-fail.wav");
             }
-        }
+        },
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        "../Assets/Projectile.png",
+        Vector2(8.0f * 3.0f, 2.0f * 3.0f)
     );
     mButtons.push_back(mFireRateButton);
 
@@ -116,7 +119,10 @@ void UpgradeScene::Load()
             {
                 GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought-fail.wav");
             }
-        }
+        },
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        "../Assets/Store/Damage.png",
+        Vector2(13.0f * 2.0f, 14.0f * 2.0f)
     );
     mButtons.push_back(mDamageButton);
 
@@ -135,7 +141,10 @@ void UpgradeScene::Load()
             {
                 GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought-fail.wav");
             }
-        }
+        },
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        "../Assets/Store/Velocity.png",
+        Vector2(13.0f * 2.0f, 16.0f * 2.0f)
     );
     mButtons.push_back(mVelocityButton);
 
@@ -154,7 +163,10 @@ void UpgradeScene::Load()
             {
                 GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought-fail.wav");
             }
-        }
+        },
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        "../Assets/Store/Piercing.png",
+        Vector2(14.0f * 2.0f, 7.0f * 2.0f)
     );
     mButtons.push_back(mPiercingButton);
 
@@ -171,11 +183,11 @@ void UpgradeScene::Load()
     UpdateButtonSelection();
 }
 
-void UpgradeScene::Unload()
+void StoreScene::Unload()
 {
 }
 
-void UpgradeScene::Update(float deltaTime)
+void StoreScene::Update(float deltaTime)
 {
     mCoinWidget->SetValue(std::to_string(GetGame()->GetCoinCount()));
     
@@ -199,7 +211,7 @@ void UpgradeScene::Update(float deltaTime)
     mPiercingButton->SetText("Piercing (Price: " + std::to_string(GetGame()->GetPiercingPrice()) + ")");
 }
 
-void UpgradeScene::ProcessInput(const uint8_t* keyState)
+void StoreScene::ProcessInput(const uint8_t* keyState)
 {
     if (keyState[SDL_SCANCODE_W] && !mUpPressed)
     {
@@ -232,7 +244,7 @@ void UpgradeScene::ProcessInput(const uint8_t* keyState)
     }
 }
 
-void UpgradeScene::SelectNextButton()
+void StoreScene::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
 
@@ -241,7 +253,7 @@ void UpgradeScene::SelectNextButton()
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
-void UpgradeScene::SelectPreviousButton()
+void StoreScene::SelectPreviousButton()
 {
     if (mSelectedButtonIndex == 0)
     {
@@ -257,7 +269,7 @@ void UpgradeScene::SelectPreviousButton()
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
 }
 
-void UpgradeScene::ClickSelectedButton()
+void StoreScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
@@ -272,7 +284,7 @@ void UpgradeScene::ClickSelectedButton()
     }
 }
 
-void UpgradeScene::UpdateButtonSelection()
+void StoreScene::UpdateButtonSelection()
 {
     for (size_t i = 0; i < mButtons.size(); ++i)
     {

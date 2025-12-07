@@ -38,7 +38,7 @@ public:
     {
         MainMenu,
         Gameplay,
-        Upgrade,
+        Store,
         GameOver,
         Victory,
         LevelSelection,

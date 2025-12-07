@@ -6,11 +6,11 @@ class UIStatWidget;
 class UIButtonComponent;
 class Player;
 
-class UpgradeScene : public Scene
+class StoreScene : public Scene
 {
 public:
-    explicit UpgradeScene(class Game* game);
-    ~UpgradeScene() override;
+    explicit StoreScene(class Game* game);
+    ~StoreScene() override;
 
     void Load() override;
     void Unload() override;

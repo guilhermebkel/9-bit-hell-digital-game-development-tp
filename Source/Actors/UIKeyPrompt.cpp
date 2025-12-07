@@ -19,7 +19,7 @@ UIKeyPrompt::UIKeyPrompt(Game* game, const Vector2& position, const std::string&
     mKeyTextActor = new Actor(game);
     mKeyTextActor->SetPosition(Vector2(consolidatedPosition.x, consolidatedPosition.y));
     mKeyText = new UITextComponent(mKeyTextActor, drawOrder + 1);
-    mKeyText->SetText(key, Vector3(1.0f, 1.0f, 0.0f), 24);
+    mKeyText->SetText(key, Vector3(0.7f, 0.1f, 0.1f), 24);
 
     mDescTextActor = new Actor(game);
     mDescText = new UITextComponent(mDescTextActor, drawOrder);

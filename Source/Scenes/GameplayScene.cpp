@@ -18,8 +18,8 @@ GameplayScene::GameplayScene(Game* game, LevelID level)
 void GameplayScene::Load()
 {
     GetGame()->SetPlayer(new Player(GetGame(), GetGame()->GetPlayerSpeed()));
-    GetGame()->LoadGame();
-    GetGame()->ResetCorruptionLevel();
+    // GetGame()->LoadGame();
+    // GetGame()->ResetCorruptionLevel();
 
     new CorruptionOverlay(GetGame());
     new HUD(GetGame());
@@ -102,7 +102,7 @@ void GameplayScene::Update(float deltaTime)
         {
             GetGame()->UnlockNextLevel(mNextLevelID);
             GetGame()->SetCurrentLevelID(mNextLevelID);
-            GetGame()->SetScene(Game::GameScene::Upgrade);
+            GetGame()->SetScene(Game::GameScene::Store);
         }
     }
 

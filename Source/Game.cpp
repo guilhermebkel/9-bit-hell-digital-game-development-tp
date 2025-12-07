@@ -18,7 +18,7 @@
 #include "Scenes/Scene.h"
 #include "Audio/AudioSystem.h"
 #include "Scenes/LevelSelectionScene.h"
-#include "Scenes/UpgradeScene.h"
+#include "Scenes/StoreScene.h"
 #include "Scenes/VictoryScene.h"
 
 Game::Game()
@@ -115,8 +115,8 @@ void Game::ChangeScene()
         case GameScene::Gameplay:
             mCurrentScene = std::make_unique<GameplayScene>(this, mCurrentLevelID);
             break;
-        case GameScene::Upgrade:
-            mCurrentScene = std::make_unique<UpgradeScene>(this);
+        case GameScene::Store:
+            mCurrentScene = std::make_unique<StoreScene>(this);
             break;
         case GameScene::GameOver:
             mCurrentScene = std::make_unique<GameOverScene>(this);
