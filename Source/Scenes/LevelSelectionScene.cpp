@@ -11,6 +11,7 @@
 
 #include "../Components/Drawing/ShapeComponent.h"
 #include "../Components/Drawing/SolidShapeComponent.h"
+#include "../Components/Drawing/StaticSpriteComponent.h"
 
 LevelSelectionScene::LevelSelectionScene(Game* game)
     : Scene(game)
@@ -26,6 +27,8 @@ LevelSelectionScene::~LevelSelectionScene()
 
 void LevelSelectionScene::Load()
 {
+    GetGame()->LoadGame();
+
     new Background(GetGame(), "../Assets/LevelSelectionBackground.png");
 
     Actor* mTitleActor = new Actor(GetGame());
@@ -105,12 +108,25 @@ void LevelSelectionScene::Load()
 
         Vector2 pos(centerX, startY + (i * spacingY));
 
+        int maxUnlockedLevel = GetGame()->GetMaxUnlockedLevel();
+        int currentLevelIndex = static_cast<int>(i);
+        bool isLocked = currentLevelIndex > maxUnlockedLevel;
+
         int imageSpriteWidth = 20 * 2.5f;
         int imageSpriteHeight = 11 * 2.5f;
-        auto* btn = new UIImageButtonComponent(GetGame(), path, pos, [this, id = levels[i].id]() {
-            GetGame()->SetCurrentLevelID(id);
-            GetGame()->SetScene(Game::GameScene::Gameplay);
+        auto* btn = new UIImageButtonComponent(GetGame(), path, pos, [this, id = levels[i].id, isLocked]() {
+            if (!isLocked)
+            {
+                GetGame()->SetCurrentLevelID(id);
+                GetGame()->SetScene(Game::GameScene::Gameplay);
+            }
+
         }, imageSpriteWidth, imageSpriteHeight);
+
+        if (isLocked)
+        {
+            btn->GetSprite()->SetColor(Vector3(0.4f, 0.4f, 0.4f));
+        }
 
         mLevelButtons.push_back(btn);
     }
@@ -207,11 +223,21 @@ void LevelSelectionScene::ClickSelectedButton()
         mBackButton->Click();
     }
 
-    bool clickedOnAnyLevelButton = mSelectedButtonIndex != mLevelButtons.size() - 1;
+    bool clickedOnAnyLevelButton = mSelectedButtonIndex < mLevelButtons.size();
 
     if (clickedOnAnyLevelButton)
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/start-game.wav");
+        int maxUnlockedLevel = GetGame()->GetMaxUnlockedLevel();
+        int currentLevelIndex = mSelectedButtonIndex;
+        bool isLocked = currentLevelIndex > maxUnlockedLevel;
+
+        if (isLocked)
+        {
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/error.mp3");
+        } else
+        {
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/start-game.wav");
+        }
     } else
     {
         GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");

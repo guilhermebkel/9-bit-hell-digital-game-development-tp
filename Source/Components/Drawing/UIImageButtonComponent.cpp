@@ -16,12 +16,10 @@ void UIImageButtonComponent::SetSelected(bool selected)
     if (selected)
     {
         SetScale(Vector2(1.3f, 1.3f));
-        mSprite->SetColor(Vector3(1.0f, 1.0f, 1.0f));
     }
     else
     {
         SetScale(Vector2(1.0f, 1.0f));
-        mSprite->SetColor(Vector3(1.0f, 1.0f, 1.0f)); 
     }
 }
 

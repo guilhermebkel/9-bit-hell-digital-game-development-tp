@@ -100,6 +100,7 @@ void GameplayScene::Update(float deltaTime)
             GetGame()->SetScene(Game::GameScene::Victory);
         } else
         {
+            GetGame()->UnlockNextLevel();
             GetGame()->SetCurrentLevelID(mNextLevelID);
             GetGame()->SetScene(Game::GameScene::Upgrade);
         }

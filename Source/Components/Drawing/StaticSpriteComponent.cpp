@@ -27,7 +27,7 @@ void StaticSpriteComponent::Draw(Renderer* renderer)
             mOwner->GetPosition(),
             size,
             mOwner->GetRotation(),
-            Vector3(1.0f, 1.0f, 1.0f),
+            mColor,
             mTexture,
             Vector4::UnitRect,
             mOwner->GetGame()->GetCameraPos(),
