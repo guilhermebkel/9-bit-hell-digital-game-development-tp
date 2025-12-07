@@ -9,13 +9,13 @@ public:
     static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.60f;
     static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.60f;
     
-    static constexpr float MAX_HP = 400.0f;
+    static constexpr float MAX_HP = 150.0f;
     static constexpr float WALK_SPEED = 120.0f;
     
     static constexpr float ATTACK_COOLDOWN = 2.0f;
     static constexpr float ATTACK_WINDUP = 0.6f;
 
-    enum class BossState { Moving, WindUp, Attacking, Cooldown, Dead };
+    enum class BossState { Moving, WindUp, Attacking, Cooldown, BeingHit, Counter, ForcedAttack, Dead };
     enum class AttackType { HandDrop, GroundSpikes };
 
     explicit HornMiniboss(class Game* game);
@@ -27,6 +27,7 @@ private:
     void UpdateAI(float deltaTime);
     void PerformHandAttack();
     void PerformSpikeAttack();
+    void PerformForcedAttack() override;
 
     BossState mState;
     AttackType mNextAttack;

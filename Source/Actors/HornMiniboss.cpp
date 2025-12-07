@@ -36,6 +36,8 @@ HornMiniboss::HornMiniboss(Game* game)
     mRigidBody = new RigidBodyComponent(this, 8.0f, 0.0f);
     
     mCollider = new AABBColliderComponent(this, 0, 0, PHYSICS_WIDTH, PHYSICS_HEIGHT, ColliderLayer::Enemy);
+    
+    CreateHealthBar(Vector2(100.0f, 15.0f));
 }
 
 void HornMiniboss::OnUpdate(float deltaTime)
@@ -44,13 +46,47 @@ void HornMiniboss::OnUpdate(float deltaTime)
 
     if (mIsDead) return;
 
-    if (mAnimator->GetAnimationName() == "being-hit")
+    if (mState == BossState::BeingHit)
+    {
+        mBeingHitTimer -= deltaTime;
+        if (mBeingHitTimer <= 0.0f)
+        {
+            mState = BossState::ForcedAttack;
+            mStateTimer = 0.8f;
+            mAnimator->SetAnimation("special");
+            mForcedAttackCount = 0;
+            mForcedAttackIntervalTimer = 0.0f;
+        }
+        return;
+    }
+
+    if (mState == BossState::ForcedAttack)
     {
         mStateTimer -= deltaTime;
+        mForcedAttackIntervalTimer -= deltaTime;
+        
+        if (mAnimator)
+        {
+            mAnimator->ForceFinalFrame();
+        }
+        
+        if (mForcedAttackIntervalTimer <= 0.0f && mForcedAttackCount < 3)
+        {
+            PerformForcedAttack();
+            mForcedAttackCount++;
+            mForcedAttackIntervalTimer = 0.2f;
+        }
+        
         if (mStateTimer <= 0.0f)
         {
             mState = BossState::Moving;
             mStateTimer = 0.0f;
+            mForcedAttackCount = 0;
+            mForcedAttackIntervalTimer = 0.0f;
+            if (mAnimator)
+            {
+                mAnimator->SetAnimation("idle");
+            }
         }
         return;
     }
@@ -71,6 +107,8 @@ void HornMiniboss::UpdateAI(float deltaTime)
     Vector2 playerPos = player->GetPosition();
     Vector2 myPos = GetPosition();
     float distance = Vector2::Distance(myPos, playerPos);
+    
+    mJustBecameVulnerable = false;
 
     switch (mState)
     {
@@ -84,7 +122,7 @@ void HornMiniboss::UpdateAI(float deltaTime)
         mAnimator->SetAnimation("walk");
 
         mStateTimer += deltaTime;
-        if (mStateTimer >= 2.0f && distance < 600.0f)
+        if (mStateTimer >= 2.0f && distance < 900.0f)
         {
             mState = BossState::WindUp;
             mStateTimer = ATTACK_WINDUP;
@@ -99,6 +137,7 @@ void HornMiniboss::UpdateAI(float deltaTime)
             {
                 mNextAttack = AttackType::HandDrop;
                 mAnimator->SetAnimation("attack");
+                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-special-launch.wav");
             }
         }
         break;
@@ -150,18 +189,24 @@ void HornMiniboss::UpdateAI(float deltaTime)
 
 void HornMiniboss::TakeDamage(float amount)
 {
+    if (IsInvulnerable() || mIsDead) return;
+
     Miniboss::TakeDamage(amount);
 
     if (!mIsDead && mAnimator)
     {
-        if (mState != BossState::Attacking && mState != BossState::WindUp)
-        {
-            mAnimator->SetAnimation("being-hit");
-            mStateTimer = 0.2f;
-        }
+        mState = BossState::BeingHit;
+        mAnimator->SetAnimation("being-hit");
+        mBeingHitTimer = 0.5f;
+        mRigidBody->SetVelocity(Vector2::Zero);
     }
 
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-hurt.wav");
+}
+
+void HornMiniboss::PerformForcedAttack()
+{
+    PerformSpikeAttack();
 }
 
 void HornMiniboss::PerformSpikeAttack()
@@ -188,12 +233,16 @@ void HornMiniboss::PerformHandAttack()
 
     Vector2 targetPos = player->GetPosition();
     
+    // Left hand at left edge of player, 200px above
+    // Reduced offset by 1/4 for closer targeting
     FallingHand* h1 = new FallingHand(GetGame());
-    h1->SetPosition(Vector2(targetPos.x, -50.0f));
+    float leftOffset = -(Player::SPRITE_WIDTH / 2.0f) * 0.75f;
+    h1->SetPosition(Vector2(targetPos.x + leftOffset, targetPos.y - 200.0f));
 
+    // Right hand at right edge of player, 200px above
     FallingHand* h2 = new FallingHand(GetGame());
-    float offset = Random::GetFloatRange(-100.0f, 100.0f);
-    h2->SetPosition(Vector2(targetPos.x + offset, -150.0f));
+    float rightOffset = (Player::SPRITE_WIDTH / 2.0f) * 0.75f;
+    h2->SetPosition(Vector2(targetPos.x + rightOffset, targetPos.y - 200.0f));
     
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-special-launch.wav");
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-special-land.wav");
 }

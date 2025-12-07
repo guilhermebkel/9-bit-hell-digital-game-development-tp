@@ -13,7 +13,7 @@ MainMenuScene::MainMenuScene(Game* game) :
 void MainMenuScene::Load()
 {
     // Toca a música de fundo do menu em loop
-    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/menu-d5-stage2-the-way-ahead-feels-lonely.mp3");
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/menu_false_memory_syndrome.mp3");
 
     GetGame()->ResetPlayerUpgrades();
     GetGame()->ResetCorruptionLevel();
@@ -33,7 +33,7 @@ void MainMenuScene::Load()
     startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
     auto startButton = new UIButtonComponent(startButtonActor, "START GAME", buttonSize,
         [this]() {
-            GetGame()->SetScene(Game::GameScene::Gameplay);
+            GetGame()->SetScene(Game::GameScene::Gameplay, 0.5f);
         }
     );
     mButtons.push_back(startButton);
@@ -116,11 +116,6 @@ void MainMenuScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
-        /**
-         *  TODO:
-         *  - Using a more robust validation to avoid breaking this
-         *  business rule in case the index of 'Start Button' changes.
-         */
         bool clickedOnStartGameButton = mSelectedButtonIndex == 0;
 
         if (clickedOnStartGameButton)

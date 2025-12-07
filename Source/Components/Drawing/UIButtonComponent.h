@@ -16,6 +16,7 @@ public:
     void SetSelected(bool selected) { mSelected = selected; }
     bool GetSelected() const { return mSelected; }
 
+    void SetText(const std::string& text);
     void Click();
 
 private:

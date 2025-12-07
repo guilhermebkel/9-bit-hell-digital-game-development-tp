@@ -60,8 +60,8 @@ void UIStatWidget::UpdatePositions()
     switch (mAlignment)
     {
         case HAlign::Left:
-            labelPos = Vector2(mPosition.x + (labelWidth / 2.0f), mPosition.y);
-            valuePos = Vector2(mPosition.x + (valueWidth / 2.0f) + 6.0f, mPosition.y + labelHeight + mVerticalSpacing);
+            labelPos = Vector2(mPosition.x, mPosition.y);
+            valuePos = Vector2(mPosition.x, mPosition.y + labelHeight + mVerticalSpacing);
             break;
         case HAlign::Right:
             labelPos = Vector2(mPosition.x - (labelWidth / 2.0f), mPosition.y);

@@ -16,7 +16,7 @@ Player::Player(Game* game, const float forwardSpeed)
         , mIsDead(false)
         , mIsMeleeAttacking(false)
         , mMeleeAttackAnimationTimer(0.0f)
-        , mHasKilledEnemyInCurrentAttack(false)
+        , mEnemiesHitInCurrentAttack(0)
         , mIsRangedAttacking(false)
         , mRangedAttackAnimationTimer(0.0f)
         , mRangedAttackCooldownTimer(0.0f)
@@ -50,14 +50,14 @@ Player::Player(Game* game, const float forwardSpeed)
 
     mRigidBodyComponent = new RigidBodyComponent(this, Player::MASS, Player::FRICTION);
 
-    // Align collider base with sprite base
     const int dy = (int)((Player::SPRITE_HEIGHT / 2.0f) - (Player::PHYSICS_HEIGHT / 2.0f));
     new AABBColliderComponent(this, 0, dy, Player::PHYSICS_WIDTH, Player::PHYSICS_HEIGHT, ColliderLayer::Player);
+
+    SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, 580.0f));
 }
 
 void Player::OnProcessInput(const uint8_t* state)
 {
-    // Bloqueia input durante o congelamento por dano
     if (mHitFreezeTimer > 0.0f)
     {
         return;
@@ -96,9 +96,8 @@ void Player::OnProcessInput(const uint8_t* state)
     {
         mIsMeleeAttacking = true;
         mMeleeAttackAnimationTimer = Player::MELEE_ATTACK_ANIMATION_DURATION;
-        mHasKilledEnemyInCurrentAttack = false;
+        mEnemiesHitInCurrentAttack = 0;
         
-        // Tocar aleatoriamente um dos 4 sons de ataque
         int soundIndex = Random::GetIntRange(1, 4);
         std::string soundFile = "../Assets/Sounds/sword-attack-" + std::to_string(soundIndex) + ".wav";
         GetGame()->GetAudioSystem()->PlaySound(soundFile);
@@ -181,7 +180,6 @@ void Player::OnUpdate(float deltaTime)
         mInvincibilityTimer -= deltaTime;
         mBlinkTimer += deltaTime;
         
-        // Pisca a cada X segundos
         bool shouldShow = (static_cast<int>(mBlinkTimer * 10.0f) % 2) == 0;
         if (mDrawComponent)
         {
@@ -267,19 +265,26 @@ void Player::OnHorizontalCollision(const float minOverlap, AABBColliderComponent
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        if (mIsMeleeAttacking && !mHasKilledEnemyInCurrentAttack)
+        if (mIsMeleeAttacking)
         {
+            int maxEnemiesHit = 1 + GetGame()->GetPlayerPiercing();
+            
             Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
             if (enemy)
             {
-                enemy->Kill();
-                mHasKilledEnemyInCurrentAttack = true; // Marca que já matou 1 inimigo
+                // Verifica se este inimigo já foi atingido neste ataque
+                if (mEnemiesHitInCurrentAttack < maxEnemiesHit)
+                {
+                    enemy->TakeDamage(GetGame()->GetPlayerMeleeDamage());
+                    mEnemiesHitInCurrentAttack++;
+                }
             }
 
             Miniboss* miniboss = dynamic_cast<Miniboss*>(other->GetOwner());
-            if (miniboss)
+            if (miniboss && mEnemiesHitInCurrentAttack < maxEnemiesHit)
             {
                 miniboss->TakeDamage(GetGame()->GetPlayerMeleeDamage());
+                mEnemiesHitInCurrentAttack++;
             }
         }
     }
@@ -289,13 +294,22 @@ void Player::OnVerticalCollision(const float minOverlap, AABBColliderComponent* 
 {
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
-        if (mIsMeleeAttacking && !mHasKilledEnemyInCurrentAttack)
+        if (mIsMeleeAttacking)
         {
+            int maxEnemiesHit = 1 + GetGame()->GetPlayerPiercing();
+            
             Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
-            if (enemy)
+            if (enemy && mEnemiesHitInCurrentAttack < maxEnemiesHit)
             {
-                enemy->Kill();
-                mHasKilledEnemyInCurrentAttack = true; // Marca que já matou 1 inimigo
+                enemy->TakeDamage(GetGame()->GetPlayerMeleeDamage());
+                mEnemiesHitInCurrentAttack++;
+            }
+
+            Miniboss* miniboss = dynamic_cast<Miniboss*>(other->GetOwner());
+            if (miniboss && mEnemiesHitInCurrentAttack < maxEnemiesHit)
+            {
+                miniboss->TakeDamage(GetGame()->GetPlayerMeleeDamage());
+                mEnemiesHitInCurrentAttack++;
             }
         }
     }

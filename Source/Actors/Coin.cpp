@@ -25,7 +25,6 @@ void Coin::OnUpdate(float deltaTime)
 {
     Actor::OnUpdate(deltaTime);
     
-    // Salva a posição inicial no primeiro frame
     if (mInitialPosition.x == 0.0f && mInitialPosition.y == 0.0f)
     {
         mInitialPosition = GetPosition();
@@ -41,8 +40,5 @@ void Coin::OnCollect(Player* player)
 {
     GetGame()->AddCoin();
     
-    // Tocar som aleatório de coleta de moeda
-    int randomSound = Random::GetIntRange(1, 2);
-    std::string soundFile = "../Assets/Sounds/pickup-soul-" + std::to_string(randomSound) + ".wav";
-    GetGame()->GetAudioSystem()->PlaySound(soundFile);
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-soul-2.wav");
 }

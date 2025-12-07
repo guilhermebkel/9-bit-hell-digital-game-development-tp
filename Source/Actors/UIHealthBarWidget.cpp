@@ -38,6 +38,12 @@ void UIHealthBarWidget::Update(float currentValue, float maxValue)
     mFillActor->SetPosition(Vector2(newX, mPosition.y));
 }
 
+void UIHealthBarWidget::SetPosition(const Vector2& position)
+{
+    mPosition = position;
+    mFrameActor->SetPosition(mPosition);
+}
+
 void UIHealthBarWidget::SetVisible(bool visible)
 {
     ActorState newState = visible ? ActorState::Active : ActorState::Paused;

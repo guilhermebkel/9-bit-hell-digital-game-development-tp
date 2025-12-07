@@ -5,7 +5,7 @@ class FallingHand : public Actor
 {
 public:
     static constexpr float DAMAGE = 20.0f;
-    static constexpr float FALL_SPEED = 600.0f;
+    static constexpr float FALL_SPEED = 1350.0f;
     static constexpr float SPRITE_WIDTH = 8.0f * 4.0f;
     static constexpr float SPRITE_HEIGHT = 12.0f * 4.0f;
 

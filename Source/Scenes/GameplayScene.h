@@ -41,4 +41,5 @@ private:
     bool IsLevelComplete();
     LevelID mLevelID;
     LevelID mNextLevelID;
+    bool mMusicPlayed = false;
 };

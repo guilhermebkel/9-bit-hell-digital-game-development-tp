@@ -7,6 +7,8 @@
 #include "Scenes/Scene.h"
 #include "Audio/AudioSystem.h"
 
+class PauseScreen;  // Forward declaration
+
 class Game
 {
 public:
@@ -19,9 +21,15 @@ public:
     struct PlayerUpgrades
     {
         int coins = 0;
-        float fireRate = 0.3f;
+        float fireRate = 1.2f;
         int meleeDamage = 10;
         int rangedDamage = 5;
+        float playerSpeed = 1725.0f;
+        int piercing = 0;
+        int fireRatePrice = 10;
+        int damagePriceBase = 20;
+        int velocityPriceBase = 15;
+        int piercingPriceBase = 25;
     };
 
     enum class GameScene
@@ -78,10 +86,25 @@ public:
     bool CanAfford(int cost) const { return mPlayerUpgrades.coins >= cost; }
     void SpendCoins(int amount) { mPlayerUpgrades.coins -= amount; }
     void UpgradeFireRate();
+    void UpgradeMeleeDamage();
+    void UpgradeRangedDamage();
+    void UpgradeSpeed();
+    void UpgradePiercing();
     float GetPlayerFireRate() const { return mPlayerUpgrades.fireRate; }
     float GetPlayerMeleeDamage() const { return mPlayerUpgrades.meleeDamage; }
     float GetPlayerRangedDamage() const { return mPlayerUpgrades.rangedDamage; }
+    float GetPlayerSpeed() const { return mPlayerUpgrades.playerSpeed; }
+    int GetPlayerPiercing() const { return mPlayerUpgrades.piercing; }
+    int GetFireRatePrice() const { return mPlayerUpgrades.fireRatePrice; }
+    int GetDamagePrice() const;
+    int GetVelocityPrice() const;
+    int GetPiercingPrice() const;
+    int GetPlayerHealth() const;
+    int GetPlayerMaxHealth() const;
     void ResetPlayerUpgrades() { mPlayerUpgrades = PlayerUpgrades(); }
+    
+    // Retorna a velocidade como um multiplicador amigável (e.g., "1.0x", "1.1x")
+    std::string GetSpeedDisplayValue() const;
 
     // Camera functions
     Vector2& GetCameraPos() { return mCameraPos; };
@@ -112,6 +135,9 @@ public:
 
     void SetCurrentLevelID(LevelID currentLevelID) { mCurrentLevelID = currentLevelID; }
     LevelID GetCurrentLevelID() { return mCurrentLevelID; }
+
+    bool IsSceneJustChanged() { return mSceneJustChanged; }
+    SceneState GetSceneState() { return mSceneState; }
 
     std::vector<class Actor*> GetActors() { return mActors; }
 
@@ -168,9 +194,10 @@ private:
     SceneState mSceneState = SceneState::Running;
     float mTransitionTimer = 0.0f;
     float mTransitionTotalTime = 0.0f;
+    bool mSceneJustChanged = false;
 
     bool mIsPaused = false;
-    class Actor* mPauseScreen = nullptr;
+    class PauseScreen* mPauseScreen = nullptr;
 
     LevelID mCurrentLevelID = LevelID::Tutorial;
 

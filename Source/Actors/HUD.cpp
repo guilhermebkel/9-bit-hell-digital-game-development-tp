@@ -11,9 +11,9 @@ HUD::HUD(Game* game)
 {
     int pointSize = 36;
 
-    mCoinWidget = new UIStatWidget(game, "COINS", pointSize, HUD::DRAW_ORDER);
+    mCoinWidget = new UIStatWidget(game, "SOULS", pointSize, HUD::DRAW_ORDER);
     mCoinWidget->SetOutline(true);
-    mCoinWidget->SetPosition(Vector2(20.0f, 56.0f), HAlign::Left);
+    mCoinWidget->SetPosition(Vector2(60.0f, 56.0f), HAlign::Left);
     mCoinWidget->SetValue(std::to_string(GetGame()->GetCoinCount()));
 
     mCorruptionWidget = new UIStatWidget(game, GetCurrentLevelTitle(game->GetCurrentLevelID()), pointSize, HUD::DRAW_ORDER);

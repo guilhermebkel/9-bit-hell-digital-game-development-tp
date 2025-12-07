@@ -8,6 +8,7 @@ public:
     ~UIHealthBarWidget();
 
     void Update(float currentValue, float maxValue);
+    void SetPosition(const Vector2& position);
     void SetVisible(bool visible);
 
 private:

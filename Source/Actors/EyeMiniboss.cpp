@@ -35,6 +35,8 @@ EyeMiniboss::EyeMiniboss(Game* game)
     mRigidBody = new RigidBodyComponent(this, 2.0f, 0.0f);
     
     mCollider = new AABBColliderComponent(this, 0, 0, PHYSICS_WIDTH, PHYSICS_HEIGHT, ColliderLayer::Enemy);
+    
+    CreateHealthBar(Vector2(100.0f, 15.0f));
 }
 
 void EyeMiniboss::OnUpdate(float deltaTime)
@@ -43,13 +45,47 @@ void EyeMiniboss::OnUpdate(float deltaTime)
 
     if (mIsDead) return;
 
-    if (mAnimator->GetAnimationName() == "being-hit")
+    if (mState == BossState::BeingHit)
+    {
+        mBeingHitTimer -= deltaTime;
+        if (mBeingHitTimer <= 0.0f)
+        {
+            mState = BossState::ForcedAttack;
+            mStateTimer = 0.8f;
+            mAnimator->SetAnimation("attack");
+            mForcedAttackCount = 0;
+            mForcedAttackIntervalTimer = 0.0f;
+        }
+        return;
+    }
+
+    if (mState == BossState::ForcedAttack)
     {
         mStateTimer -= deltaTime;
+        mForcedAttackIntervalTimer -= deltaTime;
+        
+        if (mAnimator)
+        {
+            mAnimator->ForceFinalFrame();
+        }
+        
+        if (mForcedAttackIntervalTimer <= 0.0f && mForcedAttackCount < 6)
+        {
+            PerformForcedAttack();
+            mForcedAttackCount++;
+            mForcedAttackIntervalTimer = 0.15f;
+        }
+        
         if (mStateTimer <= 0.0f)
         {
             mState = BossState::Moving;
             mStateTimer = 0.0f;
+            mForcedAttackCount = 0;
+            mForcedAttackIntervalTimer = 0.0f;
+            if (mAnimator)
+            {
+                mAnimator->SetAnimation("idle");
+            }
         }
         return;
     }
@@ -70,6 +106,8 @@ void EyeMiniboss::UpdateAI(float deltaTime)
     Vector2 playerPos = player->GetPosition();
     Vector2 myPos = GetPosition();
     float distance = Vector2::Distance(myPos, playerPos);
+    
+    mJustBecameVulnerable = false;
 
     switch (mState)
     {
@@ -138,7 +176,7 @@ void EyeMiniboss::UpdateAI(float deltaTime)
             mStateTimer = 0.0f;
         }
         break;
-        
+
     case BossState::Dead:
         mAnimator->SetAnimation("dead");
         break;
@@ -147,18 +185,24 @@ void EyeMiniboss::UpdateAI(float deltaTime)
 
 void EyeMiniboss::TakeDamage(float amount)
 {
+    if (IsInvulnerable() || mIsDead) return;
+
     Miniboss::TakeDamage(amount);
 
     if (!mIsDead && mAnimator)
     {
-        if (mState != BossState::Attacking && mState != BossState::WindUp)
-        {
-            mAnimator->SetAnimation("being-hit");
-            mStateTimer = 0.2f;
-        }
+        mState = BossState::BeingHit;
+        mAnimator->SetAnimation("being-hit");
+        mBeingHitTimer = 0.5f;
+        mRigidBody->SetVelocity(Vector2::Zero);
     }
 
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/eye-hurt.wav");
+}
+
+void EyeMiniboss::PerformForcedAttack()
+{
+    PerformSpreadShot();
 }
 
 void EyeMiniboss::PerformSpreadShot()

@@ -4,10 +4,17 @@
 #include "../Components/Drawing/UITextComponent.h"
 #include "../Components/Drawing/RectComponent.h"
 #include "../Audio/AudioSystem.h"
+#include "UIStatWidget.h"
 
 PauseScreen::PauseScreen(Game* game)
     : Actor(game)
     , mSelectedButtonIndex(0)
+    , mHealthWidget(nullptr)
+    , mMeleeWidget(nullptr)
+    , mRangedWidget(nullptr)
+    , mFireRateWidget(nullptr)
+    , mSpeedWidget(nullptr)
+    , mPiercingWidget(nullptr)
 {
     SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, Game::WINDOW_HEIGHT / 2.0f));
     auto* background = new RectComponent(
@@ -37,17 +44,52 @@ PauseScreen::PauseScreen(Game* game)
         PauseScreen::DRAW_ORDER
     );
     mButtons.push_back(resumeButton);
+    mButtonActors.push_back(resumeButtonActor);
 
     Actor* quitButtonActor = new Actor(game);
     quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));
     auto quitButton = new UIButtonComponent(quitButtonActor, "EXIT TO MAIN MENU", buttonSize,
         [this]() {
-            GetGame()->TogglePause();
             GetGame()->SetScene(Game::GameScene::MainMenu);
+            GetGame()->TogglePause();
         },
         PauseScreen::DRAW_ORDER
     );
     mButtons.push_back(quitButton);
+    mButtonActors.push_back(quitButtonActor);
+
+    // Player status widgets (20% larger text = 14 * 1.2 = 16.8 ≈ 20)
+    // Positioned in middle-right area: third column, middle row
+    const float statusX = windowCenterX + 250.0f;  // Right side, moved +100px
+    const float statusCenterY = windowCenterY;      // Center vertical
+    
+    mHealthWidget = new UIStatWidget(GetGame(), "HEALTH", 20, PauseScreen::DRAW_ORDER);
+    mHealthWidget->SetPosition(Vector2(statusX, statusCenterY - 130.0f));
+    mHealthWidget->SetValue(std::to_string(GetGame()->GetPlayerHealth()) + "/" + std::to_string(GetGame()->GetPlayerMaxHealth()));
+
+    mMeleeWidget = new UIStatWidget(GetGame(), "MELEE ATK", 20, PauseScreen::DRAW_ORDER);
+    mMeleeWidget->SetPosition(Vector2(statusX, statusCenterY - 65.0f));
+    mMeleeWidget->SetValue(std::to_string(static_cast<int>(GetGame()->GetPlayerMeleeDamage())));
+
+    mRangedWidget = new UIStatWidget(GetGame(), "RANGED ATK", 20, PauseScreen::DRAW_ORDER);
+    mRangedWidget->SetPosition(Vector2(statusX, statusCenterY));
+    mRangedWidget->SetValue(std::to_string(static_cast<int>(GetGame()->GetPlayerRangedDamage())));
+
+    mFireRateWidget = new UIStatWidget(GetGame(), "FIRE RATE", 20, PauseScreen::DRAW_ORDER);
+    mFireRateWidget->SetPosition(Vector2(statusX, statusCenterY + 65.0f));
+    {
+        char fireRateStr[16];
+        snprintf(fireRateStr, sizeof(fireRateStr), "%.2f/s", 1.0f / GetGame()->GetPlayerFireRate());
+        mFireRateWidget->SetValue(fireRateStr);
+    }
+
+    mSpeedWidget = new UIStatWidget(GetGame(), "SPEED", 20, PauseScreen::DRAW_ORDER);
+    mSpeedWidget->SetPosition(Vector2(statusX, statusCenterY + 130.0f));
+    mSpeedWidget->SetValue(GetGame()->GetSpeedDisplayValue());
+
+    mPiercingWidget = new UIStatWidget(GetGame(), "PIERCING", 20, PauseScreen::DRAW_ORDER);
+    mPiercingWidget->SetPosition(Vector2(statusX, statusCenterY + 195.0f));
+    mPiercingWidget->SetValue(std::to_string(GetGame()->GetPlayerPiercing()));
 
     UpdateButtonSelection();
 }
@@ -123,6 +165,60 @@ void PauseScreen::UpdateButtonSelection()
     }
 }
 
+void PauseScreen::DestroyChildActors()
+{
+    // Remover e deletar atores filhos
+    if (mTitleActor)
+    {
+        GetGame()->RemoveActor(mTitleActor);
+        delete mTitleActor;
+        mTitleActor = nullptr;
+    }
+    
+    for (auto actor : mButtonActors)
+    {
+        if (actor)
+        {
+            GetGame()->RemoveActor(actor);
+            delete actor;
+        }
+    }
+    mButtonActors.clear();
+    
+    // Delete status widgets
+    if (mHealthWidget)
+    {
+        delete mHealthWidget;
+        mHealthWidget = nullptr;
+    }
+    if (mMeleeWidget)
+    {
+        delete mMeleeWidget;
+        mMeleeWidget = nullptr;
+    }
+    if (mRangedWidget)
+    {
+        delete mRangedWidget;
+        mRangedWidget = nullptr;
+    }
+    if (mFireRateWidget)
+    {
+        delete mFireRateWidget;
+        mFireRateWidget = nullptr;
+    }
+    if (mSpeedWidget)
+    {
+        delete mSpeedWidget;
+        mSpeedWidget = nullptr;
+    }
+    if (mPiercingWidget)
+    {
+        delete mPiercingWidget;
+        mPiercingWidget = nullptr;
+    }
+}
+
 PauseScreen::~PauseScreen()
 {
+    DestroyChildActors();
 }

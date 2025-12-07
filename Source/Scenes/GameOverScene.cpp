@@ -29,7 +29,7 @@ void GameOverScene::Load()
     titleText->SetText("GAME OVER", Color::White, 48);
 
     Actor* startButtonActor = new Actor(GetGame());
-    startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
+    startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY - 50.0f));
     auto startButton = new UIButtonComponent(startButtonActor, "TRY AGAIN", buttonSize,
         [this]() {
             GetGame()->ResetCorruptionLevel();
@@ -37,6 +37,15 @@ void GameOverScene::Load()
         }
     );
     mButtons.push_back(startButton);
+
+    Actor* shopButtonActor = new Actor(GetGame());
+    shopButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
+    auto shopButton = new UIButtonComponent(shopButtonActor, "GO TO SHOP", buttonSize,
+        [this]() {
+            GetGame()->SetScene(Game::GameScene::Upgrade);
+        }
+    );
+    mButtons.push_back(shopButton);
 
     Actor* quitButtonActor = new Actor(GetGame());
     quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));

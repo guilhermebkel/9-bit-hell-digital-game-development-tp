@@ -25,6 +25,20 @@ private:
 
     UIStatWidget* mCoinWidget;
     std::vector<UIButtonComponent*> mButtons;
+    
+    // Status widgets
+    UIStatWidget* mHealthWidget;
+    UIStatWidget* mMeleeWidget;
+    UIStatWidget* mRangedWidget;
+    UIStatWidget* mFireRateWidget;
+    UIStatWidget* mSpeedWidget;
+    UIStatWidget* mPiercingWidget;
+    
+    // Button references for text updates
+    UIButtonComponent* mFireRateButton;
+    UIButtonComponent* mDamageButton;
+    UIButtonComponent* mVelocityButton;
+    UIButtonComponent* mPiercingButton;
 
     size_t mSelectedButtonIndex;
     bool mUpPressed = false;

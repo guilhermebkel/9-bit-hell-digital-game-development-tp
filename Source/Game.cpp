@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <fstream>
+#include <cstdio>
 #include "Game.h"
 #include "Components/Drawing/DrawComponent.h"
 #include "Random.h"
@@ -148,9 +149,11 @@ void Game::UpdateSceneManager(float deltaTime)
         mTransitionTimer -= deltaTime;
         if (mTransitionTimer <= 0.0f)
         {
+            // Muda de cena no meio da transição
             ChangeScene();
+            mSceneJustChanged = true;
             mSceneState = SceneState::FadingIn;
-            mTransitionTimer = mTransitionTotalTime;
+            mTransitionTimer = mTransitionTotalTime / 2.0f; // Fade in é metade do tempo
         }
         break;
 
@@ -163,6 +166,7 @@ void Game::UpdateSceneManager(float deltaTime)
         break;
 
     case SceneState::Running:
+        mSceneJustChanged = false;
         break;
     }
 }
@@ -231,7 +235,7 @@ void Game::ProcessInput()
             }
             mUpdatingActors = false;
         }
-        else if (mPauseScreen)
+        else if (mIsPaused && mPauseScreen)
         {
             mPauseScreen->ProcessInput(state);
         }
@@ -250,11 +254,19 @@ void Game::TogglePause()
     {
         if (mPauseScreen)
         {
-            mPauseScreen->SetState(ActorState::Destroy);
+            // Destruir os atores filhos do PauseScreen
+            mPauseScreen->DestroyChildActors();
+
+            
+            // Remover da lista de atores e deletar
+            RemoveActor(mPauseScreen);
+            delete mPauseScreen;
             mPauseScreen = nullptr;
         }
     }
 }
+
+
 
 void Game::UpdateGame(float deltaTime)
 {
@@ -385,6 +397,11 @@ void Game::GenerateOutput()
 
     for (auto drawable : mDrawables)
     {
+        // Skip rendering if actor doesn't have valid position yet
+        if (drawable->GetOwner() && !drawable->GetOwner()->HasValidPosition())
+        {
+            continue;
+        }
         drawable->Draw(mRenderer);
     }
 
@@ -436,4 +453,85 @@ void Game::UpgradeFireRate()
     {
         mPlayerUpgrades.fireRate = 0.1f;
     }
+    
+    // Increase price by 25% for next upgrade
+    mPlayerUpgrades.fireRatePrice = static_cast<int>(mPlayerUpgrades.fireRatePrice * 1.25f);
+}
+
+void Game::UpgradeMeleeDamage()
+{
+    mPlayerUpgrades.meleeDamage += 5;
+    
+    // Increase price by 25% for next upgrade
+    mPlayerUpgrades.damagePriceBase = static_cast<int>(mPlayerUpgrades.damagePriceBase * 1.25f);
+}
+
+void Game::UpgradeRangedDamage()
+{
+    mPlayerUpgrades.rangedDamage += 3;
+    
+    // Increase price by 25% for next upgrade
+    mPlayerUpgrades.damagePriceBase = static_cast<int>(mPlayerUpgrades.damagePriceBase * 1.25f);
+}
+
+void Game::UpgradeSpeed()
+{
+    mPlayerUpgrades.playerSpeed *= 1.10f;
+    
+    // Increase price by 25% for next upgrade
+    mPlayerUpgrades.velocityPriceBase = static_cast<int>(mPlayerUpgrades.velocityPriceBase * 1.25f);
+}
+
+void Game::UpgradePiercing()
+{
+    mPlayerUpgrades.piercing += 1;
+    
+    // Increase price by 25% for next upgrade
+    mPlayerUpgrades.piercingPriceBase = static_cast<int>(mPlayerUpgrades.piercingPriceBase * 1.25f);
+}
+
+int Game::GetDamagePrice() const
+{
+    return mPlayerUpgrades.damagePriceBase;
+}
+
+int Game::GetVelocityPrice() const
+{
+    return mPlayerUpgrades.velocityPriceBase;
+}
+
+int Game::GetPiercingPrice() const
+{
+    return mPlayerUpgrades.piercingPriceBase;
+}
+
+int Game::GetPlayerHealth() const
+{
+    if (mPlayer)
+    {
+        return static_cast<int>(mPlayer->GetHealth());
+    }
+    return 0;
+}
+
+int Game::GetPlayerMaxHealth() const
+{
+    if (mPlayer)
+    {
+        return static_cast<int>(mPlayer->GetMaxHealth());
+    }
+    return 100;
+}
+
+std::string Game::GetSpeedDisplayValue() const
+{
+    // Velocidade padrão é 1725.0f
+    // Calcular multiplicador baseado na velocidade padrão
+    const float BASE_SPEED = 1725.0f;
+    float multiplier = mPlayerUpgrades.playerSpeed / BASE_SPEED;
+    
+    // Formatar como multiplicador com 1 casa decimal
+    char buffer[16];
+    snprintf(buffer, sizeof(buffer), "%.1fx", multiplier);
+    return std::string(buffer);
 }

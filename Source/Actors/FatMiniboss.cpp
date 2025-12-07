@@ -3,6 +3,8 @@
 #include "SlimeProjectile.h"
 #include "SlimePuddle.h"
 #include "../Game.h"
+#include "../Random.h"
+#include "../Math.h"
 #include "../Components/Drawing/AnimatorComponent.h"
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
@@ -35,6 +37,8 @@ FatMiniboss::FatMiniboss(Game* game)
     mRigidBody = new RigidBodyComponent(this, 10.0f, 0.0f);
 
     mCollider = new AABBColliderComponent(this, 0, 0, PHYSICS_WIDTH, PHYSICS_HEIGHT, ColliderLayer::Enemy);
+    
+    CreateHealthBar(Vector2(100.0f, 15.0f));
 }
 
 void FatMiniboss::OnUpdate(float deltaTime)
@@ -43,14 +47,54 @@ void FatMiniboss::OnUpdate(float deltaTime)
 
     if (mIsDead) return;
 
-    if (mAnimator->GetAnimationName() == "being-hit")
+    if (mState == BossState::BeingHit)
+    {
+        mBeingHitTimer -= deltaTime;
+        mStateTimer -= deltaTime;
+        
+        // Após 0.5s de being-hit, transiciona para ForcedAttack
+        if (mBeingHitTimer <= 0.0f && mState == BossState::BeingHit)
+        {
+            mState = BossState::ForcedAttack;
+            mStateTimer = 0.8f;
+            mAnimator->SetAnimation("special");
+            mForcedAttackCount = 0;
+            mForcedAttackIntervalTimer = 0.0f;
+        }
+        // Não chamar UpdateAI enquanto estiver em BeingHit
+        return;
+    }
+
+    if (mState == BossState::ForcedAttack)
     {
         mStateTimer -= deltaTime;
+        mForcedAttackIntervalTimer -= deltaTime;
+        
+        if (mAnimator)
+        {
+            mAnimator->ForceFinalFrame();
+        }
+        
+        if (mForcedAttackIntervalTimer <= 0.0f && mForcedAttackCount < 6)
+        {
+            PerformForcedAttack();
+            mForcedAttackCount++;
+            mForcedAttackIntervalTimer = 0.15f;
+        }
+        
         if (mStateTimer <= 0.0f)
         {
             mState = BossState::Moving;
             mStateTimer = 0.0f;
+            mForcedAttackCount = 0;
+            mForcedAttackIntervalTimer = 0.0f;
+            mForcedAttackExecuted = false;
+            if (mAnimator)
+            {
+                mAnimator->SetAnimation("idle");
+            }
         }
+        // Não chamar UpdateAI durante ForcedAttack
         return;
     }
 
@@ -137,17 +181,40 @@ void FatMiniboss::UpdateAI(float deltaTime)
     }
 }
 
+void FatMiniboss::PerformForcedAttack()
+{
+    const Player* player = GetGame()->GetPlayer();
+    if (!player) return;
+
+    Vector2 dir = player->GetPosition() - GetPosition();
+    dir.Normalize();
+    
+    // Adicionar pequena variação de ângulo (±10 graus)
+    float angle = Math::Atan2(dir.y, dir.x);
+    float angleVariation = Math::ToRadians(Random::GetFloatRange(-10.0f, 10.0f));
+    angle += angleVariation;
+    
+    Vector2 variedDir(Math::Cos(angle), Math::Sin(angle));
+    
+    SlimeProjectile* proj = new SlimeProjectile(GetGame(), variedDir);
+    proj->SetPosition(GetPosition() + Vector2(0.0f, -10.0f));
+
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-attack.wav");
+}
+
 void FatMiniboss::TakeDamage(float amount)
 {
+    if (IsInvulnerable() || mIsDead) return;
+
     Miniboss::TakeDamage(amount);
 
     if (!mIsDead && mAnimator)
     {
-        if (mState != BossState::Attacking && mState != BossState::WindUp)
-        {
-            mAnimator->SetAnimation("being-hit");
-            mStateTimer = 0.2f;
-        }
+        mState = BossState::BeingHit;
+        mAnimator->SetAnimation("being-hit");
+        mStateTimer = 0.5f;
+        mBeingHitTimer = 0.5f; // Timer para transição para ForcedAttack
+        mRigidBody->SetVelocity(Vector2::Zero);
     }
 
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-hurt.wav");

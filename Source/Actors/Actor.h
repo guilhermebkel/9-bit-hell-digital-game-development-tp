@@ -32,7 +32,8 @@ public:
 
     // Position getter/setter
     const Vector2& GetPosition() const { return mPosition; }
-    void SetPosition(const Vector2& pos) { mPosition = pos; }
+    void SetPosition(const Vector2& pos) { mPosition = pos; if (!mInitialPositionSet && (pos.x != 0.0f || pos.y != 0.0f)) { mInitialPositionSet = true; } }
+    bool HasValidPosition() const { return mInitialPositionSet; }
 
     // Scale getter/setter
     const Vector2& GetScale() const { return mScale; }
@@ -88,6 +89,7 @@ protected:
     Vector2 mPosition;
     Vector2 mScale;
     float mRotation;
+    bool mInitialPositionSet;
 
     // Components
     std::vector<class Component*> mComponents;

@@ -5,7 +5,7 @@ class SlimePuddle : public Actor
 {
 public:
     static constexpr float DAMAGE = 5.0f;
-    static constexpr float LIFETIME = 5.0f; // Dura 5 segundos
+    static constexpr float LIFETIME = 10.0f; // Dura 10 segundos
     static constexpr float SPRITE_WIDTH = 12.0f * 3.0f;
     static constexpr float SPRITE_HEIGHT = 4.0f * 3.0f;
 

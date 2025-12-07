@@ -10,7 +10,6 @@ Collectable::Collectable(Game* game, int width, int height)
 {
     float physicsWidth = width * 0.50f;
     float physicsHeight = height * 0.25f;
-    // Align collider base with sprite base
     const int dy = (int)((physicsHeight / 2.0f) - (physicsHeight / 2.0f));
 
     mColliderComponent = new AABBColliderComponent(this, 0, dy, physicsWidth, physicsHeight, ColliderLayer::Collectable, true);

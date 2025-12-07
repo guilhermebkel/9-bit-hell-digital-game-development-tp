@@ -5,7 +5,7 @@
 #include "../Components/Drawing/AnimatorComponent.h"
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
-#include "../Random.h" // Precisamos para a velocidade aleatória
+#include "../Random.h"
 #include "../Audio/AudioSystem.h"
 
 Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
@@ -22,6 +22,8 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
       , mIsFlashing(false)
       , mFlashTimer(0.0f)
       , mOriginalColor(Vector3::Zero)
+      , mHealth(BASE_HEALTH)
+      , mMaxHealth(BASE_HEALTH)
 {
     std::string texturePath;
     std::string jsonPath;
@@ -101,17 +103,33 @@ void Enemy::Kill()
     mRigidBodyComponent->SetEnabled(false);
     mColliderComponent->SetEnabled(false);
     
-    // Ativar flash branco ao morrer (100% branco puro - valores altos para forçar branco)
     mIsFlashing = true;
     mFlashTimer = HIT_FLASH_DURATION;
     mDrawComponent->SetColor(Vector3(10.0f, 10.0f, 10.0f));
+}
+
+void Enemy::TakeDamage(float amount)
+{
+    if (mIsDying) return;
+    
+    mHealth -= amount;
+    
+    mIsFlashing = true;
+    mFlashTimer = HIT_FLASH_DURATION;
+    mDrawComponent->SetColor(Vector3(10.0f, 10.0f, 10.0f));
+    
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/monster-hurt.wav");
+    
+    if (mHealth <= 0.0f)
+    {
+        Kill();
+    }
 }
 
 void Enemy::OnUpdate(float deltaTime)
 {
     Actor::OnUpdate(deltaTime);
 
-    // Atualizar flash branco
     if (mIsFlashing)
     {
         mFlashTimer -= deltaTime;

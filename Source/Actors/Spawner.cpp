@@ -10,6 +10,7 @@
 #include "EyeMiniboss.h"
 #include "../Random.h"
 #include <algorithm>
+#include <array>
 
 Spawner::Spawner(Game* game, SpawnType type, int totalCount, int waveSize, int keepPopulation, bool waitForClear)
     : Actor(game)
@@ -19,6 +20,7 @@ Spawner::Spawner(Game* game, SpawnType type, int totalCount, int waveSize, int k
     , mWaveSize(waveSize)
     , mKeepPopulation(keepPopulation)
     , mWaitForClear(waitForClear)
+    , mInitialSpawnDelay(0.0f)
 {
     if (mWaveSize <= 0) mWaveSize = totalCount;
     if (mKeepPopulation < 0) mKeepPopulation = 0;
@@ -26,6 +28,12 @@ Spawner::Spawner(Game* game, SpawnType type, int totalCount, int waveSize, int k
 
 void Spawner::OnUpdate(float deltaTime)
 {
+    if (mInitialSpawnDelay > 0.0f)
+    {
+        mInitialSpawnDelay -= deltaTime;
+        return;
+    }
+
     if (mRemainingCount <= 0)
     {
         SetState(ActorState::Destroy);
@@ -86,10 +94,33 @@ int Spawner::CountActiveEnemies()
 
 void Spawner::SpawnOne()
 {
-    Vector2 spawnPos = Vector2(
-        Random::GetFloatRange(100.0f, Game::WINDOW_WIDTH - 100.0f),
-        Random::GetFloatRange(GetGame()->GetUpperBoundary() + 100.0f, Game::WINDOW_HEIGHT - 100.0f)
-    );
+    const Player* player = GetGame()->GetPlayer();
+    Vector2 spawnPos;
+    
+    const float MIN_SPAWN_DISTANCE = 100.0f;
+    bool validSpawn = false;
+    int maxAttempts = 10;
+    
+    for (int attempt = 0; attempt < maxAttempts && !validSpawn; ++attempt)
+    {
+        spawnPos = Vector2(
+            Random::GetFloatRange(100.0f, Game::WINDOW_WIDTH - 100.0f),
+            Random::GetFloatRange(GetGame()->GetUpperBoundary() + 100.0f, Game::WINDOW_HEIGHT - 100.0f)
+        );
+        
+        if (!player || Vector2::Distance(spawnPos, player->GetPosition()) >= MIN_SPAWN_DISTANCE)
+        {
+            validSpawn = true;
+        }
+    }
+    
+    if (!validSpawn)
+    {
+        spawnPos = Vector2(
+            Random::GetFloatRange(100.0f, Game::WINDOW_WIDTH - 100.0f),
+            Random::GetFloatRange(GetGame()->GetUpperBoundary() + 100.0f, Game::WINDOW_HEIGHT - 100.0f)
+        );
+    }
 
     switch (mSpawnType)
     {
@@ -100,7 +131,7 @@ void Spawner::SpawnOne()
                 Enemy::EnemyType::Horn,
                 Enemy::EnemyType::Fat
             };
-            auto randomIndex = Random::GetIntRange(0, enemyTypes.size() - 1);
+            int randomIndex = Random::GetIntRange(0, static_cast<int>(enemyTypes.size()) - 1);
             Enemy* enemy = new Enemy(GetGame(), enemyTypes[randomIndex]);
             enemy->SetPosition(spawnPos);
             break;

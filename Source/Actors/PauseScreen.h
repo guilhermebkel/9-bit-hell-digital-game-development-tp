@@ -3,6 +3,8 @@
 #include <vector>
 #include "HUD.h"
 
+class UIStatWidget;
+
 class PauseScreen : public Actor
 {
 public:
@@ -12,6 +14,8 @@ public:
     ~PauseScreen();
 
     void OnProcessInput(const uint8_t* keyState) override;
+    
+    void DestroyChildActors();
 
 private:
     void SelectNextButton();
@@ -22,7 +26,16 @@ private:
     size_t mSelectedButtonIndex;
 
     std::vector<class UIButtonComponent*> mButtons;
+    std::vector<class Actor*> mButtonActors;  // Armazenar referências dos atores dos botões
     class Actor* mTitleActor;
+    
+    // Status widgets for cleanup
+    UIStatWidget* mHealthWidget;
+    UIStatWidget* mMeleeWidget;
+    UIStatWidget* mRangedWidget;
+    UIStatWidget* mFireRateWidget;
+    UIStatWidget* mSpeedWidget;
+    UIStatWidget* mPiercingWidget;
 
     bool mUpPressed = false;
     bool mDownPressed = false;

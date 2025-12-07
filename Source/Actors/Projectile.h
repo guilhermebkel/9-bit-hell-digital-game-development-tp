@@ -20,6 +20,7 @@ public:
     void HandleCollision(AABBColliderComponent* other);
 
 private:
-    bool mHasHitEnemy;
+    int mEnemiesHit;
     int mDamage;
+    class Game* mGamePtr;
 };

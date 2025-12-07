@@ -1,5 +1,6 @@
 #include "Miniboss.h"
 #include "Player.h"
+#include "UIHealthBarWidget.h"
 #include "../Game.h"
 #include "../Components/Drawing/AnimatorComponent.h"
 #include "../Components/Physics/RigidBodyComponent.h"
@@ -11,17 +12,46 @@ Miniboss::Miniboss(Game* game, float health)
     , mHealth(health)
     , mMaxHealth(health)
     , mIsDead(false)
+    , mJustBecameVulnerable(false)
+    , mBeingHitTimer(0.0f)
+    , mForcedAttackExecuted(false)
+    , mForcedAttackCount(0)
+    , mForcedAttackIntervalTimer(0.0f)
+    , mHealthBar(nullptr)
+    , mHealthBarOffset(Vector2(0.0f, -75.0f))
     , mAnimator(nullptr)
     , mRigidBody(nullptr)
     , mCollider(nullptr)
     , mIsFlashing(false)
     , mFlashTimer(0.0f)
     , mOriginalColor(Vector3::One)
+    , mInvulnerabilityTimer(0.0f)
 {
 }
 
 void Miniboss::OnUpdate(float deltaTime)
 {
+    bool wasInvulnerable = mInvulnerabilityTimer > 0.0f;
+    
+    mInvulnerabilityTimer -= deltaTime;
+    if (mInvulnerabilityTimer < 0.0f)
+    {
+        mInvulnerabilityTimer = 0.0f;
+    }
+
+    // Detecta quando a invencibilidade termina
+    if (wasInvulnerable && !IsInvulnerable())
+    {
+        mJustBecameVulnerable = true;
+    }
+
+    if (mHealthBar)
+    {
+        Vector2 barPosition = GetPosition() + mHealthBarOffset;
+        mHealthBar->SetPosition(barPosition);
+        mHealthBar->Update(mHealth, mMaxHealth);
+    }
+
     if (mIsFlashing && mAnimator)
     {
         mFlashTimer -= deltaTime;
@@ -60,6 +90,12 @@ void Miniboss::OnUpdate(float deltaTime)
         SetScale(Vector2(1.0f, 1.0f));
     }
 
+    // Clamp posição dentro dos limites da tela (assim como o Player faz)
+    Vector2 clampedPosition = GetPosition();
+    clampedPosition.x = Math::Clamp(clampedPosition.x, halfWidth, Game::WINDOW_WIDTH - halfWidth);
+    clampedPosition.y = Math::Clamp(clampedPosition.y, GetGame()->GetUpperBoundary() + halfHeight, Game::WINDOW_HEIGHT - halfHeight);
+    SetPosition(clampedPosition);
+
     if (mAnimator)
     {
         mAnimator->SetDrawOrder(100 + static_cast<int>(GetPosition().y));
@@ -68,9 +104,10 @@ void Miniboss::OnUpdate(float deltaTime)
 
 void Miniboss::TakeDamage(float amount)
 {
-    if (mIsDead) return;
+    if (mIsDead || IsInvulnerable()) return;
 
     mHealth -= amount;
+    mInvulnerabilityTimer = INVULNERABILITY_DURATION;
     
     if (mAnimator)
     {
@@ -109,4 +146,13 @@ void Miniboss::OnHorizontalCollision(const float minOverlap, AABBColliderCompone
 
 void Miniboss::OnVerticalCollision(const float minOverlap, AABBColliderComponent* other)
 {
+}
+
+void Miniboss::CreateHealthBar(const Vector2& barSize)
+{
+    if (!mHealthBar)
+    {
+        Vector2 barPosition = GetPosition() + Vector2(0.0f, -100.0f);
+        mHealthBar = new UIHealthBarWidget(GetGame(), barPosition, barSize, 200);
+    }
 }

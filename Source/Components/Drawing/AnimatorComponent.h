@@ -31,6 +31,19 @@ public:
     void AddAnimation(const std::string& name, const std::vector<int>& images);
 
     std::string GetAnimationName() { return mAnimName; }
+    
+    // Força a exibição do último frame da animação atual
+    void ForceFinalFrame() { 
+        if (!mAnimName.empty() && mAnimations.count(mAnimName) > 0)
+        {
+            const std::vector<int>& animFrames = mAnimations[mAnimName];
+            int totalFrames = static_cast<int>(animFrames.size());
+            if (totalFrames > 0)
+            {
+                mAnimTimer = (totalFrames - 1 + 0.5f) / mAnimFPS;
+            }
+        }
+    }
 
 private:
     bool LoadSpriteSheetData(const std::string& dataPath);

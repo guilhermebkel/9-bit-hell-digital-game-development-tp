@@ -11,8 +11,9 @@
 
 Projectile::Projectile(Game* game, int damage)
     : Actor(game)
-    , mHasHitEnemy(false)
+    , mEnemiesHit(0)
     , mDamage(damage)
+    , mGamePtr(game)
 {
     new StaticSpriteComponent(this, "../Assets/Projectile.png", Projectile::SPRITE_WIDTH, Projectile::SPRITE_HEIGHT);
 
@@ -35,23 +36,29 @@ void Projectile::OnUpdate(float deltaTime)
 void Projectile::HandleCollision(AABBColliderComponent* other)
 {
 
-    if (other->GetLayer() == ColliderLayer::Enemy && !mHasHitEnemy)
+    if (other->GetLayer() == ColliderLayer::Enemy)
     {
+        int maxEnemiesHit = 1 + mGamePtr->GetPlayerPiercing();
+        
         Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
-        if (enemy)
+        if (enemy && mEnemiesHit < maxEnemiesHit)
         {
-            enemy->Kill();
-            mHasHitEnemy = true;
+            enemy->TakeDamage(mDamage);
+            mEnemiesHit++;
         }
 
         Miniboss* miniboss = dynamic_cast<Miniboss*>(other->GetOwner());
-        if (miniboss)
+        if (miniboss && mEnemiesHit < maxEnemiesHit)
         {
             miniboss->TakeDamage(mDamage);
-            mHasHitEnemy = true;
+            mEnemiesHit++;
         }
 
-        mState = ActorState::Destroy;
+        // Destruir projétil apenas se atingiu o máximo de inimigos permitido
+        if (mEnemiesHit >= maxEnemiesHit)
+        {
+            mState = ActorState::Destroy;
+        }
     }
 }
 

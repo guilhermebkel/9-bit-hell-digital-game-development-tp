@@ -30,11 +30,12 @@ public:
     static constexpr float AGGRO_AREA_SIZE = 800.0f;
 
     static constexpr float ATTACK_DISTANCE = 50.0f;
-    static constexpr float ATTACK_WIND_UP_TIME = 0.5f;
-    static constexpr float ATTACK_DURATION = 0.5f;
-    static constexpr float ATTACK_COOLDOWN = 1.0f;
+    static constexpr float ATTACK_WIND_UP_TIME = 0.25f;
+    static constexpr float ATTACK_DURATION = 0.25f;
+    static constexpr float ATTACK_COOLDOWN = 0.5f;
     static constexpr float ATTACK_DAMAGE = 10.0f;
     static constexpr float HIT_FLASH_DURATION = 0.1f;
+    static constexpr float BASE_HEALTH = 10.0f;
 
     explicit Enemy(Game* game, EnemyType type, float forwardSpeed = 100.0f, float deathTime = 0.25f);
 
@@ -43,6 +44,7 @@ public:
     void OnVerticalCollision(const float minOverlap, AABBColliderComponent* other) override;
 
     void Kill() override;
+    void TakeDamage(float amount);
 
 private:
     void UpdateAI(float deltaTime);
@@ -60,6 +62,10 @@ private:
     bool mIsFlashing;
     float mFlashTimer;
     Vector3 mOriginalColor;
+    
+    // HP system
+    float mHealth;
+    float mMaxHealth;
 
     class RigidBodyComponent* mRigidBodyComponent;
     class AABBColliderComponent* mColliderComponent;

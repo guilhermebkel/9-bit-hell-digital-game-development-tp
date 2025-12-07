@@ -30,6 +30,7 @@ private:
     int mWaveSize;        // Tamanho do lote
     int mKeepPopulation;  // Gatilho para respawn
     bool mWaitForClear;   // Comportamento de Boss
+    float mInitialSpawnDelay;  // Delay antes do primeiro spawn
 
     int CountActiveEnemies();
     void SpawnOne();

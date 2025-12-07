@@ -16,6 +16,12 @@ EyeProjectile::EyeProjectile(Game* game, const Vector2& direction)
     mCollider = new AABBColliderComponent(this, 0, 0, SPRITE_WIDTH, SPRITE_HEIGHT, ColliderLayer::Enemy);
     
     SetRotation(Math::Atan2(direction.y, direction.x));
+    
+    // Flip sprite se a direção for para a esquerda
+    if (direction.x < 0.0f)
+    {
+        SetScale(Vector2(1.0f, -1.0f));
+    }
 }
 
 void EyeProjectile::OnUpdate(float deltaTime)

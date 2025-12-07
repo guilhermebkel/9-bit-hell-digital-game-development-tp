@@ -18,7 +18,7 @@ public:
     static constexpr float HIT_FREEZE_DURATION = 0.5f;
     static constexpr float INVINCIBILITY_DURATION = 1.0f;
 
-    explicit Player(Game* game, float forwardSpeed = 2500.0f);
+    explicit Player(Game* game, float forwardSpeed = 1500.0f);
 
     void OnProcessInput(const Uint8* keyState) override;
     void OnUpdate(float deltaTime) override;
@@ -41,7 +41,7 @@ private:
 
     bool mIsMeleeAttacking;
     float mMeleeAttackAnimationTimer;
-    bool mHasKilledEnemyInCurrentAttack;
+    int mEnemiesHitInCurrentAttack;
 
     bool mIsRangedAttacking;
     float mRangedAttackAnimationTimer;

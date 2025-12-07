@@ -30,6 +30,11 @@ void UIButtonComponent::Draw(class Renderer* renderer)
     mTextActor->SetPosition(mOwner->GetPosition());
 }
 
+void UIButtonComponent::SetText(const std::string& text)
+{
+    mTextComponent->SetText(text, Color::White, 24);
+}
+
 void UIButtonComponent::Click()
 {
     if (mOnClick)
