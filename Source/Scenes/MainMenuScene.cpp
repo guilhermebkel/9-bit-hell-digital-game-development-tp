@@ -38,8 +38,17 @@ void MainMenuScene::Load()
     );
     mButtons.push_back(startButton);
 
+    Actor* levelSelectionButtonActor = new Actor(GetGame());
+    levelSelectionButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));
+    auto levelSelectionButton = new UIButtonComponent(levelSelectionButtonActor, "SELECT LEVEL", buttonSize,
+        [this]() {
+            GetGame()->SetScene(Game::GameScene::LevelSelection, 0.5f);
+        }
+    );
+    mButtons.push_back(levelSelectionButton);
+
     Actor* quitButtonActor = new Actor(GetGame());
-    quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));
+    quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 100.0f));
     auto quitButton = new UIButtonComponent(quitButtonActor, "EXIT", buttonSize,
         [this]() {
             GetGame()->Quit();

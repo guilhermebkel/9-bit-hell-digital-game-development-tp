@@ -108,6 +108,10 @@ add_executable(${PROJECT_NAME}
         Source/Scenes/VictoryScene.cpp
         Source/Scenes/VictoryScene.cpp
         Source/Scenes/VictoryScene.h
+        Source/Scenes/LevelSelectionScene.cpp
+        Source/Scenes/LevelSelectionScene.h
+        Source/Components/Drawing/UIImageButtonComponent.cpp
+        Source/Components/Drawing/UIImageButtonComponent.h
 )
 
 if(WIN32)

@@ -8,7 +8,7 @@ class UIStatWidget;
 class PauseScreen : public Actor
 {
 public:
-    static constexpr float DRAW_ORDER = HUD::DRAW_ORDER + 1; // Higher than HUD
+    static constexpr float DRAW_ORDER = HUD::DRAW_ORDER + 20; // Higher than HUD
 
     explicit PauseScreen(class Game* game);
     ~PauseScreen();

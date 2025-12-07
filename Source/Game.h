@@ -39,6 +39,7 @@ public:
         Upgrade,
         GameOver,
         Victory,
+        LevelSelection,
     };
 
     enum class SceneState
