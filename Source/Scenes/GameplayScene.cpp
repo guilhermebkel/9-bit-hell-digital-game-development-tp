@@ -17,9 +17,9 @@ GameplayScene::GameplayScene(Game* game, LevelID level)
 
 void GameplayScene::Load()
 {
-    GetGame()->SetPlayer(new Player(GetGame(), GetGame()->GetPlayerSpeed()));
     GetGame()->LoadGame();
     GetGame()->ResetCorruptionLevel();
+    GetGame()->SetPlayer(new Player(GetGame(), GetGame()->GetPlayerSpeed()));
 
     new CorruptionOverlay(GetGame());
     new HUD(GetGame());
