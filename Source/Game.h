@@ -93,7 +93,7 @@ public:
     void UpgradeRangedDamage();
     void UpgradeSpeed();
     void UpgradePiercing();
-    void UnlockNextLevel();
+    void UnlockNextLevel(LevelID nextLevelID);
     float GetPlayerFireRate() const { return mPlayerUpgrades.fireRate; }
     float GetPlayerMeleeDamage() const { return mPlayerUpgrades.meleeDamage; }
     float GetPlayerRangedDamage() const { return mPlayerUpgrades.rangedDamage; }

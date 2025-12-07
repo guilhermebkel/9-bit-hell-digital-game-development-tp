@@ -116,6 +116,8 @@ add_executable(${PROJECT_NAME}
         Source/Components/Drawing/SolidShapeComponent.h
         Source/Components/Drawing/ShapeComponent.cpp
         Source/Components/Drawing/ShapeComponent.h
+        Source/Actors/UIKeyPrompt.cpp
+        Source/Actors/UIKeyPrompt.h
 )
 
 if(WIN32)

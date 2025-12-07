@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "CorruptionOverlay.h"
 #include "UIHealthBarWidget.h"
+#include "UIKeyPrompt.h"
 #include "UIStatWidget.h"
 
 class HUD : public Actor
@@ -17,6 +18,9 @@ private:
     UIStatWidget* mCoinWidget;
     UIStatWidget* mCorruptionWidget;
     UIHealthBarWidget* mHealthBarWidget;
+
+    std::vector<UIKeyPrompt*> mTutorialPrompts;
+
     std::string GetCurrentLevelTitle(LevelID levelId);
 
     void OnUpdate();

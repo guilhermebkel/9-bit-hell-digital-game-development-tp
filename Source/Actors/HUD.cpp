@@ -2,6 +2,7 @@
 #include "../Game.h"
 #include "Player.h"
 #include "UIHealthBarWidget.h"
+#include "UIKeyPrompt.h"
 #include "../Components/Drawing/UITextComponent.h"
 
 HUD::HUD(Game* game)
@@ -27,6 +28,22 @@ HUD::HUD(Game* game)
     mCorruptionWidget->SetValue(std::to_string(corruptionPercent) + "%");
 
     mHealthBarWidget = new UIHealthBarWidget(game, Vector2(Game::WINDOW_WIDTH / 2.0f, 56.0f), Vector2(350.0f, 35.0f), HUD::DRAW_ORDER);
+
+    if (GetGame()->GetCurrentLevelID() == LevelID::Tutorial)
+    {
+        float startX = 32.0f;
+        float startY = Game::WINDOW_HEIGHT - 150.0f;
+        float spacingY = 50.0f;
+
+        auto* movementKeyPrompt = new UIKeyPrompt(game, Vector2(startX, startY), "WASD", "Movement", HUD::DRAW_ORDER, 100.0f);
+        mTutorialPrompts.push_back(movementKeyPrompt);
+
+        auto* meleeAttackKeyPrompt = new UIKeyPrompt(game, Vector2(startX, startY + spacingY), "J", "Melee Attack", HUD::DRAW_ORDER);
+        mTutorialPrompts.push_back(meleeAttackKeyPrompt);
+
+        auto* rangedAttackKeyPrompt = new UIKeyPrompt(game, Vector2(startX, startY + spacingY * 2), "K", "Ranged Attack", HUD::DRAW_ORDER);
+        mTutorialPrompts.push_back(rangedAttackKeyPrompt);
+    }
 }
 
 void HUD::OnUpdate(float deltaTime)

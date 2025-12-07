@@ -39,7 +39,7 @@ Game::Game()
 
 }
 
-const std::string Game::SAVE_FILE = "9-bit-hell-save.json";
+const std::string Game::SAVE_FILE = "../9-bit-hell-save.json";
 
 bool Game::Initialize()
 {
@@ -495,9 +495,9 @@ void Game::UpgradePiercing()
     mPlayerUpgrades.piercingPriceBase = static_cast<int>(mPlayerUpgrades.piercingPriceBase * 1.25f);
 }
 
-void Game::UnlockNextLevel()
+void Game::UnlockNextLevel(LevelID nextLevelID)
 {
-    mPlayerUpgrades.maxUnlockedLevel++;
+    mPlayerUpgrades.maxUnlockedLevel = Math::Max(mPlayerUpgrades.maxUnlockedLevel, static_cast<int>(nextLevelID));
 }
 
 void Game::AddCoin(int amount)

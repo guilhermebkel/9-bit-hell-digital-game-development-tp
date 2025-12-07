@@ -78,3 +78,6 @@ fabric.properties
 
 # MacOS
 .DS_Store
+
+# JSON Save Data
+9-bit-hell-save.json
