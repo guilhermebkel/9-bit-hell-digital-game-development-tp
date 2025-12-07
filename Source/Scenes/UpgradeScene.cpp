@@ -162,7 +162,7 @@ void UpgradeScene::Load()
     nextLevelActor->SetPosition(Vector2(centerX, Game:: WINDOW_HEIGHT - 100.0f));
     auto* nextLevelButton = new UIButtonComponent(nextLevelActor, "CONTINUE", buttonSize,
         [this]() {
-            GetGame()->ResetCorruptionLevel();
+            GetGame()->SaveGame();
             GetGame()->SetScene(Game::GameScene::Gameplay);
         }
     );

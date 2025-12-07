@@ -15,9 +15,6 @@ void MainMenuScene::Load()
     // Toca a música de fundo do menu em loop
     GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/menu_false_memory_syndrome.mp3");
 
-    GetGame()->ResetPlayerUpgrades();
-    GetGame()->ResetCorruptionLevel();
-
     new Background(GetGame(), "../Assets/MenuBackground.png");
 
     const Vector2 buttonSize(300.0f, 40.0f);

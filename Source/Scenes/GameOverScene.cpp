@@ -32,7 +32,6 @@ void GameOverScene::Load()
     startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY - 50.0f));
     auto startButton = new UIButtonComponent(startButtonActor, "TRY AGAIN", buttonSize,
         [this]() {
-            GetGame()->ResetCorruptionLevel();
             GetGame()->SetScene(Game::GameScene::Gameplay);
         }
     );

@@ -12,6 +12,7 @@ class PauseScreen;  // Forward declaration
 class Game
 {
 public:
+    static const std::string SAVE_FILE;
     static const int WINDOW_WIDTH   = 1024;
     static const int WINDOW_HEIGHT  = 768;
     static const int FPS = 60;
@@ -30,6 +31,7 @@ public:
         int damagePriceBase = 20;
         int velocityPriceBase = 15;
         int piercingPriceBase = 25;
+        int maxUnlockedLevel = 1;
     };
 
     enum class GameScene
@@ -83,14 +85,15 @@ public:
 
     // Player upgrades
     int GetCoinCount() const { return mPlayerUpgrades.coins; }
-    void AddCoin(int amount = 1) { mPlayerUpgrades.coins += amount; }
     bool CanAfford(int cost) const { return mPlayerUpgrades.coins >= cost; }
-    void SpendCoins(int amount) { mPlayerUpgrades.coins -= amount; }
+    void AddCoin(int amount = 1);
+    void SpendCoins(int amount);
     void UpgradeFireRate();
     void UpgradeMeleeDamage();
     void UpgradeRangedDamage();
     void UpgradeSpeed();
     void UpgradePiercing();
+    void UnlockNextLevel();
     float GetPlayerFireRate() const { return mPlayerUpgrades.fireRate; }
     float GetPlayerMeleeDamage() const { return mPlayerUpgrades.meleeDamage; }
     float GetPlayerRangedDamage() const { return mPlayerUpgrades.rangedDamage; }
@@ -102,8 +105,8 @@ public:
     int GetPiercingPrice() const;
     int GetPlayerHealth() const;
     int GetPlayerMaxHealth() const;
-    void ResetPlayerUpgrades() { mPlayerUpgrades = PlayerUpgrades(); }
-    
+    int GetMaxUnlockedLevel() const { return mPlayerUpgrades.maxUnlockedLevel; }
+
     // Retorna a velocidade como um multiplicador amigável (e.g., "1.0x", "1.1x")
     std::string GetSpeedDisplayValue() const;
 
@@ -141,6 +144,9 @@ public:
     SceneState GetSceneState() { return mSceneState; }
 
     std::vector<class Actor*> GetActors() { return mActors; }
+
+    void SaveGame();
+    void LoadGame();
 
 private:
     void ProcessInput();

@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstdio>
 #include "Game.h"
+#include "Json.h"
 #include "Components/Drawing/DrawComponent.h"
 #include "Random.h"
 #include "Actors/Actor.h"
@@ -37,6 +38,8 @@ Game::Game()
 {
 
 }
+
+const std::string Game::SAVE_FILE = "9-bit-hell-save.json";
 
 bool Game::Initialize()
 {
@@ -492,6 +495,21 @@ void Game::UpgradePiercing()
     mPlayerUpgrades.piercingPriceBase = static_cast<int>(mPlayerUpgrades.piercingPriceBase * 1.25f);
 }
 
+void Game::UnlockNextLevel()
+{
+    mPlayerUpgrades.maxUnlockedLevel++;
+}
+
+void Game::AddCoin(int amount)
+{
+    mPlayerUpgrades.coins += amount;
+}
+
+void Game::SpendCoins(int amount)
+{
+    mPlayerUpgrades.coins -= amount;
+}
+
 int Game::GetDamagePrice() const
 {
     return mPlayerUpgrades.damagePriceBase;
@@ -536,4 +554,69 @@ std::string Game::GetSpeedDisplayValue() const
     char buffer[16];
     snprintf(buffer, sizeof(buffer), "%.1fx", multiplier);
     return std::string(buffer);
+}
+
+void Game::SaveGame()
+{
+    nlohmann::json saveJson;
+
+    saveJson["coins"] = mPlayerUpgrades.coins;
+    saveJson["fireRate"] = mPlayerUpgrades.fireRate;
+    saveJson["meleeDamage"] = mPlayerUpgrades.meleeDamage;
+    saveJson["rangedDamage"] = mPlayerUpgrades.rangedDamage;
+    saveJson["playerSpeed"] = mPlayerUpgrades.playerSpeed;
+    saveJson["piercing"] = mPlayerUpgrades.piercing;
+    saveJson["fireRatePrice"] = mPlayerUpgrades.fireRatePrice;
+    saveJson["damagePriceBase"] = mPlayerUpgrades.damagePriceBase;
+    saveJson["velocityPriceBase"] = mPlayerUpgrades.velocityPriceBase;
+    saveJson["piercingPriceBase"] = mPlayerUpgrades.piercingPriceBase;
+    saveJson["maxUnlockedLevel"] = mPlayerUpgrades.maxUnlockedLevel;
+
+    std::ofstream file(SAVE_FILE);
+
+    if (file.is_open())
+    {
+        file << saveJson.dump(4);
+        file.close();
+        SDL_Log("Jogo salvo com sucesso!");
+    }
+    else
+    {
+        SDL_Log("Erro ao salvar o jogo.");
+    }
+}
+
+void Game::LoadGame()
+{
+    std::ifstream file(SAVE_FILE);
+
+    if (file.is_open())
+    {
+        try
+        {
+            nlohmann::json saveJson = nlohmann::json::parse(file);
+
+            mPlayerUpgrades.coins = saveJson.value("coins", PlayerUpgrades().coins);
+            mPlayerUpgrades.fireRate = saveJson.value("fireRate", PlayerUpgrades().fireRate);
+            mPlayerUpgrades.meleeDamage = saveJson.value("meleeDamage", PlayerUpgrades().meleeDamage);
+            mPlayerUpgrades.rangedDamage = saveJson.value("rangedDamage", PlayerUpgrades().rangedDamage);
+            mPlayerUpgrades.playerSpeed = saveJson.value("playerSpeed", PlayerUpgrades().playerSpeed);
+            mPlayerUpgrades.piercing = saveJson.value("piercing", PlayerUpgrades().piercing);
+            mPlayerUpgrades.fireRatePrice = saveJson.value("fireRatePrice", PlayerUpgrades().fireRatePrice);
+            mPlayerUpgrades.damagePriceBase = saveJson.value("damagePriceBase", PlayerUpgrades().damagePriceBase);
+            mPlayerUpgrades.velocityPriceBase = saveJson.value("velocityPriceBase", PlayerUpgrades().velocityPriceBase);
+            mPlayerUpgrades.piercingPriceBase = saveJson.value("piercingPriceBase", PlayerUpgrades().piercingPriceBase);
+            mPlayerUpgrades.maxUnlockedLevel = saveJson.value("maxUnlockedLevel", PlayerUpgrades().maxUnlockedLevel);
+
+            SDL_Log("Jogo carregado!");
+        }
+        catch (const std::exception& e)
+        {
+            SDL_Log("Erro ao ler JSON de save: %s", e.what());
+        }
+    }
+    else
+    {
+        SDL_Log("Nenhum save encontrado. Iniciando novo jogo.");
+    }
 }
