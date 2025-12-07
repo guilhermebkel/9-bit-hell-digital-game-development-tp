@@ -98,7 +98,7 @@ void StoreScene::Load()
             }
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
-        "../Assets/Projectile.png",
+        "../Assets/Store/FireRate.png",
         Vector2(8.0f * 3.0f, 2.0f * 3.0f)
     );
     mButtons.push_back(mFireRateButton);
