@@ -16,6 +16,7 @@
 #include "Scenes/MainMenuScene.h"
 #include "Scenes/GameplayScene.h"
 #include "Scenes/Scene.h"
+#include "Scenes/InitialDifficultyScene.h"
 #include "Audio/AudioSystem.h"
 #include "Scenes/LevelSelectionScene.h"
 #include "Scenes/StoreScene.h"
@@ -35,6 +36,7 @@ Game::Game()
         ,mCorruptionRate(Game::INITIAL_CORRUPTION_RATE)
         ,mPlayer(nullptr)
         ,mAudioSystem(nullptr)
+        ,mDifficulty(Game::Difficulty::Medium)
 {
 
 }
@@ -111,6 +113,9 @@ void Game::ChangeScene()
     {
         case GameScene::MainMenu:
             mCurrentScene = std::make_unique<MainMenuScene>(this);
+            break;
+        case GameScene::InitialDifficulty:
+            mCurrentScene = std::make_unique<class InitialDifficultyScene>(this);
             break;
         case GameScene::Gameplay:
             mCurrentScene = std::make_unique<GameplayScene>(this, mCurrentLevelID);
@@ -571,6 +576,7 @@ void Game::SaveGame()
     saveJson["speedPriceBase"] = mPlayerUpgrades.speedPriceBase;
     saveJson["piercingPriceBase"] = mPlayerUpgrades.piercingPriceBase;
     saveJson["maxUnlockedLevel"] = mPlayerUpgrades.maxUnlockedLevel;
+    saveJson["difficulty"] = static_cast<int>(mDifficulty);
 
     std::ofstream file(SAVE_FILE);
 
@@ -608,6 +614,10 @@ void Game::LoadGame()
             mPlayerUpgrades.piercingPriceBase = saveJson.value("piercingPriceBase", PlayerUpgrades().piercingPriceBase);
             mPlayerUpgrades.maxUnlockedLevel = saveJson.value("maxUnlockedLevel", PlayerUpgrades().maxUnlockedLevel);
 
+            int diffVal = saveJson.value("difficulty", static_cast<int>(Difficulty::Medium));
+            if (diffVal < 0 || diffVal > 2) diffVal = static_cast<int>(Difficulty::Medium);
+            mDifficulty = static_cast<Difficulty>(diffVal);
+
             SDL_Log("Jogo carregado!");
         }
         catch (const std::exception& e)
@@ -619,4 +629,21 @@ void Game::LoadGame()
     {
         SDL_Log("Nenhum save encontrado. Iniciando novo jogo.");
     }
+}
+
+bool Game::HasSaveFile() const
+{
+    std::ifstream file(SAVE_FILE);
+    return file.is_open();
+}
+
+float Game::GetDifficultyMultiplier() const
+{
+    switch (mDifficulty)
+    {
+        case Difficulty::Easy: return 1.0f;
+        case Difficulty::Medium: return 1.5f;
+        case Difficulty::Hard: return 2.0f;
+    }
+    return 1.0f;
 }

@@ -33,8 +33,38 @@ void MainMenuScene::Load()
     startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
     auto startButton = new UIButtonComponent(startButtonActor, "START GAME", buttonSize,
         [this]() {
-            GetGame()->SetCurrentLevelID(LevelID::Tutorial);
-            GetGame()->SetScene(Game::GameScene::Gameplay, 0.5f);
+            if (!GetGame()->HasSaveFile())
+            {
+                GetGame()->SetScene(Game::GameScene::InitialDifficulty, 0.5f);
+            }
+            else
+            {
+                int maxLevel = GetGame()->GetMaxUnlockedLevel();
+                if (maxLevel <= 1)
+                {
+                    GetGame()->SetCurrentLevelID(LevelID::Level1);
+                }
+                else if (maxLevel >= 9)
+                {
+                    GetGame()->SetCurrentLevelID(LevelID::Level9);
+                }
+                else
+                {
+                    switch (maxLevel)
+                    {
+                        case 2: GetGame()->SetCurrentLevelID(LevelID::Level2); break;
+                        case 3: GetGame()->SetCurrentLevelID(LevelID::Level3); break;
+                        case 4: GetGame()->SetCurrentLevelID(LevelID::Level4); break;
+                        case 5: GetGame()->SetCurrentLevelID(LevelID::Level5); break;
+                        case 6: GetGame()->SetCurrentLevelID(LevelID::Level6); break;
+                        case 7: GetGame()->SetCurrentLevelID(LevelID::Level7); break;
+                        case 8: GetGame()->SetCurrentLevelID(LevelID::Level8); break;
+                        default: GetGame()->SetCurrentLevelID(LevelID::Level1); break;
+                    }
+                }
+
+                GetGame()->SetScene(Game::GameScene::Gameplay, 0.5f);
+            }
         }
         ,
         UIButtonComponent::DEFAULT_DRAW_ORDER,

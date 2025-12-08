@@ -37,6 +37,7 @@ public:
     enum class GameScene
     {
         MainMenu,
+        InitialDifficulty,
         Gameplay,
         Store,
         GameOver,
@@ -147,6 +148,11 @@ public:
 
     void SaveGame();
     void LoadGame();
+    bool HasSaveFile() const;
+    enum class Difficulty { Easy = 0, Medium = 1, Hard = 2 };
+    void SetDifficulty(Difficulty d) { mDifficulty = d; }
+    Difficulty GetDifficulty() const { return mDifficulty; }
+    float GetDifficultyMultiplier() const;
 
 private:
     void ProcessInput();
@@ -209,4 +215,5 @@ private:
     LevelID mCurrentLevelID = LevelID::Tutorial;
 
     PlayerUpgrades mPlayerUpgrades;
+    Difficulty mDifficulty = Difficulty::Medium;
 };

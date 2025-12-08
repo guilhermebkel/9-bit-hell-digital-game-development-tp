@@ -22,9 +22,15 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
       , mIsFlashing(false)
       , mFlashTimer(0.0f)
       , mOriginalColor(Vector3::Zero)
-      , mHealth(BASE_HEALTH)
-      , mMaxHealth(BASE_HEALTH)
 {
+    float diffMul = 1.0f;
+    if (GetGame()) diffMul = GetGame()->GetDifficultyMultiplier();
+
+    mMaxHealth = BASE_HEALTH * diffMul;
+    mHealth = mMaxHealth;
+
+    mForwardSpeed *= diffMul;
+
     std::string texturePath;
     std::string jsonPath;
 

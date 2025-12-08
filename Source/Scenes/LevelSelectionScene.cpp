@@ -3,6 +3,11 @@
 #include "../Actors/Actor.h"
 #include "../Actors/Background.h"
 #include "../Components/Drawing/UIImageButtonComponent.h"
+#include "LevelSelectionScene.h"
+#include "../Game.h"
+#include "../Actors/Actor.h"
+#include "../Actors/Background.h"
+#include "../Components/Drawing/UIImageButtonComponent.h"
 #include "../Components/Drawing/RectComponent.h"
 #include "../Components/Drawing/UIButtonComponent.h"
 #include "../Components/Drawing/UITextComponent.h"
@@ -19,7 +24,15 @@ LevelSelectionScene::LevelSelectionScene(Game* game)
     , mBackButtonActor(nullptr)
     , mTotalButtons(0)
     , mSelectedButtonIndex(0)
-{}
+    , mUpPressed(false)
+    , mDownPressed(false)
+    , mEnterPressed(false)
+    , mLeftPressed(false)
+    , mRightPressed(false)
+    , mDifficultyFocus(false)
+    , mDifficultySelectedIndex(0)
+{
+}
 
 LevelSelectionScene::~LevelSelectionScene()
 {
@@ -36,6 +49,72 @@ void LevelSelectionScene::Load()
     auto* titleText = new UITextComponent(mTitleActor);
     titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
     titleText->SetText("Select Level", Vector3(1.0f, 1.0f, 1.0f), 64);
+
+    const float leftEdgeX = 80.0f;
+    const float diffStartY = 300.0f;
+    const float diffSpacingY = 80.0f;
+    const int spriteBase = 16;
+    mDifficultyBaseScale = 2.0f;
+    std::array<std::string,3> diffImages = {"../Assets/GameDifficulty/easy.png", "../Assets/GameDifficulty/medium.png", "../Assets/GameDifficulty/hard.png"};
+    std::array<std::string,3> diffLabels = {"Easy", "Medium", "Hard"};
+
+    mDifficultyButtonWidth = 190.0f;
+    const float buttonHeight = 56.0f;
+    const float paddingLeft = 18.0f;
+    const float paddingBetweenIconAndText = 12.0f;
+
+    for (int d = 0; d < 3; ++d)
+    {
+        float y = diffStartY + (d * diffSpacingY);
+        float iconWidthScaled = spriteBase * mDifficultyBaseScale;
+
+        Actor* bgActor = new Actor(GetGame());
+        float bgCenterX = leftEdgeX + (mDifficultyButtonWidth / 2.0f);
+        bgActor->SetPosition(Vector2(bgCenterX, y));
+        auto* bgRect = new RectComponent(bgActor, static_cast<int>(mDifficultyButtonWidth), static_cast<int>(buttonHeight), RendererMode::TRIANGLES, 90);
+        bgRect->SetColor(Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+        bgRect->SetVisible(false);
+        mDifficultyBackgroundActors.push_back(bgActor);
+
+        float iconLeft = leftEdgeX + paddingLeft;
+        float iconCenterX = iconLeft + (iconWidthScaled / 2.0f);
+        Vector2 iconPos(iconCenterX, y);
+
+        auto* btn = new UIImageButtonComponent(GetGame(), diffImages[d], iconPos, [this, d]() {
+            Game::Difficulty gd = static_cast<Game::Difficulty>(d);
+            GetGame()->SetDifficulty(gd);
+            GetGame()->SaveGame();
+            mDifficultySelectedIndex = d;
+            UpdateDifficultySelection();
+        }, spriteBase, spriteBase);
+
+        btn->SetScale(Vector2(mDifficultyBaseScale, mDifficultyBaseScale));
+        mDifficultyButtons.push_back(btn);
+
+        Actor* labelActor = new Actor(GetGame());
+        auto* labelText = new UITextComponent(labelActor);
+        labelText->SetFont("../Assets/Fonts/Jersey10-Regular.ttf");
+        labelText->SetText(diffLabels[d], Vector3(1.0f,1.0f,1.0f), 36);
+
+        int textW = 0;
+        if (labelText->GetTexture()) textW = labelText->GetTexture()->GetWidth();
+
+        float labelLeft = iconLeft + iconWidthScaled + paddingBetweenIconAndText;
+        float labelCenterX = labelLeft + (textW / 2.0f);
+        labelActor->SetPosition(Vector2(labelCenterX, y));
+        mDifficultyLabels.push_back(labelText);
+
+        Actor* hlActor = new Actor(GetGame());
+        float hlCenterX = leftEdgeX + (mDifficultyButtonWidth / 2.0f);
+        hlActor->SetPosition(Vector2(hlCenterX, y));
+        auto* hlRect = new RectComponent(hlActor, static_cast<int>(mDifficultyButtonWidth), static_cast<int>(buttonHeight), RendererMode::TRIANGLES, 95);
+        hlRect->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.08f));
+        hlRect->SetVisible(false);
+        mDifficultyHighlightActors.push_back(hlActor);
+    }
+
+    mDifficultySelectedIndex = static_cast<int>(GetGame()->GetDifficulty());
+    UpdateDifficultySelection();
 
     Actor* gridManager = new Actor(GetGame());
     auto* shapeLines = new ShapeComponent(gridManager, 90);
@@ -113,7 +192,6 @@ void LevelSelectionScene::Load()
         int currentLevelIndex = static_cast<int>(i) + 1;
         bool isLocked = currentLevelIndex > maxUnlockedLevel;
 
-        // Passar dimensões originais do sprite (20x11) - o scaling será aplicado pelo SetScale
         int imageSpriteWidth = 20;
         int imageSpriteHeight = 11;
         auto* btn = new UIImageButtonComponent(GetGame(), path, pos, [this, id = levels[i].id, isLocked]() {
@@ -150,32 +228,106 @@ void LevelSelectionScene::Unload()
     mHighlightActors.clear();
     mBackButton = nullptr;
     mBackButtonActor = nullptr;
+
+    mDifficultyButtons.clear();
+    mDifficultyLabels.clear();
+    mDifficultyHighlightActors.clear();
+    mDifficultyBackgroundActors.clear();
 }
 
 void LevelSelectionScene::Update(float deltaTime) {}
 
 void LevelSelectionScene::ProcessInput(const uint8_t* keyState)
 {
-    if (keyState[SDL_SCANCODE_W] && !mUpPressed)
+    if (!mDifficultyFocus)
     {
-        mUpPressed = true;
-        SelectPreviousButton();
-    }
-    else if (!keyState[SDL_SCANCODE_W])
-    {
-        mUpPressed = false;
+        if (keyState[SDL_SCANCODE_W] && !mUpPressed)
+        {
+            mUpPressed = true;
+            SelectPreviousButton();
+        }
+        else if (!keyState[SDL_SCANCODE_W])
+        {
+            mUpPressed = false;
+        }
+
+        if (keyState[SDL_SCANCODE_S] && !mDownPressed)
+        {
+            mDownPressed = true;
+            SelectNextButton();
+        }
+        else if (!keyState[SDL_SCANCODE_S])
+        {
+            mDownPressed = false;
+        }
     }
 
-    if (keyState[SDL_SCANCODE_S] && !mDownPressed)
+    if (keyState[SDL_SCANCODE_A] && !mLeftPressed)
     {
-        mDownPressed = true;
-        SelectNextButton();
+        mLeftPressed = true;
+        mDifficultyFocus = true;
+        mDifficultySelectedIndex = static_cast<int>(GetGame()->GetDifficulty());
+        
+        UpdateButtonSelection();
+        UpdateDifficultySelection();
     }
-    else if (!keyState[SDL_SCANCODE_S])
+    else if (!keyState[SDL_SCANCODE_A])
     {
-        mDownPressed = false;
+        mLeftPressed = false;
     }
 
+    if (keyState[SDL_SCANCODE_D] && !mRightPressed)
+    {
+        mRightPressed = true;
+        mDifficultyFocus = false;
+        
+        UpdateButtonSelection();
+        UpdateDifficultySelection();
+    }
+    else if (!keyState[SDL_SCANCODE_D])
+    {
+        mRightPressed = false;
+    }
+
+    if (mDifficultyFocus)
+    {
+        if (keyState[SDL_SCANCODE_W] && !mUpPressed)
+        {
+            mUpPressed = true;
+            mDifficultySelectedIndex = (mDifficultySelectedIndex - 1 + 3) % 3;
+            UpdateDifficultySelection();
+        }
+        else if (!keyState[SDL_SCANCODE_W])
+        {
+            mUpPressed = false;
+        }
+
+        if (keyState[SDL_SCANCODE_S] && !mDownPressed)
+        {
+            mDownPressed = true;
+            mDifficultySelectedIndex = (mDifficultySelectedIndex + 1) % 3;
+            UpdateDifficultySelection();
+        }
+        else if (!keyState[SDL_SCANCODE_S])
+        {
+            mDownPressed = false;
+        }
+
+        if (keyState[SDL_SCANCODE_RETURN] && !mEnterPressed)
+        {
+            mEnterPressed = true;
+            Game::Difficulty gd = static_cast<Game::Difficulty>(mDifficultySelectedIndex);
+            GetGame()->SetDifficulty(gd);
+            GetGame()->SaveGame();
+            UpdateDifficultySelection();
+        }
+        else if (!keyState[SDL_SCANCODE_RETURN])
+        {
+            mEnterPressed = false;
+        }
+
+        return;
+    }
     if (keyState[SDL_SCANCODE_RETURN] && !mEnterPressed)
     {
         mEnterPressed = true;
@@ -248,25 +400,114 @@ void LevelSelectionScene::ClickSelectedButton()
 
 void LevelSelectionScene::UpdateButtonSelection()
 {
-    for (size_t i = 0; i < mLevelButtons.size(); ++i)
+    if (mDifficultyFocus)
     {
-        mLevelButtons[i]->SetSelected(i == mSelectedButtonIndex);
-    }
+        for (size_t i = 0; i < mLevelButtons.size(); ++i)
+        {
+            mLevelButtons[i]->SetSelected(false);
+        }
 
-    if (mBackButton)
+        if (mBackButton) mBackButton->SetSelected(false);
+    }
+    else
     {
-        bool isBackSelected = (mSelectedButtonIndex == mLevelButtons.size());
-        mBackButton->SetSelected(isBackSelected);
+        for (size_t i = 0; i < mLevelButtons.size(); ++i)
+        {
+            mLevelButtons[i]->SetSelected(i == mSelectedButtonIndex);
+        }
+
+        if (mBackButton)
+        {
+            bool isBackSelected = (mSelectedButtonIndex == mLevelButtons.size());
+            mBackButton->SetSelected(isBackSelected);
+        }
     }
 
     for (size_t i = 0; i < mHighlightActors.size(); ++i)
     {
-        bool isSelected = (i == mSelectedButtonIndex);
+        bool isSelected = (i == mSelectedButtonIndex) && !mDifficultyFocus;
 
         auto comp = mHighlightActors[i]->GetComponent<SolidShapeComponent>();
         if (comp)
         {
             comp->SetVisible(isSelected);
+        }
+    }
+}
+
+
+
+void LevelSelectionScene::UpdateDifficultySelection()
+{
+    int savedIdx = -1;
+    if (GetGame()->HasSaveFile())
+    {
+        savedIdx = static_cast<int>(GetGame()->GetDifficulty());
+    }
+
+    if (!mDifficultyFocus)
+    {
+        for (int i = 0; i < static_cast<int>(mDifficultyButtons.size()); ++i)
+        {
+                if (mDifficultyButtons[i])
+                {
+                    mDifficultyButtons[i]->SetScale(Vector2(mDifficultyBaseScale, mDifficultyBaseScale));
+                }
+            if (i < static_cast<int>(mDifficultyHighlightActors.size()) && mDifficultyHighlightActors[i])
+            {
+                auto rect = mDifficultyHighlightActors[i]->GetComponent<RectComponent>();
+                if (rect)
+                {
+                    if (i == savedIdx)
+                    {
+                        rect->SetVisible(true);
+                        rect->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.08f));
+                    }
+                    else
+                    {
+                        rect->SetVisible(false);
+                    }
+                }
+            }
+        }
+
+        return;
+    }
+
+    int focusedIdx = mDifficultySelectedIndex;
+
+    for (int i = 0; i < static_cast<int>(mDifficultyButtons.size()); ++i)
+    {
+        float base = mDifficultyBaseScale;
+        float focusedScale = mDifficultyBaseScale * 1.25f;
+        if (mDifficultyButtons[i])
+        {
+            mDifficultyButtons[i]->SetScale(Vector2(i == focusedIdx ? focusedScale : base,
+                                                   i == focusedIdx ? focusedScale : base));
+        }
+
+        if (i < static_cast<int>(mDifficultyHighlightActors.size()) && mDifficultyHighlightActors[i])
+        {
+            auto rect = mDifficultyHighlightActors[i]->GetComponent<RectComponent>();
+            if (rect)
+            {
+                bool isFocused = (i == focusedIdx);
+                bool isSaved = (i == savedIdx) && !isFocused;
+                if (isFocused)
+                {
+                    rect->SetVisible(true);
+                    rect->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.14f));
+                }
+                else if (isSaved)
+                {
+                    rect->SetVisible(true);
+                    rect->SetColor(Vector4(1.0f, 1.0f, 1.0f, 0.08f));
+                }
+                else
+                {
+                    rect->SetVisible(false);
+                }
+            }
         }
     }
 }

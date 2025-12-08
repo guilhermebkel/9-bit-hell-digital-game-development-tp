@@ -108,6 +108,8 @@ add_executable(${PROJECT_NAME}
         Source/Scenes/VictoryScene.cpp
         Source/Scenes/VictoryScene.cpp
         Source/Scenes/VictoryScene.h
+        Source/Scenes/InitialDifficultyScene.cpp
+        Source/Scenes/InitialDifficultyScene.h
         Source/Scenes/LevelSelectionScene.cpp
         Source/Scenes/LevelSelectionScene.h
         Source/Components/Drawing/UIImageButtonComponent.cpp
