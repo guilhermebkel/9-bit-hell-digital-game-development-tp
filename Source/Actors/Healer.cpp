@@ -1,37 +1,31 @@
 #include "Healer.h"
 #include "Player.h"
 #include "../Game.h"
-#include "../Math.h"
-#include "../Random.h"
 #include "../Audio/AudioSystem.h"
-#include "../Components/Drawing/StaticSpriteComponent.h"
-#include <cmath>
+#include "../Components/Drawing/AnimatorComponent.h"
 
 Healer::Healer(class Game* game)
     : Collectable(game, Healer::SPRITE_WIDTH, Healer::SPRITE_HEIGHT)
-    , mPulseTimer(Random::GetFloatRange(0.0f, 6.28f))
 {
-    new StaticSpriteComponent(
+    class AnimatorComponent* mDrawComponent = new AnimatorComponent(
         this,
-        "../Assets/Sprites/Collectables/Healer.png",
+        "../Assets/Sprites/Collectables/HealthOrb/HealthOrb.png",
+        "../Assets/Sprites/Collectables/HealthOrb/HealthOrb.json",
         Healer::SPRITE_WIDTH,
-        Healer::SPRITE_HEIGHT,
-        90
+        Healer::SPRITE_HEIGHT
     );
+    mDrawComponent->AddAnimation("idle", {0, 1, 2, 3, 2, 1});
+    mDrawComponent->SetAnimation("idle");
+    mDrawComponent->SetAnimFPS(6.0f);
 }
 
 void Healer::OnUpdate(float deltaTime)
 {
     Actor::OnUpdate(deltaTime);
-
-    mPulseTimer += deltaTime * 1.33f;
-
-    float pulseScale = 1.0f + (std::sin(mPulseTimer) * 0.1f);
-    SetScale(Vector2(pulseScale, pulseScale));
 }
 
 void Healer::OnCollect(Player* player)
 {
     player->Heal(10);
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-cross.wav");
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-health.wav");
 }

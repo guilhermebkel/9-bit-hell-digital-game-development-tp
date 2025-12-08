@@ -13,8 +13,22 @@ UIButtonComponent::UIButtonComponent(Actor* owner, const std::string& text, Vect
     , mIconSprite(nullptr)
     , mIconActor(nullptr)
     , mIconSize(iconSize)
+    , mPriceTextComponent(nullptr)
+    , mPriceTextActor(nullptr)
+    , mPriceIconSprite(nullptr)
+    , mPriceIconActor(nullptr)
+    , mPriceIconSize(Vector2::Zero)
     , mTextPointSize(textPointSize)
     , mHighlightSize(size)
+    , mDrawOrder(drawOrder)
+    , mPriceSpacing(8.0f)
+    , mPriceMargin(16.0f)
+    , mMainContentLeftAligned(false)
+    , mAffordable(true)
+    , mDisabledColor(Vector3(0.6f, 0.6f, 0.6f))
+    , mTextColor(Color::White)
+    , mIconBaseColor(Vector3::One)
+    , mPriceIconBaseColor(Vector3::One)
 {
     mTextActor = new Actor(owner->GetGame());
     mTextComponent = new UITextComponent(mTextActor, drawOrder + 1);
@@ -24,13 +38,24 @@ UIButtonComponent::UIButtonComponent(Actor* owner, const std::string& text, Vect
     {
         mIconActor = new Actor(owner->GetGame());
         mIconSprite = new StaticSpriteComponent(mIconActor, iconPath, static_cast<int>(iconSize.x), static_cast<int>(iconSize.y), drawOrder + 1);
-        mIconSprite->SetColor(Vector3(0.5f, 0.0f, 0.0f));
+        Vector3 iconColor(0.5f, 0.0f, 0.0f);
+        mIconSprite->SetColor(iconColor);
+        mIconBaseColor = iconColor;
     }
+    UpdateAffordabilityAppearance();
 }
 
 UIButtonComponent::~UIButtonComponent()
 {
     mTextActor->SetState(ActorState::Destroy);
+    if (mPriceTextActor)
+    {
+        mPriceTextActor->SetState(ActorState::Destroy);
+    }
+    if (mPriceIconActor)
+    {
+        mPriceIconActor->SetState(ActorState::Destroy);
+    }
 }
 
 float UIButtonComponent::GetTextWidth() const
@@ -59,7 +84,47 @@ void UIButtonComponent::Draw(class Renderer* renderer)
 
 void UIButtonComponent::SetText(const std::string& text)
 {
-    mTextComponent->SetText(text, Color::White, mTextPointSize);
+    mTextComponent->SetText(text, GetTextColor(), mTextPointSize);
+}
+
+void UIButtonComponent::SetPrice(int value)
+{
+    if (!mPriceTextActor)
+    {
+        mPriceTextActor = new Actor(mOwner->GetGame());
+        mPriceTextComponent = new UITextComponent(mPriceTextActor, mDrawOrder + 1);
+    }
+
+    mPriceTextComponent->SetText(std::to_string(value), GetTextColor(), mTextPointSize);
+    UpdatePositions();
+}
+
+void UIButtonComponent::SetPriceIcon(const std::string& iconPath, Vector2 size)
+{
+    if (mPriceIconActor)
+    {
+        mPriceIconActor->SetState(ActorState::Destroy);
+        mPriceIconActor = nullptr;
+        mPriceIconSprite = nullptr;
+    }
+
+    mPriceIconActor = new Actor(mOwner->GetGame());
+    mPriceIconSprite = new StaticSpriteComponent(mPriceIconActor, iconPath, static_cast<int>(size.x), static_cast<int>(size.y), mDrawOrder + 1);
+    mPriceIconSize = size;
+    Vector3 priceIconColor = Vector3::One;
+    mPriceIconSprite->SetColor(priceIconColor);
+    mPriceIconBaseColor = priceIconColor;
+    UpdatePositions();
+    UpdateAffordabilityAppearance();
+}
+
+void UIButtonComponent::SetMainContentLeftAligned(bool leftAligned)
+{
+    if (mMainContentLeftAligned != leftAligned)
+    {
+        mMainContentLeftAligned = leftAligned;
+        UpdatePositions();
+    }
 }
 
 void UIButtonComponent::UpdatePositions()
@@ -67,28 +132,78 @@ void UIButtonComponent::UpdatePositions()
     Vector2 center = mOwner->GetPosition();
 
     float textWidth = GetTextWidth();
+    float baseContentWidth = textWidth;
+    float spacing = 24.0f;
+    float iconContentWidth = 0.0f;
 
     if (mIconSprite)
     {
-        float spacing = 24.0f;
-        float totalWidth = mIconSize.x + spacing + textWidth;
-        float highlightWidth = Math::Max(mSize.x, totalWidth + 32.0f);
-        float highlightHeight = Math::Max(mSize.y, static_cast<float>(mTextPointSize) + 24.0f);
-        mHighlightSize = Vector2(highlightWidth, highlightHeight);
+        iconContentWidth = mIconSize.x + spacing;
+        baseContentWidth += iconContentWidth;
+    }
 
-        float startX = center.x - (totalWidth / 2.0f);
+    float priceTextWidth = 0.0f;
+    if (mPriceTextComponent && !mPriceTextComponent->GetText().empty() && mPriceTextComponent->GetTexture())
+    {
+        priceTextWidth = static_cast<float>(mPriceTextComponent->GetTexture()->GetWidth());
+    }
 
-        mIconActor->SetPosition(Vector2(startX + (mIconSize.x / 2.0f), center.y));
+    float priceIconContent = 0.0f;
+    if (mPriceIconSprite && mPriceIconSize.x > 0.0f)
+    {
+        priceIconContent = mPriceIconSize.x + (priceTextWidth > 0.0f ? mPriceSpacing : 0.0f);
+    }
 
-        mTextActor->SetPosition(Vector2(startX + mIconSize.x + spacing + (textWidth / 2.0f), center.y));
+    float priceGroupWidth = priceTextWidth + priceIconContent;
+
+    float highlightWidth = mSize.x;
+    float highlightHeight = Math::Max(mSize.y, static_cast<float>(mTextPointSize) + 24.0f);
+    mHighlightSize = Vector2(highlightWidth, highlightHeight);
+
+    float startX = center.x - (highlightWidth / 2.0f);
+
+    float mainAreaWidth = highlightWidth - priceGroupWidth - mPriceMargin;
+    if (mainAreaWidth < baseContentWidth)
+    {
+        mainAreaWidth = baseContentWidth;
+    }
+
+    float mainStartX = startX + mPriceMargin;
+    if (!mMainContentLeftAligned)
+    {
+        mainStartX += (mainAreaWidth - baseContentWidth) * 0.5f;
+    }
+
+    if (mIconSprite)
+    {
+        float iconCenterX = mainStartX + (mIconSize.x / 2.0f);
+        mIconActor->SetPosition(Vector2(iconCenterX, center.y));
+
+        float textCenterX = mainStartX + iconContentWidth + (textWidth / 2.0f);
+        mTextActor->SetPosition(Vector2(textCenterX, center.y));
     }
     else
     {
-        float highlightWidth = Math::Max(mSize.x, textWidth + 32.0f);
-        float highlightHeight = Math::Max(mSize.y, static_cast<float>(mTextPointSize) + 24.0f);
-        mHighlightSize = Vector2(highlightWidth, highlightHeight);
+        float textCenterX = mainStartX + (textWidth / 2.0f);
+        mTextActor->SetPosition(Vector2(textCenterX, center.y));
+    }
 
-        mTextActor->SetPosition(center);
+    if (priceGroupWidth > 0.0f && mPriceTextActor)
+    {
+        float priceCenterX = startX + highlightWidth - mPriceMargin - (priceGroupWidth / 2.0f);
+
+        if (mPriceIconSprite)
+        {
+            float iconCenterX = priceCenterX - (priceGroupWidth / 2.0f) + (mPriceIconSize.x / 2.0f);
+            mPriceIconActor->SetPosition(Vector2(iconCenterX, center.y));
+
+            float textCenterX = iconCenterX + (mPriceIconSize.x / 2.0f) + mPriceSpacing + (priceTextWidth / 2.0f);
+            mPriceTextActor->SetPosition(Vector2(textCenterX, center.y));
+        }
+        else
+        {
+            mPriceTextActor->SetPosition(Vector2(priceCenterX, center.y));
+        }
     }
 }
 
@@ -98,4 +213,47 @@ void UIButtonComponent::Click()
     {
         mOnClick();
     }
+}
+
+void UIButtonComponent::SetAffordable(bool affordable)
+{
+    if (mAffordable == affordable)
+    {
+        return;
+    }
+
+    mAffordable = affordable;
+    UpdateAffordabilityAppearance();
+}
+
+void UIButtonComponent::UpdateAffordabilityAppearance()
+{
+    Vector3 textColor = GetTextColor();
+
+    if (mTextComponent)
+    {
+        mTextComponent->SetColor(textColor);
+    }
+
+    if (mPriceTextComponent)
+    {
+        mPriceTextComponent->SetColor(textColor);
+    }
+
+    if (mIconSprite)
+    {
+        Vector3 iconColor = mAffordable ? mIconBaseColor : mDisabledColor;
+        mIconSprite->SetColor(iconColor);
+    }
+
+    if (mPriceIconSprite)
+    {
+        Vector3 priceIconColor = mAffordable ? mPriceIconBaseColor : mDisabledColor;
+        mPriceIconSprite->SetColor(priceIconColor);
+    }
+}
+
+Vector3 UIButtonComponent::GetTextColor() const
+{
+    return mAffordable ? mTextColor : mDisabledColor;
 }

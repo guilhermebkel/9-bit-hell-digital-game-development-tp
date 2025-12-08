@@ -17,7 +17,6 @@ EyeProjectile::EyeProjectile(Game* game, const Vector2& direction)
     
     SetRotation(Math::Atan2(direction.y, direction.x));
     
-    // Flip sprite se a direção for para a esquerda
     if (direction.x < 0.0f)
     {
         SetScale(Vector2(1.0f, -1.0f));

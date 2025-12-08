@@ -5,7 +5,7 @@
 class CorruptionOverlay : public Actor
 {
 public:
-    static constexpr float DRAW_ORDER = Game::WINDOW_HEIGHT * 2.0f; // Higher than all Actors
+    static constexpr float DRAW_ORDER = Game::WINDOW_HEIGHT * 2.0f;
 
     explicit CorruptionOverlay(class Game* game);
 

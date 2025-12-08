@@ -29,7 +29,7 @@ PauseScreen::PauseScreen(Game* game)
     const Vector2 buttonSize(300.0f, 40.0f);
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;
     const float windowCenterY = Game::WINDOW_HEIGHT / 2.0f;
-    const float buttonSpacing = 70.0f; // Increased spacing between buttons
+    const float buttonSpacing = 70.0f;
 
     mTitleActor = new Actor(game);
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
@@ -62,10 +62,8 @@ PauseScreen::PauseScreen(Game* game)
     mButtons.push_back(quitButton);
     mButtonActors.push_back(quitButtonActor);
 
-    // Player status widgets (20% larger text = 14 * 1.2 = 16.8 ≈ 20)
-    // Positioned in middle-right area: third column, middle row
-    const float statusX = windowCenterX + 250.0f;  // Right side, moved +100px
-    const float statusCenterY = windowCenterY;      // Center vertical
+    const float statusX = windowCenterX + 250.0f;
+    const float statusCenterY = windowCenterY;
     
     mHealthWidget = new UIStatWidget(GetGame(), "HEALTH", 20, PauseScreen::DRAW_ORDER + 5);
     mHealthWidget->SetPosition(Vector2(statusX, statusCenterY - 130.0f));

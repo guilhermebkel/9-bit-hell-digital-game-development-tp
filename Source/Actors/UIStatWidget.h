@@ -1,4 +1,9 @@
 #pragma once
+class Game;
+class Actor;
+class UITextComponent;
+class StaticSpriteComponent;
+
 #include "../Math.h"
 #include <string>
 
@@ -16,6 +21,10 @@ public:
     
     void SetOutline(bool enabled, const Vector3& color = Color::Black, float size = 2.0f);
 
+    void SetIcon(const std::string& texturePath, const Vector2& size);
+    void SetValueOffsetX(float offset);
+    void SetIconValueLeftAligned(bool leftAligned);
+
 private:
     void UpdatePositions();
 
@@ -25,9 +34,16 @@ private:
     class Actor* mValueActor;
     class UITextComponent* mLabelText;
     class UITextComponent* mValueText;
+    class Actor* mIconActor;
+    class StaticSpriteComponent* mIconSprite;
 
     Vector2 mPosition;
     HAlign mAlignment;
     int mPointSize;
     const float mVerticalSpacing = 1.0f;
+    Vector2 mIconSize;
+    float mIconSpacing = 8.0f;
+    int mDrawOrder;
+    bool mIconValueLeftAligned;
+    float mValueOffsetX;
 };

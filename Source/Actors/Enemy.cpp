@@ -34,7 +34,7 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         texturePath = "../Assets/Sprites/EyeEnemy/EyeEnemy.png";
         jsonPath = "../Assets/Sprites/EyeEnemy/EyeEnemy.json";
         mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::EYE_SPRITE_WIDTH, Enemy::EYE_SPRITE_HEIGHT);
-        mOriginalColor = Vector3(1.0f, 0.39f, 0.39f); // Vermelho
+        mOriginalColor = Vector3(1.0f, 0.39f, 0.39f);
         mDrawComponent->SetColor(mOriginalColor);
         mDrawComponent->AddAnimation("attack", {0, 1});
         mDrawComponent->AddAnimation("idle", {2, 3});
@@ -48,7 +48,7 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         texturePath = "../Assets/Sprites/HornEnemy/HornEnemy.png";
         jsonPath = "../Assets/Sprites/HornEnemy/HornEnemy.json";
         mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
-        mOriginalColor = Vector3(0.5f, 1.0f, 0.5f); // Verde
+        mOriginalColor = Vector3(0.5f, 1.0f, 0.5f);
         mDrawComponent->SetColor(mOriginalColor);
         mDrawComponent->AddAnimation("attack", {0, 1});
         mDrawComponent->AddAnimation("idle", {2, 3});
@@ -62,7 +62,7 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         texturePath = "../Assets/Sprites/FatEnemy/FatEnemy.png";
         jsonPath = "../Assets/Sprites/FatEnemy/FatEnemy.json";
         mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
-        mOriginalColor = Vector3(0.44f, 0.56f, 0.25f); // Verde Musgo
+        mOriginalColor = Vector3(0.44f, 0.56f, 0.25f);
         mDrawComponent->SetColor(mOriginalColor);
         mDrawComponent->AddAnimation("attack", {0, 1, 2});
         mDrawComponent->AddAnimation("being-hit", {3});
@@ -76,7 +76,6 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
 
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);
 
-    // Align collider base with sprite base
     const int dy = (int)((Enemy::SPRITE_HEIGHT / 2.0f) - (Enemy::PHYSICS_HEIGHT / 2.0f));
     mColliderComponent = new AABBColliderComponent(this, 0, dy, Enemy::PHYSICS_WIDTH, Enemy::PHYSICS_HEIGHT,
                                                    ColliderLayer::Enemy);
@@ -196,7 +195,6 @@ void Enemy::OnHorizontalCollision(const float minOverlap, AABBColliderComponent*
 
             if (player)
             {
-                // Só causa dano se o player ainda estiver dentro da distância de ataque
                 float distance = Vector2::Distance(GetPosition(), player->GetPosition());
                 if (distance < Enemy::ATTACK_DISTANCE)
                 {
@@ -220,7 +218,6 @@ void Enemy::OnVerticalCollision(const float minOverlap, AABBColliderComponent* o
             Player* player = dynamic_cast<Player*>(other->GetOwner());
             if (player)
             {
-                // Só causa dano se o player ainda estiver dentro da distância de ataque
                 float distance = Vector2::Distance(GetPosition(), player->GetPosition());
                 if (distance < Enemy::ATTACK_DISTANCE)
                 {

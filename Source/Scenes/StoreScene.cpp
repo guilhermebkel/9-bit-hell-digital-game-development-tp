@@ -18,7 +18,7 @@ StoreScene::StoreScene(Game* game)
     , mPiercingWidget(nullptr)
     , mFireRateButton(nullptr)
     , mDamageButton(nullptr)
-    , mVelocityButton(nullptr)
+    , mSpeedButton(nullptr)
     , mPiercingButton(nullptr)
     , mSelectedButtonIndex(0)
 {
@@ -50,6 +50,9 @@ void StoreScene::Load()
     mCoinWidget->SetOutline(true);
     mCoinWidget->SetPosition(Vector2(60.0f, 35.0f), HAlign::Left);
     mCoinWidget->SetValue(std::to_string(GetGame()->GetCoinCount()));
+    mCoinWidget->SetIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    mCoinWidget->SetIconValueLeftAligned(true);
+    mCoinWidget->SetValueOffsetX(-30.0f);
 
     const float statusStartY = 35.0f;
     const float statusSpacing = 90.0f;
@@ -88,7 +91,7 @@ void StoreScene::Load()
 
     auto* fireRateActor = new Actor(GetGame());
     fireRateActor->SetPosition(Vector2(centerX, firstButtonY));
-    mFireRateButton = new UIButtonComponent(fireRateActor, "Shooting Cadence (Price: " + std::to_string(GetGame()->GetFireRatePrice()) + ")", buttonSize,
+    mFireRateButton = new UIButtonComponent(fireRateActor, "Firerate", buttonSize,
         [this]() {
             int price = GetGame()->GetFireRatePrice();
             if (GetGame()->CanAfford(price))
@@ -105,13 +108,20 @@ void StoreScene::Load()
         UIButtonComponent::DEFAULT_DRAW_ORDER,
         36,
         "../Assets/Store/FireRate.png",
-        Vector2(8.0f * 3.0f, 2.0f * 3.0f)
+        Vector2(12.0f * 3.0f, 12.0f * 3.0f)
     );
+    mFireRateButton->SetPriceIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    {
+        int price = GetGame()->GetFireRatePrice();
+        mFireRateButton->SetPrice(price);
+        mFireRateButton->SetAffordable(GetGame()->CanAfford(price));
+    }
+    mFireRateButton->SetMainContentLeftAligned(true);
     mButtons.push_back(mFireRateButton);
 
     auto* damageActor = new Actor(GetGame());
     damageActor->SetPosition(Vector2(centerX, firstButtonY + buttonSpacing));
-    mDamageButton = new UIButtonComponent(damageActor, "Damage (Price: " + std::to_string(GetGame()->GetDamagePrice()) + ")", buttonSize,
+    mDamageButton = new UIButtonComponent(damageActor, "Damage", buttonSize,
         [this]() {
             int price = GetGame()->GetDamagePrice();
             if (GetGame()->CanAfford(price))
@@ -129,15 +139,22 @@ void StoreScene::Load()
         UIButtonComponent::DEFAULT_DRAW_ORDER,
         36,
         "../Assets/Store/Damage.png",
-        Vector2(13.0f * 2.0f, 14.0f * 2.0f)
+        Vector2(12.0f * 3.0f, 12.0f * 3.0f)
     );
+    mDamageButton->SetPriceIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    {
+        int price = GetGame()->GetDamagePrice();
+        mDamageButton->SetPrice(price);
+        mDamageButton->SetAffordable(GetGame()->CanAfford(price));
+    }
+    mDamageButton->SetMainContentLeftAligned(true);
     mButtons.push_back(mDamageButton);
 
-    auto* velocityActor = new Actor(GetGame());
-    velocityActor->SetPosition(Vector2(centerX, firstButtonY + (buttonSpacing * 2.0f)));
-    mVelocityButton = new UIButtonComponent(velocityActor, "Velocity (Price: " + std::to_string(GetGame()->GetVelocityPrice()) + ")", buttonSize,
+    auto* speedActor = new Actor(GetGame());
+    speedActor->SetPosition(Vector2(centerX, firstButtonY + (buttonSpacing * 2.0f)));
+    mSpeedButton = new UIButtonComponent(speedActor, "Speed", buttonSize,
         [this]() {
-            int price = GetGame()->GetVelocityPrice();
+            int price = GetGame()->GetSpeedPrice();
             if (GetGame()->CanAfford(price))
             {
                 GetGame()->SpendCoins(price);
@@ -151,14 +168,21 @@ void StoreScene::Load()
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
         36,
-        "../Assets/Store/Velocity.png",
-        Vector2(13.0f * 2.0f, 16.0f * 2.0f)
+        "../Assets/Store/Speed.png",
+        Vector2(12.0f * 3.0f, 12.0f * 3.0f)
     );
-    mButtons.push_back(mVelocityButton);
+    mSpeedButton->SetPriceIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    {
+        int price = GetGame()->GetSpeedPrice();
+        mSpeedButton->SetPrice(price);
+        mSpeedButton->SetAffordable(GetGame()->CanAfford(price));
+    }
+    mSpeedButton->SetMainContentLeftAligned(true);
+    mButtons.push_back(mSpeedButton);
 
     auto* piercingActor = new Actor(GetGame());
     piercingActor->SetPosition(Vector2(centerX, firstButtonY + (buttonSpacing * 3.0f)));
-    mPiercingButton = new UIButtonComponent(piercingActor, "Piercing (Price: " + std::to_string(GetGame()->GetPiercingPrice()) + ")", buttonSize,
+    mPiercingButton = new UIButtonComponent(piercingActor, "Piercing", buttonSize,
         [this]() {
             int price = GetGame()->GetPiercingPrice();
             if (GetGame()->CanAfford(price))
@@ -175,8 +199,15 @@ void StoreScene::Load()
         UIButtonComponent::DEFAULT_DRAW_ORDER,
         36,
         "../Assets/Store/Piercing.png",
-        Vector2(14.0f * 2.0f, 7.0f * 2.0f)
+        Vector2(12.0f * 3.0f, 12.0f * 3.0f)
     );
+    mPiercingButton->SetPriceIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    {
+        int price = GetGame()->GetPiercingPrice();
+        mPiercingButton->SetPrice(price);
+        mPiercingButton->SetAffordable(GetGame()->CanAfford(price));
+    }
+    mPiercingButton->SetMainContentLeftAligned(true);
     mButtons.push_back(mPiercingButton);
 
     auto* nextLevelActor = new Actor(GetGame());
@@ -217,10 +248,29 @@ void StoreScene::Update(float deltaTime)
     mPiercingWidget->SetValue(std::to_string(GetGame()->GetPlayerPiercing()));
     
     // Update button texts with current prices
-    mFireRateButton->SetText("Shooting Cadence (Price: " + std::to_string(GetGame()->GetFireRatePrice()) + ")");
-    mDamageButton->SetText("Damage (Price: " + std::to_string(GetGame()->GetDamagePrice()) + ")");
-    mVelocityButton->SetText("Velocity (Price: " + std::to_string(GetGame()->GetVelocityPrice()) + ")");
-    mPiercingButton->SetText("Piercing (Price: " + std::to_string(GetGame()->GetPiercingPrice()) + ")");
+    {
+        int price = GetGame()->GetFireRatePrice();
+        mFireRateButton->SetPrice(price);
+        mFireRateButton->SetAffordable(GetGame()->CanAfford(price));
+    }
+
+    {
+        int price = GetGame()->GetDamagePrice();
+        mDamageButton->SetPrice(price);
+        mDamageButton->SetAffordable(GetGame()->CanAfford(price));
+    }
+
+    {
+        int price = GetGame()->GetSpeedPrice();
+        mSpeedButton->SetPrice(price);
+        mSpeedButton->SetAffordable(GetGame()->CanAfford(price));
+    }
+
+    {
+        int price = GetGame()->GetPiercingPrice();
+        mPiercingButton->SetPrice(price);
+        mPiercingButton->SetAffordable(GetGame()->CanAfford(price));
+    }
 }
 
 void StoreScene::ProcessInput(const uint8_t* keyState)

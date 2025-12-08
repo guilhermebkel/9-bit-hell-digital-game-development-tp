@@ -15,11 +15,11 @@ void UIImageButtonComponent::SetSelected(bool selected)
 {
     if (selected)
     {
-        SetScale(Vector2(1.3f, 1.3f));
+        SetScale(Vector2(4.8f, 4.8f));
     }
     else
     {
-        SetScale(Vector2(1.0f, 1.0f));
+        SetScale(Vector2(4.0f, 4.0f));
     }
 }
 

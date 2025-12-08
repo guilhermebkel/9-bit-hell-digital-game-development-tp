@@ -56,6 +56,12 @@ void UITextComponent::SetText(const std::string& text, const Vector3& color, int
     UpdateTexture();
 }
 
+void UITextComponent::SetColor(const Vector3& color)
+{
+    mColor = color;
+    UpdateTexture();
+}
+
 void UITextComponent::UpdateTexture()
 {
     if (mTexture)

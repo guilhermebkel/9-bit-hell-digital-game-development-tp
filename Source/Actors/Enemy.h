@@ -63,7 +63,6 @@ private:
     float mFlashTimer;
     Vector3 mOriginalColor;
     
-    // HP system
     float mHealth;
     float mMaxHealth;
 

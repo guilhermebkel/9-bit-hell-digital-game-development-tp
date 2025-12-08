@@ -18,7 +18,7 @@ Purifier::Purifier(class Game* game)
     );
     mDrawComponent->AddAnimation("idle", {0, 1, 2, 1});
     mDrawComponent->SetAnimation("idle");
-    mDrawComponent->SetAnimFPS(3.0f);
+    mDrawComponent->SetAnimFPS(6.0f);
 }
 
 void Purifier::OnUpdate(float deltaTime)
@@ -29,5 +29,5 @@ void Purifier::OnUpdate(float deltaTime)
 void Purifier::OnCollect(Player* player)
 {
     player->GetGame()->ReduceCorruption(0.25f);
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-cross.wav");
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-purifier.wav");
 }

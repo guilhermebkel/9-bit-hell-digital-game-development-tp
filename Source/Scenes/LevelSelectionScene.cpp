@@ -32,17 +32,17 @@ void LevelSelectionScene::Load()
     new Background(GetGame(), "../Assets/LevelSelectionBackground.png");
 
     Actor* mTitleActor = new Actor(GetGame());
-    mTitleActor->SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, 80.0f));
+    mTitleActor->SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, 50.0f));
     auto* titleText = new UITextComponent(mTitleActor);
     titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
-    titleText->SetText("Select Level", Vector3(1.0f, 1.0f, 1.0f), 72);
+    titleText->SetText("Select Level", Vector3(1.0f, 1.0f, 1.0f), 64);
 
     Actor* gridManager = new Actor(GetGame());
     auto* shapeLines = new ShapeComponent(gridManager, 90);
     shapeLines->SetColor(Vector3(0.2f, 0.2f, 0.2f));
 
-    const float startY = 180.0f;
-    const float spacingY = 55.0f;
+    const float startY = 120.0f;
+    const float spacingY = 66.0f;
     const float centerX = Game::WINDOW_WIDTH / 2.0f;
     const float topWidth = 500.0f;
     const float bottomWidth = 200.0f;
@@ -113,8 +113,9 @@ void LevelSelectionScene::Load()
         int currentLevelIndex = static_cast<int>(i) + 1;
         bool isLocked = currentLevelIndex > maxUnlockedLevel;
 
-        int imageSpriteWidth = 20 * 2.5f;
-        int imageSpriteHeight = 11 * 2.5f;
+        // Passar dimensões originais do sprite (20x11) - o scaling será aplicado pelo SetScale
+        int imageSpriteWidth = 20;
+        int imageSpriteHeight = 11;
         auto* btn = new UIImageButtonComponent(GetGame(), path, pos, [this, id = levels[i].id, isLocked]() {
             if (!isLocked)
             {
@@ -133,11 +134,11 @@ void LevelSelectionScene::Load()
     }
 
     mBackButtonActor = new Actor(GetGame());
-    mBackButtonActor->SetPosition(Vector2(centerX, currentY + 10.0f));
+    mBackButtonActor->SetPosition(Vector2(centerX, currentY - 25.0f));
 
-    mBackButton = new UIButtonComponent(mBackButtonActor, "BACK", Vector2(200.0f, 50.0f), [this]() {
+    mBackButton = new UIButtonComponent(mBackButtonActor, "BACK", Vector2(200.0f, 42.0f), [this]() {
         GetGame()->SetScene(Game::GameScene::MainMenu);
-    }, UIButtonComponent::DEFAULT_DRAW_ORDER, 32);
+    }, UIButtonComponent::DEFAULT_DRAW_ORDER, 28);
 
     mTotalButtons = static_cast<int>(mLevelButtons.size()) + 1;
     UpdateButtonSelection();

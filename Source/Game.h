@@ -29,7 +29,7 @@ public:
         int piercing = 0;
         int fireRatePrice = 10;
         int damagePriceBase = 20;
-        int velocityPriceBase = 15;
+        int speedPriceBase = 15;
         int piercingPriceBase = 25;
         int maxUnlockedLevel = 1;
     };
@@ -101,7 +101,7 @@ public:
     int GetPlayerPiercing() const { return mPlayerUpgrades.piercing; }
     int GetFireRatePrice() const { return mPlayerUpgrades.fireRatePrice; }
     int GetDamagePrice() const;
-    int GetVelocityPrice() const;
+    int GetSpeedPrice() const;
     int GetPiercingPrice() const;
     int GetPlayerHealth() const;
     int GetPlayerMaxHealth() const;

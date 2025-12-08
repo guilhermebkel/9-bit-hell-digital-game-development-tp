@@ -37,7 +37,7 @@ private:
     // Button references for text updates
     UIButtonComponent* mFireRateButton;
     UIButtonComponent* mDamageButton;
-    UIButtonComponent* mVelocityButton;
+    UIButtonComponent* mSpeedButton;
     UIButtonComponent* mPiercingButton;
 
     size_t mSelectedButtonIndex;

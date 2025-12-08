@@ -40,5 +40,5 @@ void Coin::OnCollect(Player* player)
 {
     GetGame()->AddCoin();
     
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-soul-2.wav");
+    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-soul.wav");
 }

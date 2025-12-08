@@ -484,7 +484,7 @@ void Game::UpgradeSpeed()
     mPlayerUpgrades.playerSpeed *= 1.10f;
     
     // Increase price by 25% for next upgrade
-    mPlayerUpgrades.velocityPriceBase = static_cast<int>(mPlayerUpgrades.velocityPriceBase * 1.25f);
+    mPlayerUpgrades.speedPriceBase = static_cast<int>(mPlayerUpgrades.speedPriceBase * 1.25f);
 }
 
 void Game::UpgradePiercing()
@@ -515,9 +515,9 @@ int Game::GetDamagePrice() const
     return mPlayerUpgrades.damagePriceBase;
 }
 
-int Game::GetVelocityPrice() const
+int Game::GetSpeedPrice() const
 {
-    return mPlayerUpgrades.velocityPriceBase;
+    return mPlayerUpgrades.speedPriceBase;
 }
 
 int Game::GetPiercingPrice() const
@@ -568,7 +568,7 @@ void Game::SaveGame()
     saveJson["piercing"] = mPlayerUpgrades.piercing;
     saveJson["fireRatePrice"] = mPlayerUpgrades.fireRatePrice;
     saveJson["damagePriceBase"] = mPlayerUpgrades.damagePriceBase;
-    saveJson["velocityPriceBase"] = mPlayerUpgrades.velocityPriceBase;
+    saveJson["speedPriceBase"] = mPlayerUpgrades.speedPriceBase;
     saveJson["piercingPriceBase"] = mPlayerUpgrades.piercingPriceBase;
     saveJson["maxUnlockedLevel"] = mPlayerUpgrades.maxUnlockedLevel;
 
@@ -604,7 +604,7 @@ void Game::LoadGame()
             mPlayerUpgrades.piercing = saveJson.value("piercing", PlayerUpgrades().piercing);
             mPlayerUpgrades.fireRatePrice = saveJson.value("fireRatePrice", PlayerUpgrades().fireRatePrice);
             mPlayerUpgrades.damagePriceBase = saveJson.value("damagePriceBase", PlayerUpgrades().damagePriceBase);
-            mPlayerUpgrades.velocityPriceBase = saveJson.value("velocityPriceBase", PlayerUpgrades().velocityPriceBase);
+            mPlayerUpgrades.speedPriceBase = saveJson.value("speedPriceBase", PlayerUpgrades().speedPriceBase);
             mPlayerUpgrades.piercingPriceBase = saveJson.value("piercingPriceBase", PlayerUpgrades().piercingPriceBase);
             mPlayerUpgrades.maxUnlockedLevel = saveJson.value("maxUnlockedLevel", PlayerUpgrades().maxUnlockedLevel);
 

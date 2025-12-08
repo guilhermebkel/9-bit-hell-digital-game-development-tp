@@ -15,5 +15,4 @@ protected:
     void OnCollect(class Player* player) override;
 
 private:
-    float mPulseTimer;
 };
