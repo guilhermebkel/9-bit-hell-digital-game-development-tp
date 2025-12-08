@@ -34,7 +34,8 @@ void LevelSelectionScene::Load()
     Actor* mTitleActor = new Actor(GetGame());
     mTitleActor->SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, 80.0f));
     auto* titleText = new UITextComponent(mTitleActor);
-    titleText->SetText("SELECT LEVEL", Vector3(1.0f, 1.0f, 1.0f), 48);
+    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetText("Select Level", Vector3(1.0f, 1.0f, 1.0f), 72);
 
     Actor* gridManager = new Actor(GetGame());
     auto* shapeLines = new ShapeComponent(gridManager, 90);
@@ -134,9 +135,9 @@ void LevelSelectionScene::Load()
     mBackButtonActor = new Actor(GetGame());
     mBackButtonActor->SetPosition(Vector2(centerX, currentY + 10.0f));
 
-    mBackButton = new UIButtonComponent(mBackButtonActor, "BACK", Vector2(150.0f, 40.0f), [this]() {
+    mBackButton = new UIButtonComponent(mBackButtonActor, "BACK", Vector2(200.0f, 50.0f), [this]() {
         GetGame()->SetScene(Game::GameScene::MainMenu);
-    });
+    }, UIButtonComponent::DEFAULT_DRAW_ORDER, 32);
 
     mTotalButtons = static_cast<int>(mLevelButtons.size()) + 1;
     UpdateButtonSelection();
@@ -236,7 +237,7 @@ void LevelSelectionScene::ClickSelectedButton()
             GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/error.mp3");
         } else
         {
-            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/start-game.wav");
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-level.wav");
         }
     } else
     {

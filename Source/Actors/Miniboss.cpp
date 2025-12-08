@@ -148,11 +148,11 @@ void Miniboss::OnVerticalCollision(const float minOverlap, AABBColliderComponent
 {
 }
 
-void Miniboss::CreateHealthBar(const Vector2& barSize)
+void Miniboss::CreateHealthBar(const Vector2& barSize, const Vector4& fillColor)
 {
     if (!mHealthBar)
     {
         Vector2 barPosition = GetPosition() + Vector2(0.0f, -100.0f);
-        mHealthBar = new UIHealthBarWidget(GetGame(), barPosition, barSize, 200);
+        mHealthBar = new UIHealthBarWidget(GetGame(), barPosition, barSize, 200, fillColor);
     }
 }

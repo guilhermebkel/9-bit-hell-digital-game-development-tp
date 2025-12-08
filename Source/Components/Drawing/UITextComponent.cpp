@@ -3,6 +3,7 @@
 #include "../../Game.h"
 #include "../../Renderer/Font.h"
 #include "../../Renderer/Texture.h"
+#include <SDL_log.h>
 
 UITextComponent::UITextComponent(Actor* owner, int drawOrder)
     : DrawComponent(owner, drawOrder)
@@ -12,7 +13,7 @@ UITextComponent::UITextComponent(Actor* owner, int drawOrder)
     , mPointSize(24)
 {
     mFont = new Font(GetGame());
-    mFont->Load("../Assets/Fonts/VT323-Regular.ttf");
+    SetFont("../Assets/Fonts/Jersey10-Regular.ttf");
 }
 
 UITextComponent::~UITextComponent()
@@ -26,6 +27,25 @@ UITextComponent::~UITextComponent()
     {
         delete mTexture;
     }
+}
+
+bool UITextComponent::SetFont(const std::string& fontPath)
+{
+    if (!mFont)
+    {
+        mFont = new Font(GetGame());
+    }
+
+    mFont->Unload();
+
+    if (!mFont->Load(fontPath))
+    {
+        SDL_Log("Failed to load font %s", fontPath.c_str());
+        return false;
+    }
+
+    UpdateTexture();
+    return true;
 }
 
 void UITextComponent::SetText(const std::string& text, const Vector3& color, int pointSize)

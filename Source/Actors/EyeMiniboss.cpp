@@ -36,7 +36,7 @@ EyeMiniboss::EyeMiniboss(Game* game)
     
     mCollider = new AABBColliderComponent(this, 0, 0, PHYSICS_WIDTH, PHYSICS_HEIGHT, ColliderLayer::Enemy);
     
-    CreateHealthBar(Vector2(100.0f, 15.0f));
+    CreateHealthBar(Vector2(100.0f, 15.0f), Vector4(140.0f / 255.0f, 67.0f / 255.0f, 66.0f / 255.0f, 1.0f));
 }
 
 void EyeMiniboss::OnUpdate(float deltaTime)

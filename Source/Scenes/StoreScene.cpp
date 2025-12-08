@@ -38,51 +38,56 @@ void StoreScene::Load()
     auto* bgActor = new Actor(GetGame());
     bgActor->SetPosition(Vector2(centerX, Game::WINDOW_HEIGHT / 2.0f));
     auto* bgRect = new RectComponent(bgActor, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT, RendererMode::TRIANGLES);
-    bgRect->SetColor(Vector4(0.0f, 0.0f, 0.0f, 0.85f));
+    bgRect->SetColor(Vector4(36.0f / 255.0f, 20.0f / 255.0f, 20.0f / 255.0f, 1.0f));
 
     auto* titleActor = new Actor(GetGame());
     auto* titleText = new UITextComponent(titleActor);
-    titleText->SetText("Store", Color::White, 48);
+    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetText("Store", Color::White, 108);
     titleActor->SetPosition(Vector2(centerX, 100.0f));
 
-    mCoinWidget = new UIStatWidget(GetGame(), "SOULS", 24);
+    mCoinWidget = new UIStatWidget(GetGame(), "SOULS", 36);
     mCoinWidget->SetOutline(true);
-    mCoinWidget->SetPosition(Vector2(60.0f, 32.0f), HAlign::Left);
+    mCoinWidget->SetPosition(Vector2(60.0f, 35.0f), HAlign::Left);
     mCoinWidget->SetValue(std::to_string(GetGame()->GetCoinCount()));
 
-    // Player status widgets (20% larger text = 16 * 1.2 = 19.2, using 20pt)
-    mHealthWidget = new UIStatWidget(GetGame(), "HEALTH", 20);
-    mHealthWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, 35.0f), HAlign::Right);
+    const float statusStartY = 35.0f;
+    const float statusSpacing = 90.0f;
+
+    mHealthWidget = new UIStatWidget(GetGame(), "HEALTH", 30);
+    mHealthWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, statusStartY), HAlign::Right);
     mHealthWidget->SetValue(std::to_string(GetGame()->GetPlayerHealth()) + "/" + std::to_string(GetGame()->GetPlayerMaxHealth()));
 
-    mMeleeWidget = new UIStatWidget(GetGame(), "MELEE ATK", 20);
-    mMeleeWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, 90.0f), HAlign::Right);
+    mMeleeWidget = new UIStatWidget(GetGame(), "MELEE ATK", 30);
+    mMeleeWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, statusStartY + statusSpacing), HAlign::Right);
     mMeleeWidget->SetValue(std::to_string(static_cast<int>(GetGame()->GetPlayerMeleeDamage())));
 
-    mRangedWidget = new UIStatWidget(GetGame(), "RANGED ATK", 20);
-    mRangedWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, 145.0f), HAlign::Right);
+    mRangedWidget = new UIStatWidget(GetGame(), "RANGED ATK", 30);
+    mRangedWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, statusStartY + (statusSpacing * 2.0f)), HAlign::Right);
     mRangedWidget->SetValue(std::to_string(static_cast<int>(GetGame()->GetPlayerRangedDamage())));
 
-    mFireRateWidget = new UIStatWidget(GetGame(), "FIRE RATE", 20);
-    mFireRateWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, 200.0f), HAlign::Right);
+    mFireRateWidget = new UIStatWidget(GetGame(), "FIRE RATE", 30);
+    mFireRateWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, statusStartY + (statusSpacing * 3.0f)), HAlign::Right);
     {
         char fireRateStr[16];
         snprintf(fireRateStr, sizeof(fireRateStr), "%.2f/s", 1.0f / GetGame()->GetPlayerFireRate());
         mFireRateWidget->SetValue(fireRateStr);
     }
 
-    mSpeedWidget = new UIStatWidget(GetGame(), "SPEED", 20);
-    mSpeedWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, 255.0f), HAlign::Right);
+    mSpeedWidget = new UIStatWidget(GetGame(), "SPEED", 30);
+    mSpeedWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, statusStartY + (statusSpacing * 4.0f)), HAlign::Right);
     mSpeedWidget->SetValue(GetGame()->GetSpeedDisplayValue());
 
-    mPiercingWidget = new UIStatWidget(GetGame(), "PIERCING", 20);
-    mPiercingWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, 310.0f), HAlign::Right);
+    mPiercingWidget = new UIStatWidget(GetGame(), "PIERCING", 30);
+    mPiercingWidget->SetPosition(Vector2(Game::WINDOW_WIDTH - 20.0f, statusStartY + (statusSpacing * 5.0f)), HAlign::Right);
     mPiercingWidget->SetValue(std::to_string(GetGame()->GetPlayerPiercing()));
 
-    const Vector2 buttonSize(400.0f, 40.0f);
+    const Vector2 buttonSize(320.0f, 50.0f);
+    const float buttonSpacing = 70.0f;
+    const float firstButtonY = 250.0f;
 
     auto* fireRateActor = new Actor(GetGame());
-    fireRateActor->SetPosition(Vector2(centerX, 250.0f));
+    fireRateActor->SetPosition(Vector2(centerX, firstButtonY));
     mFireRateButton = new UIButtonComponent(fireRateActor, "Shooting Cadence (Price: " + std::to_string(GetGame()->GetFireRatePrice()) + ")", buttonSize,
         [this]() {
             int price = GetGame()->GetFireRatePrice();
@@ -98,13 +103,14 @@ void StoreScene::Load()
             }
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36,
         "../Assets/Store/FireRate.png",
         Vector2(8.0f * 3.0f, 2.0f * 3.0f)
     );
     mButtons.push_back(mFireRateButton);
 
     auto* damageActor = new Actor(GetGame());
-    damageActor->SetPosition(Vector2(centerX, 300.0f));
+    damageActor->SetPosition(Vector2(centerX, firstButtonY + buttonSpacing));
     mDamageButton = new UIButtonComponent(damageActor, "Damage (Price: " + std::to_string(GetGame()->GetDamagePrice()) + ")", buttonSize,
         [this]() {
             int price = GetGame()->GetDamagePrice();
@@ -121,13 +127,14 @@ void StoreScene::Load()
             }
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36,
         "../Assets/Store/Damage.png",
         Vector2(13.0f * 2.0f, 14.0f * 2.0f)
     );
     mButtons.push_back(mDamageButton);
 
     auto* velocityActor = new Actor(GetGame());
-    velocityActor->SetPosition(Vector2(centerX, 350.0f));
+    velocityActor->SetPosition(Vector2(centerX, firstButtonY + (buttonSpacing * 2.0f)));
     mVelocityButton = new UIButtonComponent(velocityActor, "Velocity (Price: " + std::to_string(GetGame()->GetVelocityPrice()) + ")", buttonSize,
         [this]() {
             int price = GetGame()->GetVelocityPrice();
@@ -143,13 +150,14 @@ void StoreScene::Load()
             }
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36,
         "../Assets/Store/Velocity.png",
         Vector2(13.0f * 2.0f, 16.0f * 2.0f)
     );
     mButtons.push_back(mVelocityButton);
 
     auto* piercingActor = new Actor(GetGame());
-    piercingActor->SetPosition(Vector2(centerX, 400.0f));
+    piercingActor->SetPosition(Vector2(centerX, firstButtonY + (buttonSpacing * 3.0f)));
     mPiercingButton = new UIButtonComponent(piercingActor, "Piercing (Price: " + std::to_string(GetGame()->GetPiercingPrice()) + ")", buttonSize,
         [this]() {
             int price = GetGame()->GetPiercingPrice();
@@ -165,6 +173,7 @@ void StoreScene::Load()
             }
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36,
         "../Assets/Store/Piercing.png",
         Vector2(14.0f * 2.0f, 7.0f * 2.0f)
     );
@@ -177,6 +186,9 @@ void StoreScene::Load()
             GetGame()->SaveGame();
             GetGame()->SetScene(Game::GameScene::Gameplay);
         }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
     );
     mButtons.push_back(nextLevelButton);
 
@@ -277,7 +289,7 @@ void StoreScene::ClickSelectedButton()
 
         if (clickedOnContinueButton)
         {
-            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-level.wav");
         }
 
         mButtons[mSelectedButtonIndex]->Click();

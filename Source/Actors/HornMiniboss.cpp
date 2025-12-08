@@ -37,7 +37,7 @@ HornMiniboss::HornMiniboss(Game* game)
     
     mCollider = new AABBColliderComponent(this, 0, 0, PHYSICS_WIDTH, PHYSICS_HEIGHT, ColliderLayer::Enemy);
     
-    CreateHealthBar(Vector2(100.0f, 15.0f));
+    CreateHealthBar(Vector2(100.0f, 15.0f), Vector4(92.0f / 255.0f, 75.0f / 255.0f, 113.0f / 255.0f, 1.0f));
 }
 
 void HornMiniboss::OnUpdate(float deltaTime)

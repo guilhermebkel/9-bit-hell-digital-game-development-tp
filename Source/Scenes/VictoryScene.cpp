@@ -17,7 +17,8 @@ VictoryScene::~VictoryScene() {}
 
 void VictoryScene::Load()
 {
-    new Background(GetGame(), "../Assets/VictoryBackground.png");
+    auto* backgroundActor = new Background(GetGame(), "../Assets/VictoryBackground.png");
+    mSceneActors.push_back(backgroundActor);
 
     const Vector2 buttonSize(300.0f, 40.0f);
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;
@@ -26,7 +27,8 @@ void VictoryScene::Load()
     Actor* mTitleActor = new Actor(GetGame());
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor);
-    titleText->SetText("VICTORY!", Color::White, 48);
+    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetText("Victory!", Color::White, 96);
 
     Actor* quitButtonActor = new Actor(GetGame());
     quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));
@@ -36,6 +38,9 @@ void VictoryScene::Load()
         }
     );
     mButtons.push_back(quitButton);
+
+    mSceneActors.push_back(mTitleActor);
+    mSceneActors.push_back(quitButtonActor);
 
     UpdateButtonSelection();
 }

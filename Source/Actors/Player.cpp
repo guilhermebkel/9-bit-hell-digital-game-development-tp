@@ -93,7 +93,12 @@ void Player::OnProcessInput(const uint8_t* state)
         mIsRunning = true;
     }
 
-    if (state[SDL_SCANCODE_J] && !mIsMeleeAttacking && mMeleeAttackCooldownTimer <= 0.0f)
+    bool meleeRequested = state[SDL_SCANCODE_J];
+    bool rangedRequested = state[SDL_SCANCODE_K];
+    bool canStartMelee = meleeRequested && !mIsMeleeAttacking && !mIsRangedAttacking && mMeleeAttackCooldownTimer <= 0.0f;
+    bool canStartRanged = rangedRequested && !mIsRangedAttacking && !mIsMeleeAttacking && mRangedAttackCooldownTimer <= 0.0f;
+
+    if (canStartMelee)
     {
         mIsMeleeAttacking = true;
         mMeleeAttackAnimationTimer = Player::MELEE_ATTACK_ANIMATION_DURATION;
@@ -104,8 +109,7 @@ void Player::OnProcessInput(const uint8_t* state)
         std::string soundFile = "../Assets/Sounds/sword-attack-" + std::to_string(soundIndex) + ".wav";
         GetGame()->GetAudioSystem()->PlaySound(soundFile);
     }
-
-    if (state[SDL_SCANCODE_K] && mRangedAttackCooldownTimer <= 0.0f)
+    else if (canStartRanged)
     {
         mRangedAttackCooldownTimer = GetGame()->GetPlayerFireRate();
 

@@ -26,32 +26,45 @@ void GameOverScene::Load()
     Actor* mTitleActor = new Actor(GetGame());
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor);
-    titleText->SetText("GAME OVER", Color::White, 48);
+    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetText("Game Over", Color::White, 96);
+
+    const float buttonSpacing = 70.0f;
+    const float baseY = windowCenterY - (buttonSpacing * 0.3f);
 
     Actor* startButtonActor = new Actor(GetGame());
-    startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY - 50.0f));
+    startButtonActor->SetPosition(Vector2(windowCenterX, baseY));
     auto startButton = new UIButtonComponent(startButtonActor, "TRY AGAIN", buttonSize,
         [this]() {
             GetGame()->SetScene(Game::GameScene::Gameplay);
         }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
     );
     mButtons.push_back(startButton);
 
     Actor* shopButtonActor = new Actor(GetGame());
-    shopButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
-    auto shopButton = new UIButtonComponent(shopButtonActor, "GO TO SHOP", buttonSize,
+    shopButtonActor->SetPosition(Vector2(windowCenterX, baseY + buttonSpacing));
+    auto shopButton = new UIButtonComponent(shopButtonActor, "STORE", buttonSize,
         [this]() {
             GetGame()->SetScene(Game::GameScene::Store);
         }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
     );
     mButtons.push_back(shopButton);
 
     Actor* quitButtonActor = new Actor(GetGame());
-    quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));
-    auto quitButton = new UIButtonComponent(quitButtonActor, "EXIT TO MAIN MENU", buttonSize,
+    quitButtonActor->SetPosition(Vector2(windowCenterX, baseY + (buttonSpacing * 2.0f)));
+    auto quitButton = new UIButtonComponent(quitButtonActor, "MAIN MENU", buttonSize,
         [this]() {
             GetGame()->SetScene(Game::GameScene::MainMenu);
         }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
     );
     mButtons.push_back(quitButton);
 

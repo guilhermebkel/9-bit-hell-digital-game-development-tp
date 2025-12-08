@@ -20,7 +20,9 @@ public:
 	int GetWidth() const { return mWidth; }
 	int GetHeight() const { return mHeight; }
 
-	void CreateFromSurface(SDL_Surface* surface);
+	void CreateFromSurface(SDL_Surface* surface, bool linearFilter = true);
+
+	void SetFiltering(bool linearFilter);
 
 	unsigned int GetTextureID() const { return mTextureID; }
 

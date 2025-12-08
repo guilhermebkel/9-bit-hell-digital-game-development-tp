@@ -5,7 +5,7 @@
 #include "../../Game.h"
 #include "UITextComponent.h"
 
-UIButtonComponent::UIButtonComponent(Actor* owner, const std::string& text, Vector2 size, std::function<void()> onClick, int drawOrder, const std::string& iconPath, Vector2 iconSize)
+UIButtonComponent::UIButtonComponent(Actor* owner, const std::string& text, Vector2 size, std::function<void()> onClick, int drawOrder, int textPointSize, const std::string& iconPath, Vector2 iconSize)
     : DrawComponent(owner, drawOrder - 1)
     , mOnClick(std::move(onClick))
     , mSize(size)
@@ -13,10 +13,12 @@ UIButtonComponent::UIButtonComponent(Actor* owner, const std::string& text, Vect
     , mIconSprite(nullptr)
     , mIconActor(nullptr)
     , mIconSize(iconSize)
+    , mTextPointSize(textPointSize)
+    , mHighlightSize(size)
 {
     mTextActor = new Actor(owner->GetGame());
     mTextComponent = new UITextComponent(mTextActor, drawOrder + 1);
-    mTextComponent->SetText(text, Color::White, 24);
+    mTextComponent->SetText(text, Color::White, mTextPointSize);
 
     if (!iconPath.empty())
     {
@@ -31,40 +33,48 @@ UIButtonComponent::~UIButtonComponent()
     mTextActor->SetState(ActorState::Destroy);
 }
 
+float UIButtonComponent::GetTextWidth() const
+{
+    if (mTextComponent)
+    {
+        if (mTextComponent->GetTexture())
+        {
+            return static_cast<float>(mTextComponent->GetTexture()->GetWidth());
+        }
+        return mTextComponent->GetText().length() * (static_cast<float>(mTextPointSize) * 0.5f);
+    }
+    return 0.0f;
+}
+
 void UIButtonComponent::Draw(class Renderer* renderer)
 {
+    UpdatePositions();
+
     if (mSelected)
     {
         Vector4 highlightColor(1.0f, 0.0f, 0.0f, 0.25f);
-        renderer->DrawRect(mOwner->GetPosition(), mSize, 0.0f, highlightColor, Vector2::Zero, RendererMode::TRIANGLES);
+        renderer->DrawRect(mOwner->GetPosition(), mHighlightSize, 0.0f, highlightColor, Vector2::Zero, RendererMode::TRIANGLES);
     }
-
-    UpdatePositions();
 }
 
 void UIButtonComponent::SetText(const std::string& text)
 {
-    mTextComponent->SetText(text, Color::White, 24);
+    mTextComponent->SetText(text, Color::White, mTextPointSize);
 }
 
 void UIButtonComponent::UpdatePositions()
 {
     Vector2 center = mOwner->GetPosition();
 
+    float textWidth = GetTextWidth();
+
     if (mIconSprite)
     {
-        float textWidth = 0.0f;
-        if (mTextComponent->GetTexture())
-        {
-            textWidth = static_cast<float>(mTextComponent->GetTexture()->GetWidth());
-        }
-        else
-        {
-            textWidth = mTextComponent->GetText().length() * 12.0f;
-        }
-
         float spacing = 24.0f;
         float totalWidth = mIconSize.x + spacing + textWidth;
+        float highlightWidth = Math::Max(mSize.x, totalWidth + 32.0f);
+        float highlightHeight = Math::Max(mSize.y, static_cast<float>(mTextPointSize) + 24.0f);
+        mHighlightSize = Vector2(highlightWidth, highlightHeight);
 
         float startX = center.x - (totalWidth / 2.0f);
 
@@ -74,6 +84,10 @@ void UIButtonComponent::UpdatePositions()
     }
     else
     {
+        float highlightWidth = Math::Max(mSize.x, textWidth + 32.0f);
+        float highlightHeight = Math::Max(mSize.y, static_cast<float>(mTextPointSize) + 24.0f);
+        mHighlightSize = Vector2(highlightWidth, highlightHeight);
+
         mTextActor->SetPosition(center);
     }
 }

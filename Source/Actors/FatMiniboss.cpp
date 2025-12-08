@@ -38,7 +38,7 @@ FatMiniboss::FatMiniboss(Game* game)
 
     mCollider = new AABBColliderComponent(this, 0, 0, PHYSICS_WIDTH, PHYSICS_HEIGHT, ColliderLayer::Enemy);
     
-    CreateHealthBar(Vector2(100.0f, 15.0f));
+    CreateHealthBar(Vector2(100.0f, 15.0f), Vector4(101.0f / 255.0f, 125.0f / 255.0f, 49.0f / 255.0f, 1.0f));
 }
 
 void FatMiniboss::OnUpdate(float deltaTime)

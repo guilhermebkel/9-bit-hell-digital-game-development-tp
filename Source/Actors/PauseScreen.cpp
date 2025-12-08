@@ -29,11 +29,13 @@ PauseScreen::PauseScreen(Game* game)
     const Vector2 buttonSize(300.0f, 40.0f);
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;
     const float windowCenterY = Game::WINDOW_HEIGHT / 2.0f;
+    const float buttonSpacing = 70.0f; // Increased spacing between buttons
 
     mTitleActor = new Actor(game);
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor, PauseScreen::DRAW_ORDER + 2);
-    titleText->SetText("PAUSED", Color::White, 48);
+    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetText("Paused", Color::White, 72);
 
     Actor* resumeButtonActor = new Actor(game);
     resumeButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
@@ -41,19 +43,21 @@ PauseScreen::PauseScreen(Game* game)
         [this]() {
             GetGame()->TogglePause();
         },
-        PauseScreen::DRAW_ORDER + 3
+        PauseScreen::DRAW_ORDER + 3,
+        36
     );
     mButtons.push_back(resumeButton);
     mButtonActors.push_back(resumeButtonActor);
 
     Actor* quitButtonActor = new Actor(game);
-    quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));
+    quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + buttonSpacing));
     auto quitButton = new UIButtonComponent(quitButtonActor, "EXIT TO MAIN MENU", buttonSize,
         [this]() {
             GetGame()->SetScene(Game::GameScene::MainMenu);
             GetGame()->TogglePause();
         },
-        PauseScreen::DRAW_ORDER + 4
+        PauseScreen::DRAW_ORDER + 4,
+        36
     );
     mButtons.push_back(quitButton);
     mButtonActors.push_back(quitButtonActor);

@@ -44,8 +44,7 @@ bool Texture::Load(const std::string &filePath)
 
     SDL_FreeSurface(convertedSurface);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    SetFiltering(false);
 
     return true;
 }
@@ -61,7 +60,7 @@ void Texture::SetActive(int index) const
     glBindTexture(GL_TEXTURE_2D, mTextureID);
 }
 
-void Texture::CreateFromSurface(SDL_Surface* surface)
+void Texture::CreateFromSurface(SDL_Surface* surface, bool linearFilter)
 {
     if (!surface)
     {
@@ -85,6 +84,12 @@ void Texture::CreateFromSurface(SDL_Surface* surface)
 
     SDL_FreeSurface(convertedSurface);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    SetFiltering(linearFilter);
+}
+
+void Texture::SetFiltering(bool linearFilter)
+{
+    GLenum filter = linearFilter ? GL_LINEAR : GL_NEAREST;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 }

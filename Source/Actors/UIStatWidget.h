@@ -29,5 +29,5 @@ private:
     Vector2 mPosition;
     HAlign mAlignment;
     int mPointSize;
-    const float mVerticalSpacing = 2.0f;
+    const float mVerticalSpacing = 1.0f;
 };

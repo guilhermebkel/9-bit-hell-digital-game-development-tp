@@ -16,6 +16,9 @@ public:
     class Texture* RenderText(const std::string& text, const Vector3& color = Color::White, int pointSize = 24);
 
 private:
+    bool LoadSize(int pointSize);
+
     class Game* mGame;
     std::unordered_map<int, TTF_Font*> mFontData;
+    std::string mFontFile;
 };

@@ -14,12 +14,14 @@ public:
                       Vector2 size,
                       std::function<void()> onClick,
                       int drawOrder = DEFAULT_DRAW_ORDER,
+                      int textPointSize = 24,
                       const std::string& iconPath = "",
                       Vector2 iconSize = Vector2::Zero);
 
     ~UIButtonComponent() override;
 
     void Draw(class Renderer* renderer) override;
+    float GetTextWidth() const;
 
     void SetSelected(bool selected) { mSelected = selected; }
 
@@ -39,4 +41,6 @@ private:
 
     Vector2 mSize;
     bool mSelected;
+    int mTextPointSize;
+    Vector2 mHighlightSize;
 };

@@ -24,7 +24,10 @@ void MainMenuScene::Load()
     Actor* mTitleActor = new Actor(GetGame());
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor);
-    titleText->SetText("9-BIT HELL", Color::White, 48);
+    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetText("9-bit Hell", Color::White, 144);
+
+    constexpr float buttonSpacing = 70.0f;
 
     Actor* startButtonActor = new Actor(GetGame());
     startButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY));
@@ -33,24 +36,33 @@ void MainMenuScene::Load()
             GetGame()->SetCurrentLevelID(LevelID::Tutorial);
             GetGame()->SetScene(Game::GameScene::Gameplay, 0.5f);
         }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
     );
     mButtons.push_back(startButton);
 
     Actor* levelSelectionButtonActor = new Actor(GetGame());
-    levelSelectionButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));
+    levelSelectionButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + buttonSpacing));
     auto levelSelectionButton = new UIButtonComponent(levelSelectionButtonActor, "SELECT LEVEL", buttonSize,
         [this]() {
             GetGame()->SetScene(Game::GameScene::LevelSelection, 0.5f);
         }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
     );
     mButtons.push_back(levelSelectionButton);
 
     Actor* quitButtonActor = new Actor(GetGame());
-    quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 100.0f));
+    quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + (buttonSpacing * 2.0f)));
     auto quitButton = new UIButtonComponent(quitButtonActor, "EXIT", buttonSize,
         [this]() {
             GetGame()->Quit();
         }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
     );
     mButtons.push_back(quitButton);
 
