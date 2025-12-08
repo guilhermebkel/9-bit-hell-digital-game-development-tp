@@ -505,14 +505,14 @@ void Game::UnlockNextLevel(LevelID nextLevelID)
     mPlayerUpgrades.maxUnlockedLevel = Math::Max(mPlayerUpgrades.maxUnlockedLevel, static_cast<int>(nextLevelID));
 }
 
-void Game::AddCoin(int amount)
+void Game::AddSoul(int amount)
 {
-    mPlayerUpgrades.coins += amount;
+    mPlayerUpgrades.souls += amount;
 }
 
-void Game::SpendCoins(int amount)
+void Game::SpendSouls(int amount)
 {
-    mPlayerUpgrades.coins -= amount;
+    mPlayerUpgrades.souls -= amount;
 }
 
 int Game::GetDamagePrice() const
@@ -565,7 +565,7 @@ void Game::SaveGame()
 {
     nlohmann::json saveJson;
 
-    saveJson["coins"] = mPlayerUpgrades.coins;
+    saveJson["souls"] = mPlayerUpgrades.souls;
     saveJson["fireRate"] = mPlayerUpgrades.fireRate;
     saveJson["meleeDamage"] = mPlayerUpgrades.meleeDamage;
     saveJson["rangedDamage"] = mPlayerUpgrades.rangedDamage;
@@ -602,7 +602,7 @@ void Game::LoadGame()
         {
             nlohmann::json saveJson = nlohmann::json::parse(file);
 
-            mPlayerUpgrades.coins = saveJson.value("coins", PlayerUpgrades().coins);
+            mPlayerUpgrades.souls = saveJson.value("souls", PlayerUpgrades().souls);
             mPlayerUpgrades.fireRate = saveJson.value("fireRate", PlayerUpgrades().fireRate);
             mPlayerUpgrades.meleeDamage = saveJson.value("meleeDamage", PlayerUpgrades().meleeDamage);
             mPlayerUpgrades.rangedDamage = saveJson.value("rangedDamage", PlayerUpgrades().rangedDamage);

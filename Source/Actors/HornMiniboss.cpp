@@ -1,4 +1,5 @@
 #include "HornMiniboss.h"
+#include "Soul.h"
 #include "Player.h"
 #include "FallingHand.h"
 #include "GroundSpike.h"
@@ -116,13 +117,13 @@ void HornMiniboss::UpdateAI(float deltaTime)
     {
         Vector2 direction = playerPos - myPos;
         direction.Normalize();
-        mRigidBody->SetVelocity(direction * WALK_SPEED);
+        mRigidBody->SetVelocity(direction * (WALK_SPEED * mDifficultyMultiplier));
         
         SetScale(Vector2(direction.x < 0 ? -1.0f : 1.0f, 1.0f));
         mAnimator->SetAnimation("walk");
 
         mStateTimer += deltaTime;
-        if (mStateTimer >= 2.0f && distance < 1200.0f)
+        if (mStateTimer >= 2.0f && distance < 2400.0f)
         {
             mState = BossState::WindUp;
             mStateTimer = ATTACK_WINDUP;
@@ -233,16 +234,27 @@ void HornMiniboss::PerformHandAttack()
 
     Vector2 targetPos = player->GetPosition();
     
-    // Left hand at left edge of player, 200px above
-    // Reduced offset by 1/4 for closer targeting
+    // Mão esquerda na borda esquerda do jogador, 200px acima
+    // Deslocamento reduzido em 1/4 para alvo mais próximo
     FallingHand* h1 = new FallingHand(GetGame());
     float leftOffset = -(Player::SPRITE_WIDTH / 2.0f) * 0.75f;
     h1->SetPosition(Vector2(targetPos.x + leftOffset, targetPos.y - 200.0f));
 
-    // Right hand at right edge of player, 200px above
+    // Mão direita na borda direita do jogador, 200px acima
     FallingHand* h2 = new FallingHand(GetGame());
     float rightOffset = (Player::SPRITE_WIDTH / 2.0f) * 0.75f;
     h2->SetPosition(Vector2(targetPos.x + rightOffset, targetPos.y - 200.0f));
     
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-special-land.wav");
+}
+
+void HornMiniboss::SpawnSoulsOnDeath()
+{
+    // Soltar 1 GoldenSoul na posição do chefe com pequeno deslocamento aleatório
+    float angle = Random::GetFloatRange(0.0f, Math::TwoPi);
+    float radius = Random::GetFloatRange(8.0f, 40.0f);
+    Vector2 offset(Math::Cos(angle) * radius, Math::Sin(angle) * radius);
+
+    Soul* s = new Soul(GetGame(), Soul::SoulType::Golden);
+    s->SetPosition(GetPosition() + offset);
 }

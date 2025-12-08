@@ -6,6 +6,7 @@
 #include "../Actors/Enemy.h"
 #include "../Actors/Miniboss.h"
 #include "../Actors/Spawner.h"
+#include "../Actors/Soul.h"
 #include "../Actors/HUD.h"
 #include "../Audio/AudioSystem.h"
 
@@ -136,7 +137,7 @@ void GameplayScene::LoadTutorial()
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 5);
-    new Spawner(GetGame(), SpawnType::Coin, 5);
+    new Spawner(GetGame(), SpawnType::Soul, 5);
     new Spawner(GetGame(), SpawnType::Purifier, 1);
     new Spawner(GetGame(), SpawnType::Healer, 1);
 }
@@ -149,7 +150,7 @@ void GameplayScene::LoadLevel1()
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 15, 5, 2);
-    new Spawner(GetGame(), SpawnType::Coin, 10);
+    new Spawner(GetGame(), SpawnType::Soul, 10);
     new Spawner(GetGame(), SpawnType::Purifier, 2);
     new Spawner(GetGame(), SpawnType::Healer, 1);
 }
@@ -162,7 +163,7 @@ void GameplayScene::LoadLevel2()
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 25, 6, 3);
-    new Spawner(GetGame(), SpawnType::Coin, 15);
+    new Spawner(GetGame(), SpawnType::Soul, 15);
     new Spawner(GetGame(), SpawnType::Healer, 1);
 }
 
@@ -175,7 +176,7 @@ void GameplayScene::LoadLevel3()
 
     new Spawner(GetGame(), SpawnType::Enemy, 10, 5, 2);
     new Spawner(GetGame(), SpawnType::EyeMiniboss, 1, 1, 0, true);
-    new Spawner(GetGame(), SpawnType::Coin, 15);
+    new Spawner(GetGame(), SpawnType::Soul, 15);
     new Spawner(GetGame(), SpawnType::Purifier, 5);
     new Spawner(GetGame(), SpawnType::Healer, 1);
 }
@@ -188,7 +189,7 @@ void GameplayScene::LoadLevel4()
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 35, 7, 3);
-    new Spawner(GetGame(), SpawnType::Coin, 20);
+    new Spawner(GetGame(), SpawnType::Soul, 20);
     new Spawner(GetGame(), SpawnType::Purifier, 1);
     new Spawner(GetGame(), SpawnType::Healer, 1);
 }
@@ -201,7 +202,7 @@ void GameplayScene::LoadLevel5()
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 40, 8, 4);
-    new Spawner(GetGame(), SpawnType::Coin, 15);
+    new Spawner(GetGame(), SpawnType::Soul, 15);
     new Spawner(GetGame(), SpawnType::Healer, 2);
 }
 
@@ -226,7 +227,7 @@ void GameplayScene::LoadLevel7()
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 50, 10, 5);
-    new Spawner(GetGame(), SpawnType::Coin, 15);
+    new Spawner(GetGame(), SpawnType::Soul, 15);
     new Spawner(GetGame(), SpawnType::Purifier, 1);
     new Spawner(GetGame(), SpawnType::Healer, 1);
 }
@@ -239,7 +240,7 @@ void GameplayScene::LoadLevel8()
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 60, 10, 5);
-    new Spawner(GetGame(), SpawnType::Coin, 15);
+    new Spawner(GetGame(), SpawnType::Soul, 15);
     new Spawner(GetGame(), SpawnType::Healer, 3);
 }
 
@@ -250,13 +251,16 @@ void GameplayScene::LoadLevel9()
 
     new Spawner(GetGame(), SpawnType::Enemy, 20, 10, 0);
     new Spawner(GetGame(), SpawnType::HornMiniboss, 1, 1, 0, true);
-    new Spawner(GetGame(), SpawnType::Coin, 15);
+    new Spawner(GetGame(), SpawnType::Soul, 15);
     new Spawner(GetGame(), SpawnType::Purifier, 5);
     new Spawner(GetGame(), SpawnType::Healer, 3);
 }
 
 bool GameplayScene::IsLevelComplete()
 {
+    bool anyEnemyLike = false;
+    bool anySoul = false;
+
     for (auto actor : GetGame()->GetActors())
     {
         if (actor->GetState() != ActorState::Active)
@@ -264,12 +268,23 @@ bool GameplayScene::IsLevelComplete()
             continue;
         }
 
-        if (dynamic_cast<Enemy*>(actor) ||
-            dynamic_cast<Miniboss*>(actor) ||
-            dynamic_cast<Spawner*>(actor))
+        if (dynamic_cast<Enemy*>(actor) || dynamic_cast<Miniboss*>(actor) || dynamic_cast<Spawner*>(actor))
         {
+            // if there are still enemies/minibosses/spawners active, level not complete
             return false;
         }
+
+        // If there are souls left in the level, wait until player collects them
+        if (dynamic_cast<class Soul*>(actor))
+        {
+            anySoul = true;
+        }
+    }
+
+    // No enemies/spawners/minibosses alive; only finish when there are no souls left
+    if (anySoul)
+    {
+        return false;
     }
 
     return true;

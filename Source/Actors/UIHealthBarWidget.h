@@ -14,10 +14,30 @@ public:
     void SetFillColor(const Vector4& color);
 
 private:
-    class Actor* mFillActor;
+    class Actor* mFillTopActor;
+    class Actor* mFillBottomActor;
     class Actor* mFrameActor;
+    class Actor* mEdgeLeftActor;
+    class Actor* mEdgeRightActor;
+    class Actor* mTopEdgeActor;
+    class Actor* mBottomEdgeActor;
+        // Full background bar drawn at full size so there's always a base behind scaled fills
+        class Actor* mBackgroundActor;
 
-    class RectComponent* mFillRect;
+    // Back/underlapping fills to avoid visual gaps when scaled small
+    class Actor* mFillTopBackActor;
+    class Actor* mFillBottomBackActor;
+
+    class RectComponent* mFillTopRect;
+    class RectComponent* mFillBottomRect;
+    class RectComponent* mEdgeLeftRect;
+    class RectComponent* mEdgeRightRect;
+    class RectComponent* mTopEdgeRect;
+    class RectComponent* mBottomEdgeRect;
+        class RectComponent* mBackgroundRect;
+
+    class RectComponent* mFillTopBackRect;
+    class RectComponent* mFillBottomBackRect;
 
     Vector2 mPosition;
     Vector2 mSize;

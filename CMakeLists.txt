@@ -51,8 +51,8 @@ add_executable(${PROJECT_NAME}
         Source/Components/Drawing/StaticSpriteComponent.h
         Source/Actors/Collectable.cpp
         Source/Actors/Collectable.h
-        Source/Actors/Coin.cpp
-        Source/Actors/Coin.h
+        Source/Actors/Soul.cpp
+        Source/Actors/Soul.h
         Source/Actors/Purifier.cpp
         Source/Actors/Purifier.h
         Source/Actors/CorruptionOverlay.cpp

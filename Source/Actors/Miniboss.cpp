@@ -27,6 +27,13 @@ Miniboss::Miniboss(Game* game, float health)
     , mOriginalColor(Vector3::One)
     , mInvulnerabilityTimer(0.0f)
 {
+    float diffMul = 1.0f;
+    if (GetGame()) diffMul = GetGame()->GetDifficultyMultiplier();
+
+    // Aplicar multiplicador de dificuldade à vida
+    mHealth *= diffMul;
+    mMaxHealth *= diffMul;
+    mDifficultyMultiplier = diffMul;
 }
 
 void Miniboss::OnUpdate(float deltaTime)
@@ -133,10 +140,18 @@ void Miniboss::Kill()
     mIsDead = true;
     mHealth = 0.0f;
 
+    SpawnSoulsOnDeath();
+
     if (mAnimator) mAnimator->SetAnimation("dead");
     if (mRigidBody) mRigidBody->SetEnabled(false);
     if (mCollider) mCollider->SetEnabled(false);
     
+    if (mHealthBar)
+    {
+        delete mHealthBar;
+        mHealthBar = nullptr;
+    }
+
     SetState(ActorState::Destroy);
 }
 

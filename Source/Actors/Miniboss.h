@@ -18,6 +18,8 @@ public:
     bool IsInvulnerable() const { return mInvulnerabilityTimer > 0.0f; }
     void CreateHealthBar(const Vector2& barSize = Vector2(100.0f, 15.0f),
         const Vector4& fillColor = Vector4(109.0f / 255.0f, 21.0f / 255.0f, 21.0f / 255.0f, 1.0f));
+    
+    virtual void SpawnSoulsOnDeath() {}
     virtual void PerformForcedAttack() {} // Para ser sobrescrito por cada miniboss
 
     void OnHorizontalCollision(const float minOverlap, class AABBColliderComponent* other) override;
@@ -38,6 +40,9 @@ protected:
     class AnimatorComponent* mAnimator;
     class RigidBodyComponent* mRigidBody;
     class AABBColliderComponent* mCollider;
+    
+    // Multiplicador de dificuldade (1.0 = padrão, >1.0 aumenta vida/velocidade)
+    float mDifficultyMultiplier;
 
 private:
     bool mIsFlashing;

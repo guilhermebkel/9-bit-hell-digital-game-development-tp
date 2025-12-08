@@ -15,7 +15,7 @@ HUD::HUD(Game* game)
     mCoinWidget = new UIStatWidget(game, "SOULS", pointSize, HUD::DRAW_ORDER);
     mCoinWidget->SetOutline(true);
     mCoinWidget->SetPosition(Vector2(60.0f, 56.0f), HAlign::Left);
-    mCoinWidget->SetValue(std::to_string(GetGame()->GetCoinCount()));
+    mCoinWidget->SetValue(std::to_string(GetGame()->GetSoulCount()));
     mCoinWidget->SetIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
     mCoinWidget->SetIconValueLeftAligned(true);
     mCoinWidget->SetValueOffsetX(-30.0f);
@@ -60,7 +60,7 @@ void HUD::OnUpdate(float deltaTime)
         return;
     }
 
-    mCoinWidget->SetValue(std::to_string(GetGame()->GetCoinCount()));
+    mCoinWidget->SetValue(std::to_string(GetGame()->GetSoulCount()));
 
     int corruptionPercent = static_cast<int>(GetGame()->GetCorruptionLevel() * 100);
     mCorruptionWidget->SetValue(std::to_string(corruptionPercent) + "%");

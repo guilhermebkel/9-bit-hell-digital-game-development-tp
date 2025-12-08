@@ -1,4 +1,4 @@
-#include "Coin.h"
+#include "Soul.h"
 #include "Player.h"
 #include "../Game.h"
 #include "../Math.h"
@@ -7,21 +7,36 @@
 #include "../Components/Drawing/StaticSpriteComponent.h"
 #include <cmath>
 
-Coin::Coin(class Game* game)
-    : Collectable(game, Coin::SPRITE_WIDTH, Coin::SPRITE_HEIGHT)
+Soul::Soul(class Game* game, Soul::SoulType type)
+    : Collectable(game, Soul::SPRITE_WIDTH, Soul::SPRITE_HEIGHT)
     , mFloatTimer(Random::GetFloatRange(0.0f, 6.28f))
     , mInitialPosition(Vector2::Zero)
+    , mType(type)
+    , mValue(1)
 {
+    std::string spritePath = "../Assets/Sprites/Collectables/Soul.png";
+
+    if (mType == Soul::SoulType::Purple)
+    {
+        spritePath = "../Assets/Sprites/Collectables/PurpleSoul.png";
+        mValue = 10;
+    }
+    else if (mType == Soul::SoulType::Golden)
+    {
+        spritePath = "../Assets/Sprites/Collectables/GoldenSoul.png";
+        mValue = 50;
+    }
+
     new StaticSpriteComponent(
         this,
-        "../Assets/Sprites/Collectables/Coin.png",
-        Coin::SPRITE_WIDTH,
-        Coin::SPRITE_HEIGHT,
+        spritePath,
+        Soul::SPRITE_WIDTH,
+        Soul::SPRITE_HEIGHT,
         90
     );
 }
 
-void Coin::OnUpdate(float deltaTime)
+void Soul::OnUpdate(float deltaTime)
 {
     Actor::OnUpdate(deltaTime);
     
@@ -36,9 +51,9 @@ void Coin::OnUpdate(float deltaTime)
     SetPosition(Vector2(mInitialPosition.x, mInitialPosition.y + floatOffset));
 }
 
-void Coin::OnCollect(Player* player)
+void Soul::OnCollect(Player* player)
 {
-    GetGame()->AddCoin();
+    GetGame()->AddSoul(mValue);
     
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-soul.wav");
 }

@@ -2,7 +2,7 @@
 #include "../Game.h"
 #include "Player.h"
 #include "Enemy.h"
-#include "Coin.h"
+#include "Soul.h"
 #include "Purifier.h"
 #include "Healer.h"
 #include "FatMiniboss.h"
@@ -101,7 +101,7 @@ void Spawner::SpawnOne()
     bool validSpawn = false;
     int maxAttempts = 10;
     
-    bool isCollectable = (mSpawnType == SpawnType::Coin || mSpawnType == SpawnType::Purifier || mSpawnType == SpawnType::Healer);
+    bool isCollectable = (mSpawnType == SpawnType::Soul || mSpawnType == SpawnType::Purifier || mSpawnType == SpawnType::Healer);
     
     for (int attempt = 0; attempt < maxAttempts && !validSpawn; ++attempt)
     {
@@ -128,20 +128,39 @@ void Spawner::SpawnOne()
     {
         case SpawnType::Enemy:
         {
-            std::array<Enemy::EnemyType, 3> enemyTypes = {
-                Enemy::EnemyType::Eye,
-                Enemy::EnemyType::Horn,
-                Enemy::EnemyType::Fat
-            };
+            // Choose enemy types depending on current level
+            auto levelID = GetGame()->GetCurrentLevelID();
+
+            std::vector<Enemy::EnemyType> enemyTypes;
+
+            // Levels 1-3: only Eye
+            if (levelID == LevelID::Tutorial || levelID == LevelID::Level1 || levelID == LevelID::Level2 || levelID == LevelID::Level3)
+            {
+                enemyTypes.push_back(Enemy::EnemyType::Eye);
+            }
+            // Levels 4-6: Eye and Fat
+            else if (levelID == LevelID::Level4 || levelID == LevelID::Level5 || levelID == LevelID::Level6)
+            {
+                enemyTypes.push_back(Enemy::EnemyType::Eye);
+                enemyTypes.push_back(Enemy::EnemyType::Fat);
+            }
+            // Levels 7-9: all three types
+            else
+            {
+                enemyTypes.push_back(Enemy::EnemyType::Eye);
+                enemyTypes.push_back(Enemy::EnemyType::Horn);
+                enemyTypes.push_back(Enemy::EnemyType::Fat);
+            }
+
             int randomIndex = Random::GetIntRange(0, static_cast<int>(enemyTypes.size()) - 1);
             Enemy* enemy = new Enemy(GetGame(), enemyTypes[randomIndex]);
             enemy->SetPosition(spawnPos);
             break;
         }
-        case SpawnType::Coin:
+        case SpawnType::Soul:
         {
-            Coin* coin = new Coin(GetGame());
-            coin->SetPosition(spawnPos);
+            Soul* soul = new Soul(GetGame());
+            soul->SetPosition(spawnPos);
             break;
         }
         case SpawnType::Purifier:

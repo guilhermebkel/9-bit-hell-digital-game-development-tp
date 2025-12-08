@@ -21,7 +21,7 @@ public:
 
     struct PlayerUpgrades
     {
-        int coins = 0;
+        int souls = 0;
         float fireRate = 1.2f;
         int meleeDamage = 10;
         int rangedDamage = 5;
@@ -85,10 +85,10 @@ public:
     std::vector<class AABBColliderComponent*>& GetColliders() { return mColliders; }
 
     // Player upgrades
-    int GetCoinCount() const { return mPlayerUpgrades.coins; }
-    bool CanAfford(int cost) const { return mPlayerUpgrades.coins >= cost; }
-    void AddCoin(int amount = 1);
-    void SpendCoins(int amount);
+    int GetSoulCount() const { return mPlayerUpgrades.souls; }
+    bool CanAfford(int cost) const { return mPlayerUpgrades.souls >= cost; }
+    void AddSoul(int amount = 1);
+    void SpendSouls(int amount);
     void UpgradeFireRate();
     void UpgradeMeleeDamage();
     void UpgradeRangedDamage();

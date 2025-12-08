@@ -22,6 +22,7 @@ public:
 
     void OnUpdate(float deltaTime) override;
     void TakeDamage(float amount) override;
+    void SpawnSoulsOnDeath() override;
 
 private:
     void UpdateAI(float deltaTime);

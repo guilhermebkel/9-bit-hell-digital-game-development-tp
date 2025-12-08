@@ -4,7 +4,7 @@
 enum class SpawnType
 {
     Enemy,
-    Coin,
+    Soul,
     Purifier,
     Healer,
     FatMiniboss,

@@ -1,4 +1,5 @@
 #include "FatMiniboss.h"
+#include "Soul.h"
 #include "Player.h"
 #include "SlimeProjectile.h"
 #include "SlimePuddle.h"
@@ -121,7 +122,7 @@ void FatMiniboss::UpdateAI(float deltaTime)
     {
         Vector2 direction = playerPos - myPos;
         direction.Normalize();
-        mRigidBody->SetVelocity(direction * WALK_SPEED);
+        mRigidBody->SetVelocity(direction * (WALK_SPEED * mDifficultyMultiplier));
 
         SetScale(Vector2(direction.x < 0 ? -1.0f : 1.0f, 1.0f));
         mAnimator->SetAnimation("walk");
@@ -134,7 +135,7 @@ void FatMiniboss::UpdateAI(float deltaTime)
         }
 
         mStateTimer += deltaTime;
-        if (mStateTimer >= 3.0f && distance < 450.0f)
+        if (mStateTimer >= 3.0f && distance < 900.0f)
         {
             mState = BossState::WindUp;
             mStateTimer = ATTACK_WINDUP;
@@ -234,8 +235,33 @@ void FatMiniboss::ShootSlime()
     Vector2 dir = player->GetPosition() - GetPosition();
     dir.Normalize();
 
-    SlimeProjectile* proj = new SlimeProjectile(GetGame(), dir);
-    proj->SetPosition(GetPosition() + Vector2(0.0f, -10.0f));
+    float baseAngle = Math::Atan2(dir.y, dir.x);
+    float spread = Math::ToRadians(10.0f);
+    float angle1 = baseAngle - (spread / 2.0f);
+    float angle2 = baseAngle + (spread / 2.0f);
+
+    Vector2 dir1(Math::Cos(angle1), Math::Sin(angle1));
+    Vector2 dir2(Math::Cos(angle2), Math::Sin(angle2));
+
+    SlimeProjectile* p1 = new SlimeProjectile(GetGame(), dir1);
+    p1->SetPosition(GetPosition() + Vector2(0.0f, -10.0f));
+
+    SlimeProjectile* p2 = new SlimeProjectile(GetGame(), dir2);
+    p2->SetPosition(GetPosition() + Vector2(0.0f, -10.0f));
 
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-attack.wav");
+}
+
+void FatMiniboss::SpawnSoulsOnDeath()
+{
+    const int count = 3;
+    for (int i = 0; i < count; ++i)
+    {
+        float angle = Random::GetFloatRange(0.0f, Math::TwoPi);
+        float radius = Random::GetFloatRange(8.0f, 48.0f);
+        Vector2 offset(Math::Cos(angle) * radius, Math::Sin(angle) * radius);
+
+        Soul* s = new Soul(GetGame(), Soul::SoulType::Purple);
+        s->SetPosition(GetPosition() + offset);
+    }
 }

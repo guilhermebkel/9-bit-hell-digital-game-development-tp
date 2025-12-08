@@ -2,7 +2,10 @@
 
 #include "Player.h"
 #include "../Game.h"
+#include "../Scenes/GameplayScene.h"
 #include "../Components/Drawing/AnimatorComponent.h"
+#include <sstream>
+#include <algorithm>
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Random.h"
@@ -78,6 +81,112 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         mDrawComponent->SetAnimation("walk");
         mDrawComponent->SetAnimFPS(4.0f);
         break;
+    }
+
+    // Apply exact hex-based tints per level as requested by designer
+    if (GetGame())
+    {
+        auto levelID = GetGame()->GetCurrentLevelID();
+
+        auto hexToVec3 = [](const std::string& hex) {
+            unsigned int v = 0;
+            if (hex.size() == 6)
+            {
+                std::stringstream ss;
+                ss << std::hex << hex;
+                ss >> v;
+            }
+            float r = ((v >> 16) & 0xFF) / 255.0f;
+            float g = ((v >> 8) & 0xFF) / 255.0f;
+            float b = (v & 0xFF) / 255.0f;
+            return Vector3(r, g, b);
+        };
+
+        // Exact colors (from most light to dark per palette)
+        const Vector3 red_light   = hexToVec3("8c4342"); // level1 (light)
+        const Vector3 red_mid     = hexToVec3("9c2828"); // level2 (mid)
+        const Vector3 red_dark    = hexToVec3("6d1515"); // level3 (dark)
+
+        const Vector3 green_light = hexToVec3("7d944b"); // level4
+        const Vector3 green_mid   = hexToVec3("647d30"); // level5
+        const Vector3 green_dark  = hexToVec3("5b7225"); // level6
+
+        const Vector3 purple_light = hexToVec3("5d4a70"); // level7
+        const Vector3 purple_mid   = hexToVec3("4e3f60"); // level8
+        const Vector3 purple_dark  = hexToVec3("453059"); // level9
+
+        // Tutorial: keep original color (no overlay)
+        if (levelID == LevelID::Tutorial)
+        {
+            // do nothing
+        }
+        else if (levelID == LevelID::Level1)
+        {
+            // Light red for Level 1
+            if (type == EnemyType::Eye)
+            {
+                mOriginalColor = red_light;
+            }
+        }
+        else if (levelID == LevelID::Level2)
+        {
+            // Mid red for Level 2
+            if (type == EnemyType::Eye)
+            {
+                mOriginalColor = red_mid;
+            }
+        }
+        else if (levelID == LevelID::Level3)
+        {
+            // Dark red for Level 3
+            if (type == EnemyType::Eye)
+            {
+                mOriginalColor = red_dark;
+            }
+        }
+        else if (levelID == LevelID::Level4)
+        {
+            if (type == EnemyType::Eye || type == EnemyType::Fat)
+            {
+                mOriginalColor = green_light;
+            }
+        }
+        else if (levelID == LevelID::Level5)
+        {
+            if (type == EnemyType::Eye || type == EnemyType::Fat)
+            {
+                mOriginalColor = green_mid;
+            }
+        }
+        else if (levelID == LevelID::Level6)
+        {
+            if (type == EnemyType::Eye || type == EnemyType::Fat)
+            {
+                mOriginalColor = green_dark;
+            }
+        }
+        else if (levelID == LevelID::Level7)
+        {
+            mOriginalColor = purple_light;
+        }
+        else if (levelID == LevelID::Level8)
+        {
+            mOriginalColor = purple_mid;
+        }
+        else if (levelID == LevelID::Level9)
+        {
+            mOriginalColor = purple_dark;
+        }
+
+        const float BRIGHTNESS_BOOST = 1.35f;
+        mOriginalColor.x = std::min(mOriginalColor.x * BRIGHTNESS_BOOST, 1.0f);
+        mOriginalColor.y = std::min(mOriginalColor.y * BRIGHTNESS_BOOST, 1.0f);
+        mOriginalColor.z = std::min(mOriginalColor.z * BRIGHTNESS_BOOST, 1.0f);
+
+        if (mDrawComponent)
+        {
+            mDrawComponent->SetColor(mOriginalColor);
+        }
     }
 
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);

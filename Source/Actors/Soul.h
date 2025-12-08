@@ -1,13 +1,20 @@
 #pragma once
 #include "Collectable.h"
 
-class Coin : public Collectable
+class Soul : public Collectable
 {
 public:
     static constexpr int SPRITE_WIDTH = 34.0f;
     static constexpr int SPRITE_HEIGHT = 34.0f;
 
-    explicit Coin(class Game* game);
+    enum class SoulType
+    {
+        Normal,
+        Purple,
+        Golden
+    };
+
+    explicit Soul(class Game* game, SoulType type = SoulType::Normal);
 
     void OnUpdate(float deltaTime) override;
 
@@ -17,4 +24,6 @@ protected:
 private:
     float mFloatTimer;
     Vector2 mInitialPosition;
+    SoulType mType;
+    int mValue;
 };

@@ -1,4 +1,5 @@
 #include "EyeMiniboss.h"
+#include "Soul.h"
 #include "Player.h"
 #include "EyeProjectile.h"
 #include "../Game.h"
@@ -118,11 +119,11 @@ void EyeMiniboss::UpdateAI(float deltaTime)
         
         if (distance < 200.0f)
         {
-            mRigidBody->SetVelocity(direction * -MOVE_SPEED);
+            mRigidBody->SetVelocity(direction * (-MOVE_SPEED * mDifficultyMultiplier));
         }
         else
         {
-            mRigidBody->SetVelocity(direction * MOVE_SPEED);
+            mRigidBody->SetVelocity(direction * (MOVE_SPEED * mDifficultyMultiplier));
         }
         
         SetScale(Vector2(direction.x < 0 ? -1.0f : 1.0f, 1.0f));
@@ -233,4 +234,14 @@ void EyeMiniboss::PerformSpreadShot()
     }
 
     GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/eye-attack.wav");
+}
+
+void EyeMiniboss::SpawnSoulsOnDeath()
+{
+    float angle = Random::GetFloatRange(0.0f, Math::TwoPi);
+    float radius = Random::GetFloatRange(8.0f, 32.0f);
+    Vector2 offset(Math::Cos(angle) * radius, Math::Sin(angle) * radius);
+
+    Soul* s = new Soul(GetGame(), Soul::SoulType::Purple);
+    s->SetPosition(GetPosition() + offset);
 }

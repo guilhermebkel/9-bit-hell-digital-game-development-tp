@@ -49,7 +49,7 @@ void StoreScene::Load()
     mCoinWidget = new UIStatWidget(GetGame(), "SOULS", 36);
     mCoinWidget->SetOutline(true);
     mCoinWidget->SetPosition(Vector2(60.0f, 35.0f), HAlign::Left);
-    mCoinWidget->SetValue(std::to_string(GetGame()->GetCoinCount()));
+    mCoinWidget->SetValue(std::to_string(GetGame()->GetSoulCount()));
     mCoinWidget->SetIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
     mCoinWidget->SetIconValueLeftAligned(true);
     mCoinWidget->SetValueOffsetX(-30.0f);
@@ -96,7 +96,7 @@ void StoreScene::Load()
             int price = GetGame()->GetFireRatePrice();
             if (GetGame()->CanAfford(price))
             {
-                GetGame()->SpendCoins(price);
+                GetGame()->SpendSouls(price);
                 GetGame()->UpgradeFireRate();
                 GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought.mp3");
             }
@@ -126,7 +126,7 @@ void StoreScene::Load()
             int price = GetGame()->GetDamagePrice();
             if (GetGame()->CanAfford(price))
             {
-                GetGame()->SpendCoins(price);
+                GetGame()->SpendSouls(price);
                 GetGame()->UpgradeMeleeDamage();
                 GetGame()->UpgradeRangedDamage();
                 GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought.mp3");
@@ -157,7 +157,7 @@ void StoreScene::Load()
             int price = GetGame()->GetSpeedPrice();
             if (GetGame()->CanAfford(price))
             {
-                GetGame()->SpendCoins(price);
+                GetGame()->SpendSouls(price);
                 GetGame()->UpgradeSpeed();
                 GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought.mp3");
             }
@@ -187,7 +187,7 @@ void StoreScene::Load()
             int price = GetGame()->GetPiercingPrice();
             if (GetGame()->CanAfford(price))
             {
-                GetGame()->SpendCoins(price);
+                GetGame()->SpendSouls(price);
                 GetGame()->UpgradePiercing();
                 GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought.mp3");
             }
@@ -232,7 +232,7 @@ void StoreScene::Unload()
 
 void StoreScene::Update(float deltaTime)
 {
-    mCoinWidget->SetValue(std::to_string(GetGame()->GetCoinCount()));
+    mCoinWidget->SetValue(std::to_string(GetGame()->GetSoulCount()));
     
     // Update status widgets
     mHealthWidget->SetValue(std::to_string(GetGame()->GetPlayerHealth()) + "/" + std::to_string(GetGame()->GetPlayerMaxHealth()));
