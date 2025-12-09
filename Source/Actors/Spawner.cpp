@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <array>
 
-Spawner::Spawner(Game* game, SpawnType type, int totalCount, int waveSize, int keepPopulation, bool waitForClear)
+Spawner::Spawner(Game* game, SpawnType type, int totalCount, int waveSize, int keepPopulation, bool waitForClear, float spawnInterval)
     : Actor(game)
     , mSpawnType(type)
     , mTotalCount(totalCount)
@@ -21,6 +21,8 @@ Spawner::Spawner(Game* game, SpawnType type, int totalCount, int waveSize, int k
     , mKeepPopulation(keepPopulation)
     , mWaitForClear(waitForClear)
     , mInitialSpawnDelay(0.0f)
+    , mSpawnInterval(spawnInterval)
+    , mSpawnTimer(0.0f)
 {
     if (mWaveSize <= 0) mWaveSize = totalCount;
     if (mKeepPopulation < 0) mKeepPopulation = 0;
@@ -41,6 +43,53 @@ void Spawner::OnUpdate(float deltaTime)
     }
 
     int activeEnemies = CountActiveEnemies();
+    // Update spawn timer
+    if (mSpawnTimer > 0.0f)
+    {
+        mSpawnTimer -= deltaTime;
+        if (mSpawnTimer < 0.0f) mSpawnTimer = 0.0f;
+    }
+
+    // If this is a collectable spawner and there are no enemies/minibosses
+    // or non-collectable spawners left, flush remaining collectables immediately
+    bool isCollectable = (mSpawnType == SpawnType::Soul || mSpawnType == SpawnType::PurpleSoul || mSpawnType == SpawnType::Purifier || mSpawnType == SpawnType::Healer);
+    if (isCollectable)
+    {
+        bool anyEnemyLike = false;
+        for (auto actor : GetGame()->GetActors())
+        {
+            if (actor == this || actor->GetState() != ActorState::Active) continue;
+
+            if (dynamic_cast<Enemy*>(actor) || dynamic_cast<Miniboss*>(actor))
+            {
+                anyEnemyLike = true;
+                break;
+            }
+
+            auto otherSpawner = dynamic_cast<Spawner*>(actor);
+            if (otherSpawner)
+            {
+                // if other spawner will spawn enemies (i.e., not a collectable), consider it enemy-like
+                if (!(otherSpawner->mSpawnType == SpawnType::Soul || otherSpawner->mSpawnType == SpawnType::PurpleSoul || otherSpawner->mSpawnType == SpawnType::Purifier || otherSpawner->mSpawnType == SpawnType::Healer))
+                {
+                    anyEnemyLike = true;
+                    break;
+                }
+            }
+        }
+
+        if (!anyEnemyLike)
+        {
+            // spawn all remaining collectables immediately so level can complete
+            while (mRemainingCount > 0)
+            {
+                SpawnOne();
+                --mRemainingCount;
+            }
+            SetState(ActorState::Destroy);
+            return;
+        }
+    }
 
     if (mWaitForClear)
     {
@@ -50,17 +99,32 @@ void Spawner::OnUpdate(float deltaTime)
             if (actor == this || actor->GetState() != ActorState::Active) continue;
 
             auto otherSpawner = dynamic_cast<Spawner*>(actor);
-            if (otherSpawner && !otherSpawner->mWaitForClear)
+            if (otherSpawner)
             {
-                areThereEnemySpawners = true;
-                break;
+                // Consider it an enemy spawner only if it will spawn enemies (i.e., not a collectable)
+                bool otherIsCollectable = (otherSpawner->mSpawnType == SpawnType::Soul || otherSpawner->mSpawnType == SpawnType::PurpleSoul || otherSpawner->mSpawnType == SpawnType::Purifier || otherSpawner->mSpawnType == SpawnType::Healer);
+                if (!otherIsCollectable && !otherSpawner->mWaitForClear)
+                {
+                    areThereEnemySpawners = true;
+                    break;
+                }
             }
         }
 
         if (activeEnemies == 0 && !areThereEnemySpawners)
         {
-            SpawnOne();
-            mRemainingCount--;
+            if (mSpawnInterval > 0.0f)
+            {
+                if (mSpawnTimer > 0.0f) return;
+                SpawnOne();
+                mRemainingCount--;
+                mSpawnTimer = mSpawnInterval;
+            }
+            else
+            {
+                SpawnOne();
+                mRemainingCount--;
+            }
         }
         return;
     }
@@ -68,11 +132,24 @@ void Spawner::OnUpdate(float deltaTime)
     if (activeEnemies <= mKeepPopulation)
     {
         int countToSpawn = std::min(mWaveSize, mRemainingCount);
-        for (int i = 0; i < countToSpawn; ++i)
+        if (mSpawnInterval > 0.0f)
         {
-            SpawnOne();
+            // Spawn one at a time respecting the interval
+            if (mSpawnTimer <= 0.0f)
+            {
+                SpawnOne();
+                mRemainingCount -= 1;
+                mSpawnTimer = mSpawnInterval;
+            }
         }
-        mRemainingCount -= countToSpawn;
+        else
+        {
+            for (int i = 0; i < countToSpawn; ++i)
+            {
+                SpawnOne();
+            }
+            mRemainingCount -= countToSpawn;
+        }
     }
 }
 
@@ -101,7 +178,7 @@ void Spawner::SpawnOne()
     bool validSpawn = false;
     int maxAttempts = 10;
     
-    bool isCollectable = (mSpawnType == SpawnType::Soul || mSpawnType == SpawnType::Purifier || mSpawnType == SpawnType::Healer);
+    bool isCollectable = (mSpawnType == SpawnType::Soul || mSpawnType == SpawnType::PurpleSoul || mSpawnType == SpawnType::Purifier || mSpawnType == SpawnType::Healer);
     
     for (int attempt = 0; attempt < maxAttempts && !validSpawn; ++attempt)
     {
@@ -160,6 +237,12 @@ void Spawner::SpawnOne()
         case SpawnType::Soul:
         {
             Soul* soul = new Soul(GetGame());
+            soul->SetPosition(spawnPos);
+            break;
+        }
+        case SpawnType::PurpleSoul:
+        {
+            Soul* soul = new Soul(GetGame(), Soul::SoulType::Purple);
             soul->SetPosition(spawnPos);
             break;
         }

@@ -26,4 +26,6 @@ private:
     bool mUpPressed = false;
     bool mDownPressed = false;
     bool mEnterPressed = false;
+    float mMusicDelayTimer = 0.0f;
+    bool mPlayedVictoryMusic = false;
 };

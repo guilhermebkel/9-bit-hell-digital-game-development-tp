@@ -1,126 +1,98 @@
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 cmake_minimum_required(VERSION 3.26)
 # Configurando o padrão c++
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
-# Configurando o nome e executável do projeto
+# Configurando o nome do projeto
 set(PROJECT_NAME "9-bit-hell")
 project(${PROJECT_NAME})
 
-add_executable(${PROJECT_NAME}
-        Source/Renderer/Shader.cpp
-        Source/Renderer/Shader.h
-        Source/Main.cpp
-        Source/Math.cpp
-        Source/Math.h
-        Source/Random.cpp
-        Source/Random.h
-        Source/Game.cpp
-        Source/Game.h
-        Source/Actors/Actor.cpp
-        Source/Actors/Actor.h
-        Source/Components/Component.cpp
-        Source/Components/Component.h
-        Source/Components/Drawing/DrawComponent.cpp
-        Source/Components/Drawing/DrawComponent.h
-        Source/Components/Physics/RigidBodyComponent.cpp
-        Source/Components/Physics/RigidBodyComponent.h
-        Source/Components/Physics/AABBColliderComponent.cpp
-        Source/Components/Physics/AABBColliderComponent.h
-        Source/Components/ParticleSystemComponent.cpp
-        Source/Components/ParticleSystemComponent.h
-        Source/Renderer/Renderer.cpp
-        Source/Renderer/Renderer.h
-        Source/Renderer/VertexArray.h
-        Source/Renderer/VertexArray.cpp
-        Source/Renderer/Texture.cpp
-        Source/Renderer/Texture.h
-        Source/Actors/Enemy.cpp
-        Source/Actors/Enemy.h
-        Source/Actors/Spawner.cpp
-        Source/Actors/Spawner.h
-        Source/Actors/Player.cpp
-        Source/Actors/Player.h
-        Source/Components/Drawing/AnimatorComponent.cpp
-        Source/Components/Drawing/AnimatorComponent.h
-        Source/Components/Drawing/RectComponent.cpp
-        Source/Components/Drawing/RectComponent.h
-        Source/Actors/Background.cpp
-        Source/Actors/Background.h
-        Source/Components/Drawing/StaticSpriteComponent.cpp
-        Source/Components/Drawing/StaticSpriteComponent.h
-        Source/Actors/Collectable.cpp
-        Source/Actors/Collectable.h
-        Source/Actors/Soul.cpp
-        Source/Actors/Soul.h
-        Source/Actors/Purifier.cpp
-        Source/Actors/Purifier.h
-        Source/Actors/CorruptionOverlay.cpp
-        Source/Actors/CorruptionOverlay.h
-        Source/Actors/Projectile.cpp
-        Source/Actors/Projectile.h
-        Source/Renderer/Font.cpp
-        Source/Renderer/Font.h
-        Source/Components/Drawing/UITextComponent.cpp
-        Source/Components/Drawing/UITextComponent.h
-        Source/Actors/HUD.cpp
-        Source/Actors/HUD.h
-        Source/Components/Drawing/UIButtonComponent.cpp
-        Source/Components/Drawing/UIButtonComponent.h
-        Source/Actors/PauseScreen.cpp
-        Source/Actors/PauseScreen.h
-        Source/Scenes/Scene.cpp
-        Source/Scenes/Scene.h
-        Source/Scenes/MainMenuScene.cpp
-        Source/Scenes/MainMenuScene.h
-        Source/Scenes/GameplayScene.cpp
-        Source/Scenes/GameplayScene.h
-        Source/Actors/UIStatWidget.cpp
-        Source/Actors/UIStatWidget.h
-        Source/Actors/UIHealthBarWidget.cpp
-        Source/Actors/UIHealthBarWidget.h
-        Source/Scenes/StoreScene.cpp
-        Source/Scenes/StoreScene.h
-        Source/Scenes/GameOverScene.cpp
-        Source/Scenes/GameOverScene.h
-        Source/Audio/AudioSystem.cpp
-        Source/Audio/AudioSystem.h
-        Source/Actors/Healer.cpp
-        Source/Actors/Healer.h
-        Source/Actors/SlimeProjectile.cpp
-        Source/Actors/SlimeProjectile.h
-        Source/Actors/SlimePuddle.cpp
-        Source/Actors/SlimePuddle.h
-        Source/Actors/FatMiniboss.cpp
-        Source/Actors/FatMiniboss.h
-        Source/Actors/Miniboss.cpp
-        Source/Actors/Miniboss.h
-        Source/Actors/GroundSpike.cpp
-        Source/Actors/GroundSpike.h
-        Source/Actors/FallingHand.cpp
-        Source/Actors/FallingHand.h
-        Source/Actors/HornMiniboss.cpp
-        Source/Actors/HornMiniboss.h
-        Source/Actors/EyeProjectile.cpp
-        Source/Actors/EyeProjectile.h
-        Source/Actors/EyeMiniboss.cpp
-        Source/Actors/EyeMiniboss.h
-        Source/Scenes/VictoryScene.cpp
-        Source/Scenes/VictoryScene.cpp
-        Source/Scenes/VictoryScene.h
-        Source/Scenes/InitialDifficultyScene.cpp
-        Source/Scenes/InitialDifficultyScene.h
-        Source/Scenes/LevelSelectionScene.cpp
-        Source/Scenes/LevelSelectionScene.h
-        Source/Components/Drawing/UIImageButtonComponent.cpp
-        Source/Components/Drawing/UIImageButtonComponent.h
-        Source/Components/Drawing/SolidShapeComponent.cpp
-        Source/Components/Drawing/SolidShapeComponent.h
-        Source/Components/Drawing/ShapeComponent.cpp
-        Source/Components/Drawing/ShapeComponent.h
-        Source/Actors/UIKeyPrompt.cpp
-        Source/Actors/UIKeyPrompt.h
+set(SRC_CORE
+    Source/Main.cpp
+    Source/Game.cpp
+    Source/Math.cpp
+    Source/Random.cpp
 )
+
+set(SRC_RENDERER
+    Source/Renderer/Shader.cpp
+    Source/Renderer/Renderer.cpp
+    Source/Renderer/VertexArray.cpp
+    Source/Renderer/Texture.cpp
+    Source/Renderer/Font.cpp
+)
+
+set(SRC_COMPONENTS
+    Source/Components/Component.cpp
+    Source/Components/Drawing/DrawComponent.cpp
+    Source/Components/Physics/RigidBodyComponent.cpp
+    Source/Components/Physics/AABBColliderComponent.cpp
+    Source/Components/ParticleSystemComponent.cpp
+    Source/Components/Drawing/AnimatorComponent.cpp
+    Source/Components/Drawing/RectComponent.cpp
+    Source/Components/Drawing/StaticSpriteComponent.cpp
+    Source/Components/Drawing/UITextComponent.cpp
+    Source/Components/Drawing/UIButtonComponent.cpp
+    Source/Components/Drawing/UIImageButtonComponent.cpp
+    Source/Components/Drawing/SolidShapeComponent.cpp
+    Source/Components/Drawing/ShapeComponent.cpp
+)
+
+set(SRC_ACTORS
+    Source/Actors/Actor.cpp
+    Source/Actors/Background.cpp
+    Source/Actors/Collectable.cpp
+    Source/Actors/Soul.cpp
+    Source/Actors/Purifier.cpp
+    Source/Actors/CorruptionOverlay.cpp
+    Source/Actors/Projectile.cpp
+    Source/Actors/HUD.cpp
+    Source/Actors/PauseScreen.cpp
+    Source/Actors/UIStatWidget.cpp
+    Source/Actors/UIHealthBarWidget.cpp
+    Source/Actors/UIKeyPrompt.cpp
+    Source/Actors/Healer.cpp
+    Source/Actors/SlimeProjectile.cpp
+    Source/Actors/SlimePuddle.cpp
+    Source/Actors/FatMiniboss.cpp
+    Source/Actors/Miniboss.cpp
+    Source/Actors/GroundSpike.cpp
+    Source/Actors/FallingHand.cpp
+    Source/Actors/HornMiniboss.cpp
+    Source/Actors/EyeProjectile.cpp
+    Source/Actors/EyeMiniboss.cpp
+    Source/Actors/Enemy.cpp
+    Source/Actors/Spawner.cpp
+    Source/Actors/Player.cpp
+    Source/Actors/FatMiniboss.cpp
+    Source/Actors/HornMiniboss.cpp
+)
+
+set(SRC_SCENES
+    Source/Scenes/Scene.cpp
+    Source/Scenes/MainMenuScene.cpp
+    Source/Scenes/GameplayScene.cpp
+    Source/Scenes/StoreScene.cpp
+    Source/Scenes/GameOverScene.cpp
+    Source/Scenes/VictoryScene.cpp
+    Source/Scenes/InitialDifficultyScene.cpp
+    Source/Scenes/LevelSelectionScene.cpp
+)
+
+set(SRC_AUDIO
+    Source/Audio/AudioSystem.cpp
+)
+
+set(ALL_SOURCES
+    ${SRC_CORE}
+    ${SRC_RENDERER}
+    ${SRC_COMPONENTS}
+    ${SRC_ACTORS}
+    ${SRC_SCENES}
+    ${SRC_AUDIO}
+)
+
+add_executable(${PROJECT_NAME} ${ALL_SOURCES})
 
 if(WIN32)
     set(SDL2_PATH "C:/Program Files/SDL2")
@@ -165,11 +137,9 @@ elseif(UNIX)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_ttf REQUIRED)
     find_package(SDL2_mixer REQUIRED)
-    find_library(SDL2_MIXER_LIBRARY SDL2_mixer)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_MIXER_LIBRARY})
+
     find_package(GLEW REQUIRED)
     find_package(OpenGL REQUIRED)
-
 
     target_include_directories(${PROJECT_NAME} PRIVATE
             ${SDL2_TTF_INCLUDE_DIR}

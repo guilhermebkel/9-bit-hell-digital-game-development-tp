@@ -6,7 +6,7 @@ class GroundSpike : public Actor
 public:
     static constexpr float DAMAGE = 15.0f;
     static constexpr float RISE_TIME = 0.3f;
-    static constexpr float LIFE_TIME = 1.5f;
+    static constexpr float LIFE_TIME = 5.0f;
     static constexpr float SPRITE_WIDTH = 12.0f * 5.0f;
     static constexpr float SPRITE_HEIGHT = 8.0f * 5.0f;;
 

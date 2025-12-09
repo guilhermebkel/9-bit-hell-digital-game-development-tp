@@ -62,35 +62,40 @@ PauseScreen::PauseScreen(Game* game)
     mButtons.push_back(quitButton);
     mButtonActors.push_back(quitButtonActor);
 
-    const float statusX = windowCenterX + 250.0f;
-    const float statusCenterY = windowCenterY;
-    
-    mHealthWidget = new UIStatWidget(GetGame(), "HEALTH", 20, PauseScreen::DRAW_ORDER + 5);
-    mHealthWidget->SetPosition(Vector2(statusX, statusCenterY - 130.0f));
+    const float quitButtonY = windowCenterY + buttonSpacing;
+    const float statusStartY = quitButtonY + 120.0f;
+    const float statusSpacing = 90.0f;
+    const float columnGap = 220.0f;
+    const float colX0 = windowCenterX - columnGap;
+    const float colX1 = windowCenterX;
+    const float colX2 = windowCenterX + columnGap;
+
+    mHealthWidget = new UIStatWidget(GetGame(), "HEALTH", 30, PauseScreen::DRAW_ORDER + 5);
+    mHealthWidget->SetPosition(Vector2(colX0, statusStartY));
     mHealthWidget->SetValue(std::to_string(GetGame()->GetPlayerHealth()) + "/" + std::to_string(GetGame()->GetPlayerMaxHealth()));
 
-    mMeleeWidget = new UIStatWidget(GetGame(), "MELEE ATK", 20, PauseScreen::DRAW_ORDER + 6);
-    mMeleeWidget->SetPosition(Vector2(statusX, statusCenterY - 65.0f));
+    mMeleeWidget = new UIStatWidget(GetGame(), "MELEE ATK", 30, PauseScreen::DRAW_ORDER + 6);
+    mMeleeWidget->SetPosition(Vector2(colX1, statusStartY));
     mMeleeWidget->SetValue(std::to_string(static_cast<int>(GetGame()->GetPlayerMeleeDamage())));
 
-    mRangedWidget = new UIStatWidget(GetGame(), "RANGED ATK", 20, PauseScreen::DRAW_ORDER + 7);
-    mRangedWidget->SetPosition(Vector2(statusX, statusCenterY));
-    mRangedWidget->SetValue(std::to_string(static_cast<int>(GetGame()->GetPlayerRangedDamage())));
-
-    mFireRateWidget = new UIStatWidget(GetGame(), "FIRE RATE", 20, PauseScreen::DRAW_ORDER + 8);
-    mFireRateWidget->SetPosition(Vector2(statusX, statusCenterY + 65.0f));
+    mFireRateWidget = new UIStatWidget(GetGame(), "FIRE RATE", 30, PauseScreen::DRAW_ORDER + 7);
+    mFireRateWidget->SetPosition(Vector2(colX2, statusStartY));
     {
         char fireRateStr[16];
         snprintf(fireRateStr, sizeof(fireRateStr), "%.2f/s", 1.0f / GetGame()->GetPlayerFireRate());
         mFireRateWidget->SetValue(fireRateStr);
     }
 
-    mSpeedWidget = new UIStatWidget(GetGame(), "SPEED", 20, PauseScreen::DRAW_ORDER + 9);
-    mSpeedWidget->SetPosition(Vector2(statusX, statusCenterY + 130.0f));
+    mSpeedWidget = new UIStatWidget(GetGame(), "SPEED", 30, PauseScreen::DRAW_ORDER + 8);
+    mSpeedWidget->SetPosition(Vector2(colX0, statusStartY + statusSpacing));
     mSpeedWidget->SetValue(GetGame()->GetSpeedDisplayValue());
 
-    mPiercingWidget = new UIStatWidget(GetGame(), "PIERCING", 20, PauseScreen::DRAW_ORDER + 10);
-    mPiercingWidget->SetPosition(Vector2(statusX, statusCenterY + 195.0f));
+    mRangedWidget = new UIStatWidget(GetGame(), "RANGED ATK", 30, PauseScreen::DRAW_ORDER + 9);
+    mRangedWidget->SetPosition(Vector2(colX1, statusStartY + statusSpacing));
+    mRangedWidget->SetValue(std::to_string(static_cast<int>(GetGame()->GetPlayerRangedDamage())));
+
+    mPiercingWidget = new UIStatWidget(GetGame(), "PIERCING", 30, PauseScreen::DRAW_ORDER + 10);
+    mPiercingWidget->SetPosition(Vector2(colX2, statusStartY + statusSpacing));
     mPiercingWidget->SetValue(std::to_string(GetGame()->GetPlayerPiercing()));
 
     UpdateButtonSelection();

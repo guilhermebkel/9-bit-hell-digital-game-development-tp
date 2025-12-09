@@ -9,11 +9,11 @@ public:
     static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.60f;
     static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.60f;
 
-    static constexpr float MAX_HP = 125.0f;
+    static constexpr float MAX_HP = 150.0f;
     static constexpr float WALK_SPEED = 80.0f;
     static constexpr float PUDDLE_SPAWN_INTERVAL = 0.5f;
 
-    static constexpr float ATTACK_COOLDOWN = 2.5f;
+    static constexpr float ATTACK_COOLDOWN = 2.0f;
     static constexpr float ATTACK_WINDUP = 0.5f;
 
     enum class BossState { Moving, WindUp, Attacking, Cooldown, BeingHit, Counter, ForcedAttack, Dead };
@@ -22,6 +22,7 @@ public:
 
     void OnUpdate(float deltaTime) override;
     void TakeDamage(float amount) override;
+    void Kill() override;
     void SpawnSoulsOnDeath() override;
 
 private:

@@ -17,8 +17,6 @@ InitialDifficultyScene::InitialDifficultyScene(Game* game)
 void InitialDifficultyScene::Load()
 {
     GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/menu_false_memory_syndrome.mp3");
-    // Garantir que o save esteja carregado antes de decidir qual cena iniciar
-    GetGame()->LoadGame();
     const float centerX = Game::WINDOW_WIDTH / 2.0f;
     auto* bgActor = new Actor(GetGame());
     bgActor->SetPosition(Vector2(centerX, Game::WINDOW_HEIGHT / 2.0f));
@@ -34,11 +32,11 @@ void InitialDifficultyScene::Load()
     const float diffStartY = 220.0f;
     const float diffSpacingY = 100.0f;
     const int spriteBase = 16;
-    mDifficultyBaseScale = 2.0f;
+    mDifficultyBaseScale = 2.6f;
     std::array<std::string,3> diffImages = {"../Assets/GameDifficulty/easy.png", "../Assets/GameDifficulty/medium.png", "../Assets/GameDifficulty/hard.png"};
     std::array<std::string,3> diffLabels = {"Easy", "Medium", "Hard"};
 
-    float iconCenterOffset = -60.0f;
+    float iconCenterOffset = -50.0f;
     float labelCenterOffset = 60.0f;
 
     for (int d = 0; d < 3; ++d)
@@ -69,16 +67,16 @@ void InitialDifficultyScene::Load()
         if (labelText->GetTexture()) textW = labelText->GetTexture()->GetWidth();
 
         float iconLeft = iconCenterX - (iconWidthScaled / 2.0f);
-        float labelLeft = iconLeft + iconWidthScaled + 12.0f;
+        float labelLeft = iconLeft + iconWidthScaled + 24.0f;
         float labelCenterX = labelLeft + (textW / 2.0f);
         labelActor->SetPosition(Vector2(labelCenterX, y));
         mDifficultyLabels.push_back(labelText);
 
         Actor* hlActor = new Actor(GetGame());
-        float totalWidth = 300.0f;
+        float totalWidth = 220.0f;
         float hlCenterX = centerX;
         hlActor->SetPosition(Vector2(hlCenterX, y));
-        auto* hlRect = new RectComponent(hlActor, static_cast<int>(totalWidth), 64, RendererMode::TRIANGLES, 95);
+        auto* hlRect = new RectComponent(hlActor, static_cast<int>(totalWidth), 88, RendererMode::TRIANGLES, 95);
         hlRect->SetColor(Vector4(1.0f,1.0f,1.0f,0.08f));
         hlRect->SetVisible(false);
         mDifficultyHighlightActors.push_back(hlActor);
@@ -87,7 +85,7 @@ void InitialDifficultyScene::Load()
     Actor* startActor = new Actor(GetGame());
     float startY = diffStartY + (3 * diffSpacingY) + 20.0f;
     startActor->SetPosition(Vector2(centerX, startY));
-    mStartButton = new UIButtonComponent(startActor, "START", Vector2(180.0f, 52.0f), [this]() {
+    mStartButton = new UIButtonComponent(startActor, "START", Vector2(220.0f, 72.0f), [this]() {
         if (GetGame()->GetMaxUnlockedLevel() <= 1)
         {
             GetGame()->SetCurrentLevelID(LevelID::Tutorial);
@@ -97,13 +95,13 @@ void InitialDifficultyScene::Load()
             GetGame()->SetCurrentLevelID(LevelID::Level1);
         }
         GetGame()->SetScene(Game::GameScene::Gameplay);
-    }, UIButtonComponent::DEFAULT_DRAW_ORDER, 36);
+    }, UIButtonComponent::DEFAULT_DRAW_ORDER, 32);
 
     Actor* backActor = new Actor(GetGame());
     backActor->SetPosition(Vector2(centerX, startY + 80.0f));
-    mBackButton = new UIButtonComponent(backActor, "BACK", Vector2(180.0f, 52.0f), [this]() {
+    mBackButton = new UIButtonComponent(backActor, "BACK", Vector2(220.0f, 72.0f), [this]() {
         GetGame()->SetScene(Game::GameScene::MainMenu);
-    }, UIButtonComponent::DEFAULT_DRAW_ORDER, 28);
+    }, UIButtonComponent::DEFAULT_DRAW_ORDER, 32);
 
     if (GetGame()->HasSaveFile())
     {

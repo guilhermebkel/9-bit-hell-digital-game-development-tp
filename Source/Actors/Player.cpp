@@ -270,6 +270,11 @@ void Player::Kill()
 
     mRigidBodyComponent->SetEnabled(false);
     GetComponent<AABBColliderComponent>()->SetEnabled(false);
+
+    if (GetGame() && GetGame()->GetAudioSystem())
+    {
+        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/player-death.mp3");
+    }
 }
 
 void Player::OnHorizontalCollision(const float minOverlap, AABBColliderComponent* other)

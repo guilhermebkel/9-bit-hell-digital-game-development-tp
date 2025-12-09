@@ -17,6 +17,8 @@ VictoryScene::~VictoryScene() {}
 
 void VictoryScene::Load()
 {
+    GetGame()->SaveGame(); 
+
     auto* backgroundActor = new Background(GetGame(), "../Assets/VictoryBackground.png");
     mSceneActors.push_back(backgroundActor);
 
@@ -28,21 +30,68 @@ void VictoryScene::Load()
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor);
     titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
-    titleText->SetText("Victory!", Color::White, 96);
+    titleText->SetText("Victory!", Color::White, 144);
 
-    Actor* quitButtonActor = new Actor(GetGame());
-    quitButtonActor->SetPosition(Vector2(windowCenterX, windowCenterY + 50.0f));
-    auto quitButton = new UIButtonComponent(quitButtonActor, "EXIT TO MAIN MENU", buttonSize,
+    // Buttons: Store, Level Selection, Main Menu
+    const float firstButtonY = windowCenterY + 10.0f;
+    const float buttonGap = 60.0f;
+
+    Actor* storeButtonActor = new Actor(GetGame());
+    storeButtonActor->SetPosition(Vector2(windowCenterX, firstButtonY));
+    auto storeButton = new UIButtonComponent(storeButtonActor, "STORE", buttonSize,
+        [this]() {
+            GetGame()->SetScene(Game::GameScene::Store, 0.5f);
+        }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
+    );
+    mButtons.push_back(storeButton);
+
+    Actor* levelSelButtonActor = new Actor(GetGame());
+    levelSelButtonActor->SetPosition(Vector2(windowCenterX, firstButtonY + buttonGap));
+    auto levelSelButton = new UIButtonComponent(levelSelButtonActor, "SELECT LEVEL", buttonSize,
+        [this]() {
+            GetGame()->SetScene(Game::GameScene::LevelSelection, 0.5f);
+        }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
+    );
+    mButtons.push_back(levelSelButton);
+
+    Actor* mainMenuButtonActor = new Actor(GetGame());
+    mainMenuButtonActor->SetPosition(Vector2(windowCenterX, firstButtonY + buttonGap * 2));
+    auto mainMenuButton = new UIButtonComponent(mainMenuButtonActor, "MAIN MENU", buttonSize,
         [this]() {
             GetGame()->SetScene(Game::GameScene::MainMenu);
         }
+        ,
+        UIButtonComponent::DEFAULT_DRAW_ORDER,
+        36
     );
-    mButtons.push_back(quitButton);
+    mButtons.push_back(mainMenuButton);
 
     mSceneActors.push_back(mTitleActor);
-    mSceneActors.push_back(quitButtonActor);
+    mSceneActors.push_back(storeButtonActor);
+    mSceneActors.push_back(levelSelButtonActor);
+    mSceneActors.push_back(mainMenuButtonActor);
 
     UpdateButtonSelection();
+
+    // Tocar som de vitória ao abrir a tela
+    if (GetGame() && GetGame()->GetAudioSystem())
+    {
+        // Para garantir que a música do último nível pare
+        GetGame()->GetAudioSystem()->StopMusic();
+
+        // Toca o efeito de vitória
+        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/victory.wav");
+
+        // Inicializa timer para tocar a música de vitória após 3 segundos
+        mMusicDelayTimer = 0.0f;
+        mPlayedVictoryMusic = false;
+    }
 }
 
 void VictoryScene::Unload()
@@ -54,7 +103,19 @@ void VictoryScene::Unload()
     mSceneActors.clear();
 }
 
-void VictoryScene::Update(float deltaTime) {}
+void VictoryScene::Update(float deltaTime)
+{
+    // Atualiza o timer e, após 2 segundos, toca a música de vitória (uma vez)
+    if (!mPlayedVictoryMusic && GetGame() && GetGame()->GetAudioSystem())
+    {
+        mMusicDelayTimer += deltaTime;
+        if (mMusicDelayTimer >= 2.0f)
+        {
+            GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/victory_b6_my_heart_will_stop_in joy.mp3");
+            mPlayedVictoryMusic = true;
+        }
+    }
+}
 
 void VictoryScene::ProcessInput(const uint8_t* keyState)
 {

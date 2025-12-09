@@ -218,7 +218,10 @@ void FatMiniboss::TakeDamage(float amount)
         mRigidBody->SetVelocity(Vector2::Zero);
     }
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-hurt.wav");
+    if (!mIsDead)
+    {
+        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-hurt.wav");
+    }
 }
 
 void FatMiniboss::SpawnPuddle()
@@ -262,6 +265,21 @@ void FatMiniboss::SpawnSoulsOnDeath()
         Vector2 offset(Math::Cos(angle) * radius, Math::Sin(angle) * radius);
 
         Soul* s = new Soul(GetGame(), Soul::SoulType::Purple);
-        s->SetPosition(GetPosition() + offset);
+        Vector2 spawnPos = GetPosition() + offset;
+        const float margin = 16.0f;
+        spawnPos.x = Math::Clamp(spawnPos.x, margin, static_cast<float>(Game::WINDOW_WIDTH) - margin);
+        float minY = GetGame()->GetUpperBoundary() + margin;
+        spawnPos.y = Math::Clamp(spawnPos.y, minY, static_cast<float>(Game::WINDOW_HEIGHT) - margin);
+        s->SetPosition(spawnPos);
+    }
+}
+
+void FatMiniboss::Kill()
+{
+    Miniboss::Kill();
+
+    if (GetGame() && GetGame()->GetAudioSystem())
+    {
+        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-defeated.wav");
     }
 }

@@ -76,6 +76,8 @@ bool Game::Initialize()
         return false;
     }
 
+    LoadGame();
+
     mNextScene = GameScene::MainMenu;
     ChangeScene();
 
