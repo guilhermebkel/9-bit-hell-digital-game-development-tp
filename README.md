@@ -4,10 +4,11 @@
 
 ## Screenshots
 
-![Main Menu](screenshot-main-menu.png)
-![GamePlay](screenshot-gameplay.png)
-![Store](screenshot-store.png)
-![Game Over](screenshot-game-over.png)
+![Main Menu](screenshot-main-menu.jpg)
+![Level Selection](screenshot-level-selection.jpg)
+![Gameplay](screenshot-gameplay.jpg)
+![Store](screenshot-store.jpg)
+![Game Over](screenshot-game-over.jpg)
 
 ## Título
 
