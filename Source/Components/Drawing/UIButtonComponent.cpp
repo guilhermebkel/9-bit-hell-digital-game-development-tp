@@ -162,13 +162,22 @@ void UIButtonComponent::UpdatePositions()
 
     float startX = center.x - (highlightWidth / 2.0f);
 
-    float mainAreaWidth = highlightWidth - priceGroupWidth - mPriceMargin;
+    float mainAreaWidth;
+    if (priceGroupWidth > 0.0f)
+    {
+        mainAreaWidth = highlightWidth - priceGroupWidth - mPriceMargin;
+    }
+    else
+    {
+        mainAreaWidth = highlightWidth;
+    }
+
     if (mainAreaWidth < baseContentWidth)
     {
         mainAreaWidth = baseContentWidth;
     }
 
-    float mainStartX = startX + mPriceMargin;
+    float mainStartX = startX + (priceGroupWidth > 0.0f ? mPriceMargin : 0.0f);
     if (!mMainContentLeftAligned)
     {
         mainStartX += (mainAreaWidth - baseContentWidth) * 0.5f;

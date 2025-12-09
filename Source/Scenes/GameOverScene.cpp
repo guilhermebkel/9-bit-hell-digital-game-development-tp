@@ -19,6 +19,8 @@ void GameOverScene::Load()
 {
     new Background(GetGame(), "../Assets/GameOverBackground.png");
 
+    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/game_over_past_life_regression.mp3");
+
     const Vector2 buttonSize(300.0f, 40.0f);
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;
     const float windowCenterY = Game::WINDOW_HEIGHT / 2.0f;

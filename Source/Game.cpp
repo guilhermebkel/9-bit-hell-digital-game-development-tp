@@ -644,8 +644,8 @@ float Game::GetDifficultyMultiplier() const
     switch (mDifficulty)
     {
         case Difficulty::Easy: return 1.0f;
-        case Difficulty::Medium: return 1.5f;
-        case Difficulty::Hard: return 2.0f;
+        case Difficulty::Medium: return 1.25f;
+        case Difficulty::Hard: return 1.5f;
     }
     return 1.0f;
 }

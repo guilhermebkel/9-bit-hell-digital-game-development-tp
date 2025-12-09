@@ -347,14 +347,17 @@ void Player::TakeDamage(float amount)
     mRigidBodyComponent->SetEnabled(false);
         
     // Tocar aleatoriamente um dos 3 sons de dano do player
-    int soundIndex = Random::GetIntRange(1, 3);
-    std::string soundFile = "../Assets/Sounds/player-hurt-" + std::to_string(soundIndex) + ".wav";
-    GetGame()->GetAudioSystem()->PlaySound(soundFile);
-    
     if (mHealth <= 0.0f)
     {
         mHealth = 0.0f;
         Kill();
+    }
+    else
+    {
+        // Tocar aleatoriamente um dos 3 sons de dano do player (somente se não morreu)
+        int soundIndex = Random::GetIntRange(1, 3);
+        std::string soundFile = "../Assets/Sounds/player-hurt-" + std::to_string(soundIndex) + ".wav";
+        GetGame()->GetAudioSystem()->PlaySound(soundFile);
     }
 }
 

@@ -55,7 +55,7 @@ void LevelSelectionScene::Load()
     const float diffSpacingY = 80.0f;
     const int spriteBase = 16;
     mDifficultyBaseScale = 2.0f;
-    std::array<std::string,3> diffImages = {"../Assets/GameDifficulty/easy.png", "../Assets/GameDifficulty/medium.png", "../Assets/GameDifficulty/hard.png"};
+    std::array<std::string,3> diffImages = {"../Assets/GameDifficulty/Easy.png", "../Assets/GameDifficulty/Medium.png", "../Assets/GameDifficulty/Hard.png"};
     std::array<std::string,3> diffLabels = {"Easy", "Medium", "Hard"};
 
     mDifficultyButtonWidth = 190.0f;
