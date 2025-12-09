@@ -160,3 +160,8 @@ elseif(UNIX)
 
     )
 endif()
+
+set(RESOURCE_SHADERS "${CMAKE_SOURCE_DIR}/Shaders")
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${RESOURCE_SHADERS}" "$<TARGET_FILE_DIR:${PROJECT_NAME}>/Shaders"
+)
