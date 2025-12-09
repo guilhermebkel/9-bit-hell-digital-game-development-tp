@@ -15,7 +15,7 @@ Projectile::Projectile(Game* game, int damage)
     , mDamage(damage)
     , mGamePtr(game)
 {
-    new StaticSpriteComponent(this, "../Assets/Projectile.png", Projectile::SPRITE_WIDTH, Projectile::SPRITE_HEIGHT);
+    new StaticSpriteComponent(this, Game::ResolvePath("Assets/Projectile.png"), Projectile::SPRITE_WIDTH, Projectile::SPRITE_HEIGHT);
 
     new RigidBodyComponent(this, 1.0f, 0.0f);
 

@@ -17,9 +17,9 @@ GameOverScene::~GameOverScene() {}
 
 void GameOverScene::Load()
 {
-    new Background(GetGame(), "../Assets/GameOverBackground.png");
+    new Background(GetGame(), Game::ResolvePath("Assets/GameOverBackground.png"));
 
-    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/game_over_past_life_regression.mp3");
+    GetGame()->GetAudioSystem()->PlayMusic(Game::ResolvePath("Assets/Sounds/game_over_past_life_regression.mp3"));
 
     const Vector2 buttonSize(300.0f, 40.0f);
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;
@@ -28,7 +28,7 @@ void GameOverScene::Load()
     Actor* mTitleActor = new Actor(GetGame());
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor);
-    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetFont(Game::ResolvePath("Assets/Fonts/Jacquard12-Regular.ttf"));
     titleText->SetText("Game Over", Color::White, 96);
 
     const float buttonSpacing = 70.0f;
@@ -121,7 +121,7 @@ void GameOverScene::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
     UpdateButtonSelection();
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void GameOverScene::SelectPreviousButton()
@@ -135,14 +135,14 @@ void GameOverScene::SelectPreviousButton()
         mSelectedButtonIndex--;
     }
     UpdateButtonSelection();
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void GameOverScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/enter-option.wav"));
         mButtons[mSelectedButtonIndex]->Click();
     }
 }

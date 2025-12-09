@@ -3,6 +3,7 @@
 #include <map>
 #include <fstream>
 #include <cstdio>
+#include <filesystem>
 #include "Game.h"
 #include "Json.h"
 #include "Components/Drawing/DrawComponent.h"
@@ -41,7 +42,49 @@ Game::Game()
 
 }
 
-const std::string Game::SAVE_FILE = "../9-bit-hell-save.json";
+std::string Game::SAVE_FILE = "";
+std::string Game::sBasePath = "";
+
+std::string Game::ResolvePath(const std::string& relativePath)
+{
+    try {
+        namespace fs = std::filesystem;
+        fs::path base(sBasePath);
+        fs::path rel(relativePath);
+
+        fs::path combined = base / rel;
+        fs::path normalized = combined.lexically_normal();
+        if (fs::exists(normalized)) {
+            return normalized.generic_string();
+        }
+
+        fs::path cwdAttempt = fs::current_path() / rel;
+        cwdAttempt = cwdAttempt.lexically_normal();
+        if (fs::exists(cwdAttempt)) {
+            return cwdAttempt.generic_string();
+        }
+
+        fs::path tryPath = base;
+
+        if (tryPath.empty()) tryPath = fs::current_path();
+
+        for (int i = 0; i < 5; ++i)
+        {
+            fs::path attempt = tryPath / rel;
+            attempt = attempt.lexically_normal();
+            if (fs::exists(attempt)) {
+                return attempt.generic_string();
+            }
+            if (tryPath.has_parent_path()) tryPath = tryPath.parent_path();
+            else break;
+        }
+
+        return normalized.generic_string();
+    }
+    catch (...) {
+        return relativePath;
+    }
+}
 
 bool Game::Initialize()
 {
@@ -52,6 +95,21 @@ bool Game::Initialize()
         SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
         return false;
     }
+
+    // Inicializa o base path a partir do diretório do executável
+    char* base = SDL_GetBasePath();
+    if (base)
+    {
+        sBasePath = std::string(base);
+        SDL_free(base);
+    }
+    else
+    {
+        sBasePath = std::string();
+    }
+
+    // Definir caminho do save file com base no base path (save ao lado do exe)
+    SAVE_FILE = ResolvePath("9-bit-hell-save.json");
 
     if (TTF_Init() == -1)
     {
@@ -67,7 +125,11 @@ bool Game::Initialize()
     }
 
     mRenderer = new Renderer(mWindow);
-    mRenderer->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    if (!mRenderer->Initialize(WINDOW_WIDTH, WINDOW_HEIGHT))
+    {
+        SDL_Log("Renderer initialization failed.");
+        return false;
+    }
 
     mAudioSystem = new AudioSystem();
     if (!mAudioSystem->Initialize())

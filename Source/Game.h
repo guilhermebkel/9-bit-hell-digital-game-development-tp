@@ -12,7 +12,11 @@ class PauseScreen;  // Forward declaration
 class Game
 {
 public:
-    static const std::string SAVE_FILE;
+    static std::string SAVE_FILE;
+
+    // Retorna o base path do executável + o caminho relativo fornecido
+    static std::string ResolvePath(const std::string& relativePath);
+    static std::string sBasePath;
     static const int WINDOW_WIDTH   = 1024;
     static const int WINDOW_HEIGHT  = 768;
     static const int FPS = 60;

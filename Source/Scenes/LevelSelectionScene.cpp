@@ -42,12 +42,12 @@ void LevelSelectionScene::Load()
 {
     GetGame()->LoadGame();
 
-    new Background(GetGame(), "../Assets/LevelSelectionBackground.png");
+    new Background(GetGame(), Game::ResolvePath("Assets/LevelSelectionBackground.png"));
 
     Actor* mTitleActor = new Actor(GetGame());
     mTitleActor->SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, 50.0f));
     auto* titleText = new UITextComponent(mTitleActor);
-    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetFont(Game::ResolvePath("Assets/Fonts/Jacquard12-Regular.ttf"));
     titleText->SetText("Select Level", Vector3(1.0f, 1.0f, 1.0f), 64);
 
     const float leftEdgeX = 80.0f;
@@ -55,7 +55,7 @@ void LevelSelectionScene::Load()
     const float diffSpacingY = 80.0f;
     const int spriteBase = 16;
     mDifficultyBaseScale = 2.0f;
-    std::array<std::string,3> diffImages = {"../Assets/GameDifficulty/Easy.png", "../Assets/GameDifficulty/Medium.png", "../Assets/GameDifficulty/Hard.png"};
+    std::array<std::string,3> diffImages = {Game::ResolvePath("Assets/GameDifficulty/Easy.png"), Game::ResolvePath("Assets/GameDifficulty/Medium.png"), Game::ResolvePath("Assets/GameDifficulty/Hard.png")};
     std::array<std::string,3> diffLabels = {"Easy", "Medium", "Hard"};
 
     mDifficultyButtonWidth = 190.0f;
@@ -93,7 +93,7 @@ void LevelSelectionScene::Load()
 
         Actor* labelActor = new Actor(GetGame());
         auto* labelText = new UITextComponent(labelActor);
-        labelText->SetFont("../Assets/Fonts/Jersey10-Regular.ttf");
+        labelText->SetFont(Game::ResolvePath("Assets/Fonts/Jersey10-Regular.ttf"));
         labelText->SetText(diffLabels[d], Vector3(1.0f,1.0f,1.0f), 36);
 
         int textW = 0;
@@ -184,7 +184,7 @@ void LevelSelectionScene::Load()
 
     for (size_t i = 0; i < levels.size(); ++i)
     {
-        std::string path = "../Assets/MenuLevelNumbers/" + levels[i].suffix + ".png";
+        std::string path = Game::ResolvePath("Assets/MenuLevelNumbers/" + levels[i].suffix + ".png");
 
         Vector2 pos(centerX, startY + (i * spacingY));
 
@@ -346,7 +346,7 @@ void LevelSelectionScene::SelectNextButton()
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mTotalButtons;
     UpdateButtonSelection();
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void LevelSelectionScene::SelectPreviousButton()
@@ -363,7 +363,7 @@ void LevelSelectionScene::SelectPreviousButton()
 
     UpdateButtonSelection();
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void LevelSelectionScene::ClickSelectedButton()
@@ -387,14 +387,14 @@ void LevelSelectionScene::ClickSelectedButton()
 
         if (isLocked)
         {
-            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/error.mp3");
+            GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/error.mp3"));
         } else
         {
-            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-level.wav");
+            GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/enter-level.wav"));
         }
     } else
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/enter-option.wav"));
     }
 }
 

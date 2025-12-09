@@ -34,8 +34,8 @@ Player::Player(Game* game, const float forwardSpeed)
 {
     mDrawComponent = new AnimatorComponent(
         this,
-        "../Assets/Sprites/Principal/Principal.png",
-        "../Assets/Sprites/Principal/Principal.json",
+        Game::ResolvePath("Assets/Sprites/Principal/Principal.png"),
+        Game::ResolvePath("Assets/Sprites/Principal/Principal.json"),
         Player::SPRITE_WIDTH,
         Player::SPRITE_HEIGHT
     );
@@ -106,7 +106,7 @@ void Player::OnProcessInput(const uint8_t* state)
         mEnemiesHitInCurrentAttack = 0;
         
         int soundIndex = Random::GetIntRange(1, 4);
-        std::string soundFile = "../Assets/Sounds/sword-attack-" + std::to_string(soundIndex) + ".wav";
+        std::string soundFile = Game::ResolvePath("Assets/Sounds/sword-attack-" + std::to_string(soundIndex) + ".wav");
         GetGame()->GetAudioSystem()->PlaySound(soundFile);
     }
     else if (canStartRanged)
@@ -125,7 +125,7 @@ void Player::OnProcessInput(const uint8_t* state)
         projectile->SetScale(Vector2(direction, 1.0f));
         projectile->GetComponent<RigidBodyComponent>()->SetVelocity(Vector2(direction * Projectile::SPEED, 0.0f));
         
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/sword-throw.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/sword-throw.wav"));
     }
 
     mRigidBodyComponent->ApplyForce(force);
@@ -273,7 +273,7 @@ void Player::Kill()
 
     if (GetGame() && GetGame()->GetAudioSystem())
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/player-death.mp3");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/player-death.mp3"));
     }
 }
 
@@ -356,7 +356,7 @@ void Player::TakeDamage(float amount)
     {
         // Tocar aleatoriamente um dos 3 sons de dano do player (somente se não morreu)
         int soundIndex = Random::GetIntRange(1, 3);
-        std::string soundFile = "../Assets/Sounds/player-hurt-" + std::to_string(soundIndex) + ".wav";
+        std::string soundFile = Game::ResolvePath("Assets/Sounds/player-hurt-" + std::to_string(soundIndex) + ".wav");
         GetGame()->GetAudioSystem()->PlaySound(soundFile);
     }
 }

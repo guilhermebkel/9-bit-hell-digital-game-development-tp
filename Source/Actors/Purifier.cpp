@@ -11,8 +11,8 @@ Purifier::Purifier(class Game* game)
 {
     class AnimatorComponent* mDrawComponent = new AnimatorComponent(
         this,
-        "../Assets/Sprites/Collectables/Light/Light.png",
-        "../Assets/Sprites/Collectables/Light/Light.json",
+        Game::ResolvePath("Assets/Sprites/Collectables/Light/Light.png"),
+        Game::ResolvePath("Assets/Sprites/Collectables/Light/Light.json"),
         Purifier::SPRITE_WIDTH,
         Purifier::SPRITE_HEIGHT
     );
@@ -29,5 +29,5 @@ void Purifier::OnUpdate(float deltaTime)
 void Purifier::OnCollect(Player* player)
 {
     player->GetGame()->ReduceCorruption(0.25f);
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-purifier.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/pickup-purifier.wav"));
 }

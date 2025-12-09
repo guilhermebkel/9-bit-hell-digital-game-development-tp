@@ -8,7 +8,7 @@
 FallingHand::FallingHand(Game* game)
     : Actor(game)
 {
-    new StaticSpriteComponent(this, "../Assets/HandProjectile.png", SPRITE_WIDTH, SPRITE_HEIGHT, 150);
+    new StaticSpriteComponent(this, Game::ResolvePath("Assets/HandProjectile.png"), SPRITE_WIDTH, SPRITE_HEIGHT, 150);
 
     mRigidBody = new RigidBodyComponent(this, 1.0f, 0.0f);
     mRigidBody->SetVelocity(Vector2(0.0f, FALL_SPEED));

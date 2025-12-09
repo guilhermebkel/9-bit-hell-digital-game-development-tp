@@ -19,8 +19,8 @@ FatMiniboss::FatMiniboss(Game* game)
 {
     mAnimator = new AnimatorComponent(
         this,
-        "../Assets/Sprites/FatMiniboss/FatMiniboss.png",
-        "../Assets/Sprites/FatMiniboss/FatMiniboss.json",
+        Game::ResolvePath("Assets/Sprites/FatMiniboss/FatMiniboss.png"),
+        Game::ResolvePath("Assets/Sprites/FatMiniboss/FatMiniboss.json"),
         SPRITE_WIDTH,
         SPRITE_HEIGHT
     );
@@ -200,7 +200,7 @@ void FatMiniboss::PerformForcedAttack()
     SlimeProjectile* proj = new SlimeProjectile(GetGame(), variedDir);
     proj->SetPosition(GetPosition() + Vector2(0.0f, -10.0f));
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-attack.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/fat-attack.wav"));
 }
 
 void FatMiniboss::TakeDamage(float amount)
@@ -220,7 +220,7 @@ void FatMiniboss::TakeDamage(float amount)
 
     if (!mIsDead)
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-hurt.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/fat-hurt.wav"));
     }
 }
 
@@ -252,7 +252,7 @@ void FatMiniboss::ShootSlime()
     SlimeProjectile* p2 = new SlimeProjectile(GetGame(), dir2);
     p2->SetPosition(GetPosition() + Vector2(0.0f, -10.0f));
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-attack.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/fat-attack.wav"));
 }
 
 void FatMiniboss::SpawnSoulsOnDeath()
@@ -280,6 +280,6 @@ void FatMiniboss::Kill()
 
     if (GetGame() && GetGame()->GetAudioSystem())
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/fat-defeated.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/fat-defeated.wav"));
     }
 }

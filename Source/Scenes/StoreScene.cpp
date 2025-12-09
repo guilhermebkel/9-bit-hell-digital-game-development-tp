@@ -31,7 +31,7 @@ StoreScene::~StoreScene()
 
 void StoreScene::Load()
 {
-    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/level-transition.wav");
+    GetGame()->GetAudioSystem()->PlayMusic(Game::ResolvePath("Assets/Sounds/level-transition.wav"));
 
     const float centerX = Game::WINDOW_WIDTH / 2.0f;
 
@@ -42,7 +42,7 @@ void StoreScene::Load()
 
     auto* titleActor = new Actor(GetGame());
     auto* titleText = new UITextComponent(titleActor);
-    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetFont(Game::ResolvePath("Assets/Fonts/Jacquard12-Regular.ttf"));
     titleText->SetText("Store", Color::White, 108);
     titleActor->SetPosition(Vector2(centerX, 100.0f));
 
@@ -50,7 +50,7 @@ void StoreScene::Load()
     mCoinWidget->SetOutline(true);
     mCoinWidget->SetPosition(Vector2(60.0f, 35.0f), HAlign::Left);
     mCoinWidget->SetValue(std::to_string(GetGame()->GetSoulCount()));
-    mCoinWidget->SetIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    mCoinWidget->SetIcon(Game::ResolvePath("Assets/Store/Soul.png"), Vector2(8.0f * 3.0f, 8.0f * 3.0f));
     mCoinWidget->SetIconValueLeftAligned(true);
     mCoinWidget->SetValueOffsetX(-30.0f);
 
@@ -98,19 +98,19 @@ void StoreScene::Load()
             {
                 GetGame()->SpendSouls(price);
                 GetGame()->UpgradeFireRate();
-                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought.mp3");
+                GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/store-item-bought.mp3"));
             }
             else
             {
-                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought-fail.wav");
+                GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/store-item-bought-fail.wav"));
             }
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
         36,
-        "../Assets/Store/FireRate.png",
+        Game::ResolvePath("Assets/Store/FireRate.png"),
         Vector2(12.0f * 3.0f, 12.0f * 3.0f)
     );
-    mFireRateButton->SetPriceIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    mFireRateButton->SetPriceIcon(Game::ResolvePath("Assets/Store/Soul.png"), Vector2(8.0f * 3.0f, 8.0f * 3.0f));
     {
         int price = GetGame()->GetFireRatePrice();
         mFireRateButton->SetPrice(price);
@@ -129,19 +129,19 @@ void StoreScene::Load()
                 GetGame()->SpendSouls(price);
                 GetGame()->UpgradeMeleeDamage();
                 GetGame()->UpgradeRangedDamage();
-                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought.mp3");
+                GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/store-item-bought.mp3"));
             }
             else
             {
-                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought-fail.wav");
+                GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/store-item-bought-fail.wav"));
             }
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
         36,
-        "../Assets/Store/Damage.png",
+        Game::ResolvePath("Assets/Store/Damage.png"),
         Vector2(12.0f * 3.0f, 12.0f * 3.0f)
     );
-    mDamageButton->SetPriceIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    mDamageButton->SetPriceIcon(Game::ResolvePath("Assets/Store/Soul.png"), Vector2(8.0f * 3.0f, 8.0f * 3.0f));
     {
         int price = GetGame()->GetDamagePrice();
         mDamageButton->SetPrice(price);
@@ -159,19 +159,19 @@ void StoreScene::Load()
             {
                 GetGame()->SpendSouls(price);
                 GetGame()->UpgradeSpeed();
-                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought.mp3");
+                GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/store-item-bought.mp3"));
             }
             else
             {
-                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought-fail.wav");
+                GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/store-item-bought-fail.wav"));
             }
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
         36,
-        "../Assets/Store/Speed.png",
+        Game::ResolvePath("Assets/Store/Speed.png"),
         Vector2(12.0f * 3.0f, 12.0f * 3.0f)
     );
-    mSpeedButton->SetPriceIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    mSpeedButton->SetPriceIcon(Game::ResolvePath("Assets/Store/Soul.png"), Vector2(8.0f * 3.0f, 8.0f * 3.0f));
     {
         int price = GetGame()->GetSpeedPrice();
         mSpeedButton->SetPrice(price);
@@ -189,19 +189,19 @@ void StoreScene::Load()
             {
                 GetGame()->SpendSouls(price);
                 GetGame()->UpgradePiercing();
-                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought.mp3");
+                GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/store-item-bought.mp3"));
             }
             else
             {
-                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/store-item-bought-fail.wav");
+                GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/store-item-bought-fail.wav"));
             }
         },
         UIButtonComponent::DEFAULT_DRAW_ORDER,
         36,
-        "../Assets/Store/Piercing.png",
+        Game::ResolvePath("Assets/Store/Piercing.png"),
         Vector2(12.0f * 3.0f, 12.0f * 3.0f)
     );
-    mPiercingButton->SetPriceIcon("../Assets/Store/Soul.png", Vector2(8.0f * 3.0f, 8.0f * 3.0f));
+    mPiercingButton->SetPriceIcon(Game::ResolvePath("Assets/Store/Soul.png"), Vector2(8.0f * 3.0f, 8.0f * 3.0f));
     {
         int price = GetGame()->GetPiercingPrice();
         mPiercingButton->SetPrice(price);
@@ -312,7 +312,7 @@ void StoreScene::SelectNextButton()
 
     UpdateButtonSelection();
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void StoreScene::SelectPreviousButton()
@@ -328,7 +328,7 @@ void StoreScene::SelectPreviousButton()
 
     UpdateButtonSelection();
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void StoreScene::ClickSelectedButton()
@@ -339,7 +339,7 @@ void StoreScene::ClickSelectedButton()
 
         if (clickedOnContinueButton)
         {
-            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-level.wav");
+            GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/enter-level.wav"));
         }
 
         mButtons[mSelectedButtonIndex]->Click();

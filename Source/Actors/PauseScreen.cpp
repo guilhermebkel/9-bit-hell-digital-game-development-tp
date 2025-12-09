@@ -34,7 +34,7 @@ PauseScreen::PauseScreen(Game* game)
     mTitleActor = new Actor(game);
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor, PauseScreen::DRAW_ORDER + 2);
-    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetFont(Game::ResolvePath("Assets/Fonts/Jacquard12-Regular.ttf"));
     titleText->SetText("Paused", Color::White, 72);
 
     Actor* resumeButtonActor = new Actor(game);
@@ -138,7 +138,7 @@ void PauseScreen::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
     UpdateButtonSelection();
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void PauseScreen::SelectPreviousButton()
@@ -152,14 +152,14 @@ void PauseScreen::SelectPreviousButton()
         mSelectedButtonIndex--;
     }
     UpdateButtonSelection();
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void PauseScreen::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/enter-option.wav"));
         mButtons[mSelectedButtonIndex]->Click();
     }
 }

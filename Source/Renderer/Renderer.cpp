@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "VertexArray.h"
 #include "Texture.h"
+#include "../Game.h"
 
 Renderer::Renderer(SDL_Window *window)
 : mBaseShader(nullptr)
@@ -172,7 +173,7 @@ bool Renderer::LoadShaders()
 {
 	// Create sprite shader
 	mBaseShader = new Shader();
-	if (!mBaseShader->Load("../Shaders/Base")) {
+    if (!mBaseShader->Load(Game::ResolvePath("Shaders/Base"))) {
 		return false;
 	}
 

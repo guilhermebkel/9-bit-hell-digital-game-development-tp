@@ -55,8 +55,8 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
     switch (type)
     {
     case EnemyType::Eye:
-        texturePath = "../Assets/Sprites/EyeEnemy/EyeEnemy.png";
-        jsonPath = "../Assets/Sprites/EyeEnemy/EyeEnemy.json";
+        texturePath = Game::ResolvePath("Assets/Sprites/EyeEnemy/EyeEnemy.png");
+        jsonPath = Game::ResolvePath("Assets/Sprites/EyeEnemy/EyeEnemy.json");
         mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::EYE_SPRITE_WIDTH, Enemy::EYE_SPRITE_HEIGHT);
         mOriginalColor = Vector3(1.0f, 0.39f, 0.39f);
         mDrawComponent->SetColor(mOriginalColor);
@@ -69,8 +69,8 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         break;
 
     case EnemyType::Horn:
-        texturePath = "../Assets/Sprites/HornEnemy/HornEnemy.png";
-        jsonPath = "../Assets/Sprites/HornEnemy/HornEnemy.json";
+        texturePath = Game::ResolvePath("Assets/Sprites/HornEnemy/HornEnemy.png");
+        jsonPath = Game::ResolvePath("Assets/Sprites/HornEnemy/HornEnemy.json");
         mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
         mOriginalColor = Vector3(0.5f, 1.0f, 0.5f);
         mDrawComponent->SetColor(mOriginalColor);
@@ -83,8 +83,8 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
         break;
 
     case EnemyType::Fat:
-        texturePath = "../Assets/Sprites/FatEnemy/FatEnemy.png";
-        jsonPath = "../Assets/Sprites/FatEnemy/FatEnemy.json";
+        texturePath = Game::ResolvePath("Assets/Sprites/FatEnemy/FatEnemy.png");
+        jsonPath = Game::ResolvePath("Assets/Sprites/FatEnemy/FatEnemy.json");
         mDrawComponent = new AnimatorComponent(this, texturePath, jsonPath, Enemy::SPRITE_WIDTH, Enemy::SPRITE_HEIGHT);
         mOriginalColor = Vector3(0.44f, 0.56f, 0.25f);
         mDrawComponent->SetColor(mOriginalColor);
@@ -227,7 +227,7 @@ void Enemy::Kill()
 {
     if (mIsDying) return;
     mIsDying = true;
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/monster-hurt.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/monster-hurt.wav"));
     mDrawComponent->SetAnimation("dead");
     mRigidBodyComponent->SetEnabled(false);
     mColliderComponent->SetEnabled(false);
@@ -247,7 +247,7 @@ void Enemy::TakeDamage(float amount)
     mFlashTimer = HIT_FLASH_DURATION;
     mDrawComponent->SetColor(Vector3(10.0f, 10.0f, 10.0f));
     
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/monster-hurt.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/monster-hurt.wav"));
     
     if (mHealth <= 0.0f)
     {

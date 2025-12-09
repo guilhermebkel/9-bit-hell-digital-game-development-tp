@@ -9,8 +9,8 @@ Healer::Healer(class Game* game)
 {
     class AnimatorComponent* mDrawComponent = new AnimatorComponent(
         this,
-        "../Assets/Sprites/Collectables/HealthOrb/HealthOrb.png",
-        "../Assets/Sprites/Collectables/HealthOrb/HealthOrb.json",
+        Game::ResolvePath("Assets/Sprites/Collectables/HealthOrb/HealthOrb.png"),
+        Game::ResolvePath("Assets/Sprites/Collectables/HealthOrb/HealthOrb.json"),
         Healer::SPRITE_WIDTH,
         Healer::SPRITE_HEIGHT
     );
@@ -27,5 +27,5 @@ void Healer::OnUpdate(float deltaTime)
 void Healer::OnCollect(Player* player)
 {
     player->Heal(10);
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-health.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/pickup-health.wav"));
 }

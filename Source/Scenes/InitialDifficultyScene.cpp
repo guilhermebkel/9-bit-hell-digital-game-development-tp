@@ -16,7 +16,7 @@ InitialDifficultyScene::InitialDifficultyScene(Game* game)
 
 void InitialDifficultyScene::Load()
 {
-    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/menu_false_memory_syndrome.mp3");
+    GetGame()->GetAudioSystem()->PlayMusic(Game::ResolvePath("Assets/Sounds/menu_false_memory_syndrome.mp3"));
     const float centerX = Game::WINDOW_WIDTH / 2.0f;
     auto* bgActor = new Actor(GetGame());
     bgActor->SetPosition(Vector2(centerX, Game::WINDOW_HEIGHT / 2.0f));
@@ -26,14 +26,14 @@ void InitialDifficultyScene::Load()
     Actor* titleActor = new Actor(GetGame());
     titleActor->SetPosition(Vector2(Game::WINDOW_WIDTH / 2.0f, 80.0f));
     auto* titleText = new UITextComponent(titleActor);
-    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetFont(Game::ResolvePath("Assets/Fonts/Jacquard12-Regular.ttf"));
     titleText->SetText("Select Difficulty", Vector3(1.0f,1.0f,1.0f), 72);
 
     const float diffStartY = 220.0f;
     const float diffSpacingY = 100.0f;
     const int spriteBase = 16;
     mDifficultyBaseScale = 2.6f;
-    std::array<std::string,3> diffImages = {"../Assets/GameDifficulty/Easy.png", "../Assets/GameDifficulty/Medium.png", "../Assets/GameDifficulty/Hard.png"};
+    std::array<std::string,3> diffImages = {Game::ResolvePath("Assets/GameDifficulty/Easy.png"), Game::ResolvePath("Assets/GameDifficulty/Medium.png"), Game::ResolvePath("Assets/GameDifficulty/Hard.png")};
     std::array<std::string,3> diffLabels = {"Easy", "Medium", "Hard"};
 
     float iconCenterOffset = -50.0f;
@@ -60,7 +60,7 @@ void InitialDifficultyScene::Load()
 
         Actor* labelActor = new Actor(GetGame());
         auto* labelText = new UITextComponent(labelActor);
-        labelText->SetFont("../Assets/Fonts/Jersey10-Regular.ttf");
+        labelText->SetFont(Game::ResolvePath("Assets/Fonts/Jersey10-Regular.ttf"));
         labelText->SetText(diffLabels[d], Vector3(1.0f,1.0f,1.0f), 36);
 
         int textW = 0;
@@ -132,6 +132,7 @@ void InitialDifficultyScene::ProcessInput(const uint8_t* keyState)
         mUpPressed = true;
         mSelectedIndex = (mSelectedIndex - 1 + 5) % 5;
         UpdateDifficultySelection();
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
     }
     else if (!keyState[SDL_SCANCODE_W])
     {
@@ -143,6 +144,7 @@ void InitialDifficultyScene::ProcessInput(const uint8_t* keyState)
         mDownPressed = true;
         mSelectedIndex = (mSelectedIndex + 1) % 5;
         UpdateDifficultySelection();
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
     }
     else if (!keyState[SDL_SCANCODE_S])
     {
@@ -160,13 +162,16 @@ void InitialDifficultyScene::ProcessInput(const uint8_t* keyState)
             GetGame()->SaveGame();
             GetGame()->LoadGame();
             UpdateDifficultySelection();
+            GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/enter-option.wav"));
         }
         else if (mSelectedIndex == 3)
         {
+            GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/start-game.wav"));
             if (mStartButton) mStartButton->Click();
         }
         else if (mSelectedIndex == 4)
         {
+            GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/enter-option.wav"));
             if (mBackButton) mBackButton->Click();
         }
     }

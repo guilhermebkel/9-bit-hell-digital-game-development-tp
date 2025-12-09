@@ -34,7 +34,7 @@ UIHealthBarWidget::UIHealthBarWidget(Game* game, const Vector2& position, const 
 
     mFrameActor = new Actor(game);
     mFrameActor->SetPosition(mPosition);
-    new StaticSpriteComponent(mFrameActor, "../Assets/HealthBarEmpty.png", mSize.x, mSize.y, frameOrder);
+    new StaticSpriteComponent(mFrameActor, Game::ResolvePath("Assets/HealthBarEmpty.png"), mSize.x, mSize.y, frameOrder);
 
     float fullFillWidth = mSize.x - 8.0f;
     float fullFillHeight = mSize.y - 8.0f;

@@ -18,8 +18,8 @@ HornMiniboss::HornMiniboss(Game* game)
 {
     mAnimator = new AnimatorComponent(
         this, 
-        "../Assets/Sprites/HornMiniboss/HornMiniboss.png", 
-        "../Assets/Sprites/HornMiniboss/HornMiniboss.json", 
+        Game::ResolvePath("Assets/Sprites/HornMiniboss/HornMiniboss.png"), 
+        Game::ResolvePath("Assets/Sprites/HornMiniboss/HornMiniboss.json"), 
         SPRITE_WIDTH,
         SPRITE_HEIGHT
     );
@@ -138,7 +138,7 @@ void HornMiniboss::UpdateAI(float deltaTime)
             {
                 mNextAttack = AttackType::HandDrop;
                 mAnimator->SetAnimation("attack");
-                GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-special-launch.wav");
+                GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/horn-special-launch.wav"));
             }
         }
         break;
@@ -204,7 +204,7 @@ void HornMiniboss::TakeDamage(float amount)
 
     if (!mIsDead)
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-hurt.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/horn-hurt.wav"));
     }
 }
 
@@ -227,7 +227,7 @@ void HornMiniboss::PerformSpikeAttack()
         spike->SetPosition(Vector2(targetPos.x + (i * spacing), targetPos.y));
     }
     
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-attack.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/horn-attack.wav"));
 }
 
 void HornMiniboss::PerformHandAttack()
@@ -248,7 +248,7 @@ void HornMiniboss::PerformHandAttack()
     float rightOffset = (Player::SPRITE_WIDTH / 2.0f) * 0.75f;
     h2->SetPosition(Vector2(targetPos.x + rightOffset, targetPos.y - 200.0f));
     
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-special-land.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/horn-special-land.wav"));
 }
 
 void HornMiniboss::SpawnSoulsOnDeath()
@@ -273,6 +273,6 @@ void HornMiniboss::Kill()
 
     if (GetGame() && GetGame()->GetAudioSystem())
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/horn-defeated.flac");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/horn-defeated.flac"));
     }
 }

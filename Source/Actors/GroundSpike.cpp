@@ -10,7 +10,7 @@ GroundSpike::GroundSpike(Game* game)
     , mTimer(0.0f)
 {
     // Desenha na frente do chão, atrás do player
-    new StaticSpriteComponent(this, "../Assets/Spike.png", SPRITE_WIDTH, SPRITE_HEIGHT, 20);
+    new StaticSpriteComponent(this, Game::ResolvePath("Assets/Spike.png"), SPRITE_WIDTH, SPRITE_HEIGHT, 20);
     
     // O espinho começa "enterrado" (Escala Y = 0) e com pivô na base
     // Nota: Como o sistema de escala padrão é pelo centro, faremos um efeito visual simples

@@ -13,9 +13,9 @@ MainMenuScene::MainMenuScene(Game* game) :
 void MainMenuScene::Load()
 {
     // Toca a música de fundo do menu em loop
-    GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/menu_false_memory_syndrome.mp3");
+    GetGame()->GetAudioSystem()->PlayMusic(Game::ResolvePath("Assets/Sounds/menu_false_memory_syndrome.mp3"));
 
-    new Background(GetGame(), "../Assets/MenuBackground.png");
+    new Background(GetGame(), Game::ResolvePath("Assets/MenuBackground.png"));
 
     const Vector2 buttonSize(300.0f, 40.0f);
     const float windowCenterX = Game::WINDOW_WIDTH / 2.0f;
@@ -24,7 +24,7 @@ void MainMenuScene::Load()
     Actor* mTitleActor = new Actor(GetGame());
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor);
-    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetFont(Game::ResolvePath("Assets/Fonts/Jacquard12-Regular.ttf"));
     titleText->SetText("9-bit Hell", Color::White, 144);
 
     constexpr float buttonSpacing = 70.0f;
@@ -144,7 +144,7 @@ void MainMenuScene::SelectNextButton()
 {
     mSelectedButtonIndex = (mSelectedButtonIndex + 1) % mButtons.size();
     UpdateButtonSelection();
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void MainMenuScene::SelectPreviousButton()
@@ -158,7 +158,7 @@ void MainMenuScene::SelectPreviousButton()
         mSelectedButtonIndex--;
     }
     UpdateButtonSelection();
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void MainMenuScene::ClickSelectedButton()
@@ -169,10 +169,10 @@ void MainMenuScene::ClickSelectedButton()
 
         if (clickedOnStartGameButton)
         {
-            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/start-game.wav");
+            GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/start-game.wav"));
         } else
         {
-            GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+            GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/enter-option.wav"));
         }
 
         mButtons[mSelectedButtonIndex]->Click();

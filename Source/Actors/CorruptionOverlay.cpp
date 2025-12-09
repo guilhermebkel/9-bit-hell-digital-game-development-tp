@@ -8,7 +8,7 @@ CorruptionOverlay::CorruptionOverlay(Game* game)
 {
     int initialVignetteSize = Math::Max(Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT) * 2.5f;
 
-    new StaticSpriteComponent(this, "../Assets/Vignette.png", initialVignetteSize, initialVignetteSize, CorruptionOverlay::DRAW_ORDER);
+    new StaticSpriteComponent(this, Game::ResolvePath("Assets/Vignette.png"), initialVignetteSize, initialVignetteSize, CorruptionOverlay::DRAW_ORDER);
 }
 
 void CorruptionOverlay::OnUpdate(float deltaTime)

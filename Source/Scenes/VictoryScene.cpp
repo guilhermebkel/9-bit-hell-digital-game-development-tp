@@ -19,7 +19,7 @@ void VictoryScene::Load()
 {
     GetGame()->SaveGame(); 
 
-    auto* backgroundActor = new Background(GetGame(), "../Assets/VictoryBackground.png");
+    auto* backgroundActor = new Background(GetGame(), Game::ResolvePath("Assets/VictoryBackground.png"));
     mSceneActors.push_back(backgroundActor);
 
     const Vector2 buttonSize(300.0f, 40.0f);
@@ -29,7 +29,7 @@ void VictoryScene::Load()
     Actor* mTitleActor = new Actor(GetGame());
     mTitleActor->SetPosition(Vector2(windowCenterX, windowCenterY - 150.0f));
     auto* titleText = new UITextComponent(mTitleActor);
-    titleText->SetFont("../Assets/Fonts/Jacquard12-Regular.ttf");
+    titleText->SetFont(Game::ResolvePath("Assets/Fonts/Jacquard12-Regular.ttf"));
     titleText->SetText("Victory!", Color::White, 144);
 
     // Buttons: Store, Level Selection, Main Menu
@@ -86,7 +86,7 @@ void VictoryScene::Load()
         GetGame()->GetAudioSystem()->StopMusic();
 
         // Toca o efeito de vitória
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/victory.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/victory.wav"));
 
         // Inicializa timer para tocar a música de vitória após 3 segundos
         mMusicDelayTimer = 0.0f;
@@ -111,7 +111,7 @@ void VictoryScene::Update(float deltaTime)
         mMusicDelayTimer += deltaTime;
         if (mMusicDelayTimer >= 2.0f)
         {
-            GetGame()->GetAudioSystem()->PlayMusic("../Assets/Sounds/victory_b6_my_heart_will_stop_in joy.mp3");
+            GetGame()->GetAudioSystem()->PlayMusic(Game::ResolvePath("Assets/Sounds/victory_b6_my_heart_will_stop_in joy.mp3"));
             mPlayedVictoryMusic = true;
         }
     }
@@ -156,7 +156,7 @@ void VictoryScene::SelectNextButton()
 
     UpdateButtonSelection();
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void VictoryScene::SelectPreviousButton()
@@ -172,14 +172,14 @@ void VictoryScene::SelectPreviousButton()
 
     UpdateButtonSelection();
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/select-option.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/select-option.wav"));
 }
 
 void VictoryScene::ClickSelectedButton()
 {
     if (!mButtons.empty())
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/enter-option.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/enter-option.wav"));
         mButtons[mSelectedButtonIndex]->Click();
     }
 }

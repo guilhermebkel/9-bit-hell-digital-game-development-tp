@@ -8,7 +8,7 @@
 SlimeProjectile::SlimeProjectile(Game* game, const Vector2& direction)
     : Actor(game)
 {
-    new StaticSpriteComponent(this, "../Assets/SlimeProjectile.png", SPRITE_WIDTH, SPRITE_HEIGHT);
+    new StaticSpriteComponent(this, Game::ResolvePath("Assets/SlimeProjectile.png"), SPRITE_WIDTH, SPRITE_HEIGHT);
 
     auto rb = new RigidBodyComponent(this, 1.0f, 0.0f);
     mVelocity = direction * SPEED;

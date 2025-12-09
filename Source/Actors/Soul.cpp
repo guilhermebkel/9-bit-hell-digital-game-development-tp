@@ -14,16 +14,16 @@ Soul::Soul(class Game* game, Soul::SoulType type)
     , mType(type)
     , mValue(1)
 {
-    std::string spritePath = "../Assets/Sprites/Collectables/Soul.png";
+    std::string spritePath = Game::ResolvePath("Assets/Sprites/Collectables/Soul.png");
 
     if (mType == Soul::SoulType::Purple)
     {
-        spritePath = "../Assets/Sprites/Collectables/PurpleSoul.png";
+        spritePath = Game::ResolvePath("Assets/Sprites/Collectables/PurpleSoul.png");
         mValue = 10;
     }
     else if (mType == Soul::SoulType::Golden)
     {
-        spritePath = "../Assets/Sprites/Collectables/GoldenSoul.png";
+        spritePath = Game::ResolvePath("Assets/Sprites/Collectables/GoldenSoul.png");
         mValue = 50;
     }
 
@@ -55,5 +55,5 @@ void Soul::OnCollect(Player* player)
 {
     GetGame()->AddSoul(mValue);
     
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/pickup-soul.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/pickup-soul.wav"));
 }

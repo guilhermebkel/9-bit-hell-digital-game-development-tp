@@ -18,8 +18,8 @@ EyeMiniboss::EyeMiniboss(Game* game)
 {
     mAnimator = new AnimatorComponent(
         this, 
-        "../Assets/Sprites/EyeMiniboss/EyeMiniboss.png", 
-        "../Assets/Sprites/EyeMiniboss/EyeMiniboss.json", 
+        Game::ResolvePath("Assets/Sprites/EyeMiniboss/EyeMiniboss.png"), 
+        Game::ResolvePath("Assets/Sprites/EyeMiniboss/EyeMiniboss.json"), 
         SPRITE_WIDTH,
         SPRITE_HEIGHT
     );
@@ -200,7 +200,7 @@ void EyeMiniboss::TakeDamage(float amount)
 
     if (!mIsDead)
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/eye-hurt.wav");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/eye-hurt.wav"));
     }
 }
 
@@ -236,7 +236,7 @@ void EyeMiniboss::PerformSpreadShot()
         proj->SetPosition(GetPosition());
     }
 
-    GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/eye-attack.wav");
+    GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/eye-attack.wav"));
 }
 
 void EyeMiniboss::SpawnSoulsOnDeath()
@@ -260,6 +260,6 @@ void EyeMiniboss::Kill()
 
     if (GetGame() && GetGame()->GetAudioSystem())
     {
-        GetGame()->GetAudioSystem()->PlaySound("../Assets/Sounds/eye-defeated.ogg");
+        GetGame()->GetAudioSystem()->PlaySound(Game::ResolvePath("Assets/Sounds/eye-defeated.ogg"));
     }
 }

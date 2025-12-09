@@ -13,7 +13,7 @@ UITextComponent::UITextComponent(Actor* owner, int drawOrder)
     , mPointSize(24)
 {
     mFont = new Font(GetGame());
-    SetFont("../Assets/Fonts/Jersey10-Regular.ttf");
+    SetFont(Game::ResolvePath("Assets/Fonts/Jersey10-Regular.ttf"));
 }
 
 UITextComponent::~UITextComponent()
