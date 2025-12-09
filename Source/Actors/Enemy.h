@@ -65,6 +65,7 @@ private:
     
     float mHealth;
     float mMaxHealth;
+    EnemyType mType;
 
     class RigidBodyComponent* mRigidBodyComponent;
     class AABBColliderComponent* mColliderComponent;

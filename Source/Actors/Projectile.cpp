@@ -39,18 +39,29 @@ void Projectile::HandleCollision(AABBColliderComponent* other)
     if (other->GetLayer() == ColliderLayer::Enemy)
     {
         int maxEnemiesHit = 1 + mGamePtr->GetPlayerPiercing();
-        
-        Enemy* enemy = dynamic_cast<Enemy*>(other->GetOwner());
-        if (enemy && mEnemiesHit < maxEnemiesHit)
+
+        Actor* owner = other->GetOwner();
+        if (!owner) return;
+
+        // Se este projétil já acertou este ator, ignora (evita múltiplos hits no mesmo alvo)
+        if (mHitActors.find(owner) != mHitActors.end())
+        {
+            return;
+        }
+
+        Enemy* enemy = dynamic_cast<Enemy*>(owner);
+        if (enemy)
         {
             enemy->TakeDamage(mDamage);
+            mHitActors.insert(owner);
             mEnemiesHit++;
         }
 
-        Miniboss* miniboss = dynamic_cast<Miniboss*>(other->GetOwner());
-        if (miniboss && mEnemiesHit < maxEnemiesHit)
+        Miniboss* miniboss = dynamic_cast<Miniboss*>(owner);
+        if (miniboss)
         {
             miniboss->TakeDamage(mDamage);
+            mHitActors.insert(owner);
             mEnemiesHit++;
         }
 

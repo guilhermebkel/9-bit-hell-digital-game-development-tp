@@ -9,7 +9,7 @@
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Random.h"
-#include "../Audio/AudioSystem.h"
+#include "../Audio/AudioSystem.h"-
 
 Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
     : Actor(game)
@@ -25,11 +25,26 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
       , mIsFlashing(false)
       , mFlashTimer(0.0f)
       , mOriginalColor(Vector3::Zero)
+      , mType(type)
 {
     float diffMul = 1.0f;
     if (GetGame()) diffMul = GetGame()->GetDifficultyMultiplier();
 
-    mMaxHealth = BASE_HEALTH * diffMul;
+    float baseHealth = BASE_HEALTH;
+    switch (type)
+    {
+    case EnemyType::Eye:
+        baseHealth = 10.0f;
+        break;
+    case EnemyType::Fat:
+        baseHealth = 15.0f;
+        break;
+    case EnemyType::Horn:
+        baseHealth = 20.0f;
+        break;
+    }
+
+    mMaxHealth = baseHealth * diffMul;
     mHealth = mMaxHealth;
 
     mForwardSpeed *= diffMul;

@@ -114,6 +114,11 @@ void GameplayScene::Update(float deltaTime)
 
     if (isGameOver)
     {
+        if (GetGame())
+        {
+            GetGame()->SaveGame();
+        }
+
         GetGame()->SetScene(Game::GameScene::GameOver);
 
         if (playerDiedByCorruption)
@@ -131,7 +136,7 @@ void GameplayScene::LoadTutorial()
 {
     SetNextLevelID(LevelID::Level1);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGameTutorial.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 5);
@@ -144,7 +149,7 @@ void GameplayScene::LoadLevel1()
 {
     SetNextLevelID(LevelID::Level2);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGame1-3.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 15, 5, 2);
@@ -157,7 +162,7 @@ void GameplayScene::LoadLevel2()
 {
     SetNextLevelID(LevelID::Level3);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGame1-3.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 25, 6, 3);
@@ -169,7 +174,7 @@ void GameplayScene::LoadLevel3()
 {
     SetNextLevelID(LevelID::Level4);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGame1-3.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 10, 5, 2);
@@ -183,7 +188,7 @@ void GameplayScene::LoadLevel4()
 {
     SetNextLevelID(LevelID::Level5);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGame4-6.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 35, 7, 3);
@@ -197,7 +202,7 @@ void GameplayScene::LoadLevel5()
 {
     SetNextLevelID(LevelID::Level6);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGame4-6.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 40, 8, 4);
@@ -210,7 +215,7 @@ void GameplayScene::LoadLevel6()
 {
     SetNextLevelID(LevelID::Level7);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGame4-6.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 12, 6, 0);
@@ -224,7 +229,7 @@ void GameplayScene::LoadLevel7()
 {
     SetNextLevelID(LevelID::Level8);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGame7-9.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 50, 10, 5);
@@ -238,7 +243,7 @@ void GameplayScene::LoadLevel8()
 {
     SetNextLevelID(LevelID::Level9);
 
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGame7-9.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 60, 10, 5);
@@ -255,7 +260,7 @@ void GameplayScene::LoadLevel8()
 
 void GameplayScene::LoadLevel9()
 {
-    new Background(GetGame(), "../Assets/Levels/Level1/BackgroundGame.png");
+    new Background(GetGame(), "../Assets/Levels/BackgroundGame7-9.png");
     GetGame()->SetUpperBoundary(423.0f);
 
     new Spawner(GetGame(), SpawnType::Enemy, 20, 10, 0);

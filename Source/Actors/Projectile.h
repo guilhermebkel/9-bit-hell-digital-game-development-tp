@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include <unordered_set>
 
 class Projectile : public Actor
 {
@@ -23,4 +24,5 @@ private:
     int mEnemiesHit;
     int mDamage;
     class Game* mGamePtr;
+    std::unordered_set<class Actor*> mHitActors;
 };
