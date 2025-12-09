@@ -9,7 +9,7 @@
 #include "../Components/Physics/RigidBodyComponent.h"
 #include "../Components/Physics/AABBColliderComponent.h"
 #include "../Random.h"
-#include "../Audio/AudioSystem.h"-
+#include "../Audio/AudioSystem.h"
 
 Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
     : Actor(game)
