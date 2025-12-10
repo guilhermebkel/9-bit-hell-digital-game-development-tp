@@ -41,6 +41,10 @@ efeito de piscada.Tanto ataques corpo a corpo quanto projéteis causam um efeito
 * Funcionamento consistente da renderização **2.5D** baseada na posição Y, garantindo a ordem correta entre personagens e objetos.
 * Compreensão e impacto do **sistema de upgrades** adquiridos com moedas, incluindo feedback visual e sensação de progressão.
 
+## Gameplay
+
+[https://youtu.be/Cmaak86n77U](https://youtu.be/Cmaak86n77U)
+
 ## Créditos
 
 **Gabriel Vieira Pereira da Silva** – 2020105777
