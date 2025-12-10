@@ -25,8 +25,18 @@ public:
     static constexpr float SPRITE_HEIGHT = 68.0f;
     static constexpr float EYE_SPRITE_WIDTH = 51.0f;
     static constexpr float EYE_SPRITE_HEIGHT = 51.0f;
-    static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * 0.60f;
-    static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * 0.70f;
+
+    static constexpr float FAT_SPRITE_WIDTH = SPRITE_WIDTH * 1.25f;
+    static constexpr float FAT_SPRITE_HEIGHT = SPRITE_HEIGHT;
+
+    static constexpr float HORN_SPRITE_WIDTH = SPRITE_WIDTH * 1.15f;
+    static constexpr float HORN_SPRITE_HEIGHT = SPRITE_HEIGHT * 1.10f;
+
+    static constexpr float PHYSICS_WIDTH_FACTOR = 0.75f;
+    static constexpr float PHYSICS_HEIGHT_FACTOR = 0.875f;
+
+    static constexpr float PHYSICS_WIDTH = SPRITE_WIDTH * PHYSICS_WIDTH_FACTOR;
+    static constexpr float PHYSICS_HEIGHT = SPRITE_HEIGHT * PHYSICS_HEIGHT_FACTOR;
     static constexpr float AGGRO_AREA_SIZE = 800.0f;
 
     static constexpr float ATTACK_DISTANCE = 50.0f;

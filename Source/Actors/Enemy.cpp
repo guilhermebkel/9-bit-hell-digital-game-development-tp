@@ -206,13 +206,35 @@ Enemy::Enemy(Game* game, EnemyType type, float forwardSpeed, float deathTime)
 
     mRigidBodyComponent = new RigidBodyComponent(this, 1.0f, 0.0f);
 
-    const int dy = (int)((Enemy::SPRITE_HEIGHT / 2.0f) - (Enemy::PHYSICS_HEIGHT / 2.0f));
-    mColliderComponent = new AABBColliderComponent(this, 0, dy, Enemy::PHYSICS_WIDTH, Enemy::PHYSICS_HEIGHT,
-                                                   ColliderLayer::Enemy);
+    float spriteW = Enemy::SPRITE_WIDTH;
+    float spriteH = Enemy::SPRITE_HEIGHT;
+    if (mType == Enemy::EnemyType::Eye)
+    {
+        spriteW = Enemy::EYE_SPRITE_WIDTH;
+        spriteH = Enemy::EYE_SPRITE_HEIGHT;
+    }
+    else if (mType == Enemy::EnemyType::Horn)
+    {
+        spriteW = Enemy::HORN_SPRITE_WIDTH;
+        spriteH = Enemy::HORN_SPRITE_HEIGHT;
+    }
+    else if (mType == Enemy::EnemyType::Fat)
+    {
+        spriteW = Enemy::FAT_SPRITE_WIDTH;
+        spriteH = Enemy::FAT_SPRITE_HEIGHT;
+    }
+
+    const float physicsWf = spriteW * Enemy::PHYSICS_WIDTH_FACTOR;
+    const float physicsHf = spriteH * Enemy::PHYSICS_HEIGHT_FACTOR;
+    const int physicsW = (int)physicsWf;
+    const int physicsH = (int)physicsHf;
+    const int dy = (int)((spriteH / 2.0f) - (physicsHf / 2.0f));
+
+    mColliderComponent = new AABBColliderComponent(this, 0, dy, physicsW, physicsH, ColliderLayer::Enemy);
 
     const float aggroWidth = AGGRO_AREA_SIZE;
     const float aggroHeight = AGGRO_AREA_SIZE;
-    mAggroCollider = new AABBColliderComponent(this, 0, dy, aggroWidth, aggroHeight, ColliderLayer::EnemyAggro, true);
+    mAggroCollider = new AABBColliderComponent(this, 0, dy, (int)aggroWidth, (int)aggroHeight, ColliderLayer::EnemyAggro, true);
 
     Vector2 initialVelocity = Vector2::Zero;
     while (initialVelocity.Length() < 1.0f)
